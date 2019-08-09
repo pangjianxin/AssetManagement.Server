@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
+    <PackageReference Include="EPPlus" Version="4.5.3.1" />
+    <PackageReference Include="FluentValidation" Version="8.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Boc.Assets.Domain\Boc.Assets.Domain.csproj" />
+    <ProjectReference Include="..\Boc.Assets.Infrastructure\Boc.Assets.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
