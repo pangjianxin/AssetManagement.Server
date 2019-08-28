@@ -7,6 +7,7 @@
   <ItemGroup>
     <Compile Remove="Migrations\ApplicationDbContextConfig\20190321015020_InitProduction.cs" />
     <Compile Remove="Migrations\ApplicationDbContextConfig\20190411091525_DeleteMaintainers.cs" />
+    <Compile Remove="Migrations\ApplicationDbContextConfig\20190828075958_rmove_managementline.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,7 +4,6 @@ using Boc.Assets.Domain.Events;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Models.AssetStockTakings;
-using Boc.Assets.Domain.Models.ManagementLines;
 using Boc.Assets.Domain.Models.Organizations;
 
 namespace Boc.Assets.Application.AutoMapper
@@ -21,19 +20,16 @@ namespace Boc.Assets.Application.AutoMapper
                 .ForMember(it => it.Role, config => config.MapFrom(it => (int)it.Role.Role))
                 .ForMember(it => it.RoleDescription, config => config.MapFrom(it => it.Role.Description))
                 .ForMember(it => it.OrgId, config => config.MapFrom(it => it.Id));
-            //管理条线和管理条线DTO之间的映射
-            CreateMap<ManagementLine, ManagementLineDto>()
-                .ForMember(it => it.ManagementLineId, config => config.MapFrom(it => it.Id));
+
             //资产分类和DTO之间的映射
             CreateMap<AssetCategory, AssetCategoryDto>()
                 .ForMember(it => it.AssetMeteringUnit, config => config.MapFrom(it => it.AssetMeteringUnit.ToString()))
-                .ForMember(it => it.ManagementLineDto, config => config.MapFrom(it => it.ManagementLine))
                 .ForMember(it => it.AssetCategoryId, config => config.MapFrom(it => it.Id));
             //资产和DTO之间的映射
             CreateMap<Asset, AssetDto>()
                 .ForMember(it => it.AssetId, config => config.MapFrom(it => it.Id))
                 .ForMember(it => it.AssetCategoryDto, config => config.MapFrom(it => it.AssetCategory))
-                .ForMember(it => it.OrgDto, config => config.MapFrom(it => it.Organization));
+                .ForMember(it => it.OrgBelonged, config => config.MapFrom(it => it.OrganizationBelonged));
             //机构空间和DTO之间的映射
             CreateMap<OrganizationSpace, OrgSpaceDto>()
                 .ForMember(it => it.SpaceId, config => config.MapFrom(it => it.Id));

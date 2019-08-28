@@ -1,7 +1,6 @@
 ﻿using Boc.Assets.Domain.Core.Models;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Models.AssetStockTakings;
-using Boc.Assets.Domain.Models.ManagementLines;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -12,10 +11,10 @@ namespace Boc.Assets.Domain.Models.Organizations
     {
         private readonly ILazyLoader _lazyLoader;
         private ICollection<OrganizationSpace> _organizationSpaces;
-        private ICollection<Asset> _assets;
+        private ICollection<Asset> _assetsBelongs;
+        private ICollection<Asset> _assetsStores;
         private ICollection<AssetStockTakingOrganization> _assetStockTakingOrganizations;
         private OrganizationRole _role;
-        private ManagementLine _managementLine;
         public Organization(ILazyLoader lazyLoader = null)
         {
             _lazyLoader = lazyLoader;
@@ -52,20 +51,20 @@ namespace Boc.Assets.Domain.Models.Organizations
             set => _organizationSpaces = value;
         }
         /// <summary>
-        /// 机构归属条线
+        /// 机构名下存放的资产
         /// </summary>
-        public ManagementLine ManagementLine
+        public ICollection<Asset> AssetsBelongs
         {
-            get => _lazyLoader.Load(this, ref _managementLine);
-            set => _managementLine = value;
+            get => _lazyLoader.Load(this, ref _assetsBelongs);
+            set => _assetsBelongs = value;
         }
         /// <summary>
-        /// 机构名下的资产
+        /// 机构负责的资产
         /// </summary>
-        public ICollection<Asset> Assets
+        public ICollection<Asset> AssetsStores
         {
-            get => _lazyLoader.Load(this, ref _assets);
-            set => _assets = value;
+            get => _lazyLoader.Load(this, ref _assetsStores);
+            set => _assetsStores = value;
         }
         /// <summary>
         /// 固定资产盘点参与机构

@@ -5,7 +5,6 @@ namespace Boc.Assets.Application.Dto
     public class AssetCategoryDto
     {
         public Guid AssetCategoryId { get; set; }
-        public ManagementLineDto ManagementLineDto { get; set; }
         /// <summary>
         /// 资产大类
         /// </summary>

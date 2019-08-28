@@ -13,6 +13,5 @@ namespace Boc.Assets.Domain.Core.SharedKernel
         Guid ManagementLineId { get; }
         bool IsAuthenticated();
         IEnumerable<Claim> GetClaimsIdentity();
-
     }
 }

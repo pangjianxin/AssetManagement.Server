@@ -17,12 +17,17 @@ namespace Boc.Assets.Domain.Models.Assets
             _lazyLoader = lazyLoader;
         }
         private AssetCategory _assetCategory;
-        private Organization _organization;
+        private Organization _organizationBelonged;
         private ICollection<AssetStockTakingDetail> _assetStockTakingDetails;
+        /// <summary>
+        /// 资产分类外键
+        /// </summary>
         public Guid AssetCategoryId { get; set; }
-        public Guid? OrganizationId { get; set; }
-        #region properties
-        public string AssetLocation { get; set; }
+        /// <summary>
+        /// 资产责任中心外键
+        /// </summary>
+        public Guid? OrganizationBelongedId { get; set; }
+        #region Properties
         /// <summary>
         /// 资产名称
         /// </summary>
@@ -72,6 +77,18 @@ namespace Boc.Assets.Domain.Models.Assets
         /// </summary>
         public DateTime? CreateDateTime { get; set; }
         /// <summary>
+        /// 资产存放的机构号
+        /// </summary>
+        public string StoredOrgIdentifier { get; set; }
+        /// <summary>
+        /// 资产存放的机构名称
+        /// </summary>
+        public string StoredOrgName { get; set; }
+        /// <summary>
+        /// 资产存放位置
+        /// </summary>
+        public string AssetLocation { get; set; }
+        /// <summary>
         /// 固定资产分类
         /// </summary>
         public AssetCategory AssetCategory
@@ -80,12 +97,12 @@ namespace Boc.Assets.Domain.Models.Assets
             set => _assetCategory = value;
         }
         /// <summary>
-        /// 资产存放机构
+        /// 资产管理机构
         /// </summary>
-        public Organization Organization
+        public Organization OrganizationBelonged
         {
-            get => _lazyLoader.Load(this, ref _organization);
-            set => _organization = value;
+            get => _lazyLoader.Load(this, ref _organizationBelonged);
+            set => _organizationBelonged = value;
         }
 
         public ICollection<AssetStockTakingDetail> AssetStockTakingDetails
@@ -114,11 +131,12 @@ namespace Boc.Assets.Domain.Models.Assets
         public AssetDeploy HandleAssetReturn(AssetReturn @event)
         {
             LastModifyDateTime = DateTime.Now;
-            LastModifyComment = $"资产由{@event.RequestOrgIdentifier}交回至{@event.TargetOrgIdentifier}";
+            LastModifyComment = @event.Message;
             AssetStatus = AssetStatus.在库;
             AssetLocation = @event.RequestOrgNam;
-            OrganizationId = @event.TargetOrgId;
-            return new AssetDeploy()
+            StoredOrgIdentifier = @event.TargetOrgIdentifier;
+            StoredOrgName = @event.TargetOrgNam;
+            return new AssetDeploy
             {
                 Id = Guid.NewGuid(),
                 AssetDeployCategory = AssetDeployCategory.资产交回,
@@ -153,7 +171,8 @@ namespace Boc.Assets.Domain.Models.Assets
             LastModifyComment = $"资产由{@event.TargetOrgIdentifier}调至{@event.RequestOrgIdentifier}";
             AssetStatus = AssetStatus.在用;
             AssetLocation = @event.RequestOrgNam;
-            OrganizationId = @event.RequestOrgId;
+            StoredOrgIdentifier = @event.TargetOrgIdentifier;
+            StoredOrgName = @event.TargetOrgNam;
             return new AssetDeploy
             {
                 Id = Guid.NewGuid(),
@@ -190,7 +209,8 @@ namespace Boc.Assets.Domain.Models.Assets
             LastModifyComment = $"资产由{@event.RequestOrgIdentifier}调配至{@event.ExchangeOrgIdentifier}";
             AssetStatus = AssetStatus.在用;
             AssetLocation = @event.ExchangeOrgNam;
-            OrganizationId = @event.ExchangeOrgId;
+            StoredOrgIdentifier = @event.ExchangeOrgIdentifier;
+            StoredOrgName = @event.ExchangeOrgNam;
             return new AssetDeploy()
             {
                 Id = Guid.NewGuid(),

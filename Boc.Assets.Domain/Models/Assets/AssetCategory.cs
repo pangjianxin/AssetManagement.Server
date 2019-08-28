@@ -1,7 +1,5 @@
 ﻿using Boc.Assets.Domain.Core.Models;
-using Boc.Assets.Domain.Models.ManagementLines;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 using System.Collections.Generic;
 
 namespace Boc.Assets.Domain.Models.Assets
@@ -15,7 +13,6 @@ namespace Boc.Assets.Domain.Models.Assets
         private readonly ILazyLoader _lazyLoader;
         private ICollection<Asset> _assets;
         private ICollection<Maintainer> _maintainers;
-        private ManagementLine _managementLine;
         public AssetCategory(ILazyLoader lazyLoader)
         {
             _lazyLoader = lazyLoader;
@@ -30,12 +27,6 @@ namespace Boc.Assets.Domain.Models.Assets
         {
             get => _lazyLoader.Load(this, ref _maintainers);
             set => _maintainers = value;
-        }
-        public Guid ManagementLineId { get; set; }
-        public ManagementLine ManagementLine
-        {
-            get => _lazyLoader.Load(this, ref _managementLine);
-            set => _managementLine = value;
         }
         public string AssetFirstLevelCategory { get; set; }
         public string AssetSecondLevelCategory { get; set; }

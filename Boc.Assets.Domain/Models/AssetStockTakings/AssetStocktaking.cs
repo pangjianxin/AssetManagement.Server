@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace Boc.Assets.Domain.Models.AssetStockTakings
 {
+    /// <summary>
+    /// 描述资产盘点
+    /// </summary>
     public class AssetStockTaking : EntityBase
     {
         private readonly ILazyLoader _lazyLoader;
@@ -26,9 +29,6 @@ namespace Boc.Assets.Domain.Models.AssetStockTakings
             PublisherName = organization.OrgNam;
             PublisherIdentifier = organization.OrgIdentifier;
             PublisherOrg2 = organization.Org2;
-            ManagementLineId = organization.ManagementLine.Id;
-            ManagementLineName = organization.ManagementLine.ManagementLineName;
-            ManagementLineDescription = organization.ManagementLine.ManagementLineDescription;
             TaskName = taskName;
             TaskComment = taskComment;
             CreateDateTime = DateTime.Now;

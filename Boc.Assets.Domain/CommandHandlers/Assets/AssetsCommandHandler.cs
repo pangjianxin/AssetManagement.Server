@@ -101,9 +101,11 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                     AssetStatus = AssetStatus.在库,
                     InStoreDateTime = DateTime.Now,
                     LastModifyDateTime = DateTime.Now,
-                    LastModifyComment = "资产入库",
+                    LastModifyComment = request.Message,
                     CreateDateTime = request.CreateDateTime,
-                    OrganizationId = request.Principal.OrgId
+                    OrganizationBelongedId = request.Principal.OrgId,
+                    StoredOrgIdentifier = request.Principal.OrgIdentifier,
+                    StoredOrgName = request.Principal.OrgNam
                 };
                 await _assetRepository.AddAsync(asset);
             }

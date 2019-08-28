@@ -122,7 +122,6 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IAssetCategoryRepository, AssetCategoryRepository>();
             services.AddScoped<IOrgSpaceRepository, OrgSpaceRepository>();
-            services.AddScoped<IManagementLineRepository, ManagementLineRepository>();
             services.AddScoped<IAssetDeployRepository, AssetDeployRepository>();
             services.AddScoped<IAssetStockTakingRepository, AssetStockTakingRepository>();
             services.AddScoped<IAssetStockTakingOrganizationRepository, AssetStockTakingOrganizationRepository>();
@@ -141,7 +140,6 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetCategoryService, AssetCategoryService>();
             services.AddScoped<IOrgSpaceService, OrgSpaceService>();
             services.AddScoped<INonAuditEventService, NonAuditEventService>();
-            services.AddScoped<IManagementLineService, ManagementLineService>();
             services.AddScoped<IAssetDeployService, AssetDeployService>();
             services.AddScoped<IAssetStockTakingService, AssetStockTakingService>();
             services.AddScoped<IEmployeeService, EmployService>();

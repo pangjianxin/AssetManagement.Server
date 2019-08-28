@@ -69,15 +69,6 @@ namespace Boc.Assets.Application.ServiceImplements
             return await result.ToListAsync();
         }
 
-        public async Task<IEnumerable<dynamic>> CategoriesByManagementLineAsync(Expression<Func<Asset, bool>> predicate)
-        {
-            var result = from n in _assetRepository.GetAll(predicate)
-                         group n by n.AssetCategory.ManagementLine
-                into m
-                         select new { name = m.Key.ManagementLineName, value = m.Count() };
-            return await result.ToListAsync();
-        }
-
         public async Task<IEnumerable<dynamic>> CategoriesByStatusAsync(Expression<Func<Asset, bool>> predicate)
         {
             var result = from n in _assetRepository.GetAll(predicate)

@@ -32,12 +32,6 @@ namespace Boc.Assets.Application.ServiceInterfaces
         /// <returns></returns>
         Task<IEnumerable<dynamic>> CategoriesByStatusAsync(Expression<Func<Asset, bool>> predicate);
         /// <summary>
-        /// 根据资产分类关联条线汇总资产数量
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        Task<IEnumerable<dynamic>> CategoriesByManagementLineAsync(Expression<Func<Asset, bool>> predicate);
-        /// <summary>
         /// 修改资产存放位置
         /// </summary>
         /// <param name="model"></param>

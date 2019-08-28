@@ -70,9 +70,9 @@ namespace Boc.Assets.Domain.Models.AssetStockTakings
 
         public string Progress()
         {
-            if (Organization.Assets.Count > 0)
+            if (Organization.AssetsStores.Count > 0)
             {
-                return $"{Math.Round((double)AssetStockTakingDetails.Count / Organization.Assets.Count * 100, 2) }";
+                return $"{Math.Round((double)AssetStockTakingDetails.Count / Organization.AssetsStores.Count * 100, 2) }";
             }
             return $"0";
         }

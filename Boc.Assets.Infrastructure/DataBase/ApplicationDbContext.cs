@@ -82,7 +82,6 @@ namespace Boc.Assets.Infrastructure.DataBase
             builder.ApplyConfiguration(new OrganizationDbConfig());
             builder.ApplyConfiguration(new OrganizationRoleDbConfig());
             builder.ApplyConfiguration(new OrganizationSpaceDbConfig());
-            builder.ApplyConfiguration(new ManagementLineDbConfig());
             builder.ApplyConfiguration(new AssetStocktakingDbConfig());
             builder.ApplyConfiguration(new AssetStockTakingDetailConfig());
             builder.ApplyConfiguration(new AssetStockTakingOrganizationConfig());
