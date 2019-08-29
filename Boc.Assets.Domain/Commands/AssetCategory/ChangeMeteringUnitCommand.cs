@@ -1,13 +1,12 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
+﻿using Boc.Assets.Domain.Commands.Validations.AssetCategory;
 using Boc.Assets.Domain.Models.Assets;
 using System;
-using Boc.Assets.Domain.Commands.Validations.AssetCategory;
 
 namespace Boc.Assets.Domain.Commands.AssetCategory
 {
     public class ChangeMeteringUnitCommand : AssetCategoryCommand
     {
-        public ChangeMeteringUnitCommand(IUser principal, Guid assetCategoryId, AssetMeteringUnit meteringUnit) : base(principal)
+        public ChangeMeteringUnitCommand(Guid assetCategoryId, AssetMeteringUnit meteringUnit)
         {
             AssetCategoryId = assetCategoryId;
             AssetMeteringUnit = meteringUnit;

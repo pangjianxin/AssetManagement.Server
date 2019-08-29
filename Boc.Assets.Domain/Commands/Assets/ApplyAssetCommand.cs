@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.Assets;
-using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
@@ -8,8 +7,7 @@ namespace Boc.Assets.Domain.Commands.Assets
     {
         public Guid TargetOrgId { get; set; }
 
-        public ApplyAssetCommand(IUser principal, Guid targetOrgId, Guid assetCategoryId, string message)
-            : base(principal)
+        public ApplyAssetCommand(Guid targetOrgId, Guid assetCategoryId, string message)
         {
             AssetCategoryId = assetCategoryId;
             TargetOrgId = targetOrgId;

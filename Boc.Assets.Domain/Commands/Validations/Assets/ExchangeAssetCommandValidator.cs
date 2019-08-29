@@ -21,7 +21,6 @@ namespace Boc.Assets.Domain.Commands.Validations.Assets
             ValidateExchangeOrgId();
             ValidateTargetOrgId();
             ValidateAssetId();
-            ValidatePrincipal();
         }
     }
 }

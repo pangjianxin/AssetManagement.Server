@@ -1,6 +1,6 @@
-﻿using System;
-using Boc.Assets.Domain.Commands.Assets;
+﻿using Boc.Assets.Domain.Commands.Assets;
 using FluentValidation;
+using System;
 
 namespace Boc.Assets.Domain.Commands.Validations.Assets
 {
@@ -9,8 +9,7 @@ namespace Boc.Assets.Domain.Commands.Validations.Assets
     {
         protected void ValidateAssetId()
         {
-            RuleFor(it => it.AssetId).NotNull().NotEmpty().WithMessage("资产索引不能为空")
-                 .NotEqual(Guid.Empty).WithMessage("资产索引不能为空"); ;
+            RuleFor(it => it.AssetId).NotEqual(Guid.Empty).WithMessage("资产索引不能为空");
         }
 
         protected void ValidateAssetCategoryId()
@@ -63,11 +62,6 @@ namespace Boc.Assets.Domain.Commands.Validations.Assets
         protected void ValidateCreateDateTime()
         {
             RuleFor(it => it.CreateDateTime).NotEqual(DateTime.Today).NotEmpty().NotNull().WithMessage("生产日期错误");
-        }
-
-        protected void ValidatePrincipal()
-        {
-            RuleFor(it => it.Principal).NotNull().WithMessage("主体不能为空");
         }
     }
 }

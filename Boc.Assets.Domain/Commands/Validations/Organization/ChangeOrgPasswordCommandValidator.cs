@@ -25,7 +25,7 @@ namespace Boc.Assets.Domain.Commands.Validations.Organization
             ValidateOldPassword();
             ValidateNewPassword();
             ValidateConfirmPassword();
-            ValidatePrincipal();
+
         }
     }
 }

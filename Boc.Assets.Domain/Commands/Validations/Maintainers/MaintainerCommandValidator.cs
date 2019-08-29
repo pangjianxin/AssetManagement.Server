@@ -28,9 +28,5 @@ namespace Boc.Assets.Domain.Commands.Validations.Maintainers
         {
             RuleFor(it => it.MaintainerId).NotEqual(Guid.Empty).WithMessage("服务商主键不能为空(Guid.Empty)");
         }
-        protected void ValidatePrincipal()
-        {
-            RuleFor(it => it.Principal).NotNull().WithMessage("主体不能为空");
-        }
     }
 }

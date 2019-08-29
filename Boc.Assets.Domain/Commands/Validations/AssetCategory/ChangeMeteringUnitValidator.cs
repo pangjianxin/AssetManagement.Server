@@ -9,7 +9,6 @@ namespace Boc.Assets.Domain.Commands.Validations.AssetCategory
         {
             ValidateAssetCategoryId();
             ValidateMeteringUnit();
-            ValidatePrincipal();
         }
     }
 }

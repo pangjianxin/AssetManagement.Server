@@ -1,16 +1,15 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.Organization;
-using Boc.Assets.Domain.Core.SharedKernel;
 
 namespace Boc.Assets.Domain.Commands.Organization
 {
     public class ChangeOrgPasswordCommand : OrganizationCommand
     {
 
-        public ChangeOrgPasswordCommand(IUser principal,
+        public ChangeOrgPasswordCommand(
             string orgIdentifier,
             string oldPassword,
             string newPassword,
-            string confirmPassword) : base(principal)
+            string confirmPassword)
         {
             OrgIdentifier = orgIdentifier;
             OldPassword = oldPassword;

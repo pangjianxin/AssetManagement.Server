@@ -7,7 +7,6 @@ namespace Boc.Assets.Domain.Commands.Validations.Maintainers
         public DeleteMaintainerCommandValidator()
         {
             ValidateMaintainerId();
-            ValidatePrincipal();
         }
     }
 }

@@ -27,9 +27,5 @@ namespace Boc.Assets.Domain.Commands.Validations.Employees
         {
             RuleFor(it => it.Org2).NotNull().NotEmpty().WithMessage("二级行机构号必须输入");
         }
-        protected void ValidatePrincipal()
-        {
-            RuleFor(it => it.Principal).NotNull().WithMessage("主体不能为空");
-        }
     }
 }

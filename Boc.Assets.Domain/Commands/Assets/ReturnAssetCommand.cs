@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.Assets;
-using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
@@ -8,7 +7,7 @@ namespace Boc.Assets.Domain.Commands.Assets
     {
         public Guid TargetOrgId { get; set; }
 
-        public ReturnAssetCommand(IUser principal, Guid targetOrgId, Guid assetId, string message) : base(principal)
+        public ReturnAssetCommand(Guid targetOrgId, Guid assetId, string message)
         {
             TargetOrgId = targetOrgId;
             AssetId = assetId;

@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.Assets;
-using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
@@ -7,7 +6,7 @@ namespace Boc.Assets.Domain.Commands.Assets
     public class HandleAssetReturnCommand : AssetCommand
     {
 
-        public HandleAssetReturnCommand(IUser principal, Guid eventId) : base(principal)
+        public HandleAssetReturnCommand(Guid eventId)
         {
             EventId = eventId;
         }

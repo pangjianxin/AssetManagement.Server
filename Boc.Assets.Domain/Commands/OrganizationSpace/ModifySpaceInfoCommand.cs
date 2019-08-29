@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.OrganizationSpace;
-using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 
 namespace Boc.Assets.Domain.Commands.OrganizationSpace
@@ -7,10 +6,9 @@ namespace Boc.Assets.Domain.Commands.OrganizationSpace
     public class ModifySpaceInfoCommand : OrgSpaceCommand
     {
         public ModifySpaceInfoCommand(
-            IUser principal,
             Guid spaceId,
             string spaceName,
-            string spaceDescription) : base(principal)
+            string spaceDescription)
         {
             SpaceId = spaceId;
             SpaceName = spaceName;

@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.AssetStockTakings;
-using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 using System.Collections.Generic;
 
@@ -10,11 +9,11 @@ namespace Boc.Assets.Domain.Commands.AssetStockTaking
     /// </summary>
     public class CreateAssetStockTakingCommand : AssetStockTakingCommand
     {
-        public CreateAssetStockTakingCommand(IUser principal,
+        public CreateAssetStockTakingCommand(
             string taskName,
             string taskComment,
             DateTime expiryDateTime,
-            IEnumerable<Guid> excludedOrganizations) : base(principal)
+            IEnumerable<Guid> excludedOrganizations)
         {
             TaskName = taskName;
             TaskComment = taskComment;

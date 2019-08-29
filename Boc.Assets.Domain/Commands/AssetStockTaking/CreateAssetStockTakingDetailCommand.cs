@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.AssetStockTakings;
-using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.AssetStockTakings;
 using System;
 
@@ -11,14 +10,14 @@ namespace Boc.Assets.Domain.Commands.AssetStockTaking
     public class CreateAssetStockTakingDetailCommand : AssetStockTakingCommand
     {
 
-        public CreateAssetStockTakingDetailCommand(IUser principal, Guid assetId,
+        public CreateAssetStockTakingDetailCommand(Guid assetId,
             Guid stockTakingOrgId,
             string identifier,
             string name,
             string org2,
             string location,
             StockTakingStatus status,
-            string message) : base(principal)
+            string message)
         {
             AssetId = assetId;
             AssetStockTakingOrganizationId = stockTakingOrgId;

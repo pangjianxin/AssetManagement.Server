@@ -103,7 +103,7 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [HttpDelete("remove")]
         [Permission(Permissions.Controllers.AssetApply, Permissions.Actions.AssetApply_Delete_Current)]
-        public async Task<IActionResult> Remove(RemoveAssetApply model)
+        public async Task<IActionResult> Remove(Remove model)
         {
             await _assetApplyService.RemoveAsync(model);
             return AppResponse(null, "事件已删除");

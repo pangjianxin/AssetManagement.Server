@@ -1,12 +1,11 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.Assets;
-using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
     public class RemoveAssetApplyCommand : AssetCommand
     {
-        public RemoveAssetApplyCommand(IUser principal, Guid eventId) : base(principal)
+        public RemoveAssetApplyCommand(Guid eventId)
         {
             EventId = eventId;
         }

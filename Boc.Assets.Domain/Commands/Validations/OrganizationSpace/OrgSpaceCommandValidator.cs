@@ -17,9 +17,5 @@ namespace Boc.Assets.Domain.Commands.Validations.OrganizationSpace
         {
             RuleFor(it => it.SpaceDescription).NotNull().NotEmpty().WithMessage("空间描述不能为空");
         }
-        protected void ValidatePrincipal()
-        {
-            RuleFor(it => it.Principal).NotNull().WithMessage("主体不能为空");
-        }
     }
 }

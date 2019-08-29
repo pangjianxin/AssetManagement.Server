@@ -1,14 +1,13 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.Assets;
-using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
     public class StoreAssetWithOutFileCommand : AssetCommand
     {
-        public StoreAssetWithOutFileCommand(IUser principal, string assetName, string brand, string assetDescription,
+        public StoreAssetWithOutFileCommand(string assetName, string brand, string assetDescription,
             string assetType, string assetLocation, Guid assetCategoryId, DateTime createDateTime,
-           string startTagNumber, string endTagNumber) : base(principal)
+           string startTagNumber, string endTagNumber)
         {
             AssetName = assetName;
             Brand = brand;

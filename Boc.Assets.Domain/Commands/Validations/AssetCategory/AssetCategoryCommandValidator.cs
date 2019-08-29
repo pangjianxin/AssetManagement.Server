@@ -45,9 +45,5 @@ namespace Boc.Assets.Domain.Commands.Validations.AssetCategory
             RuleFor(it => it.AssetMeteringUnit)
                 .NotNull().NotEmpty().WithMessage("资产分类--大类不能为空");
         }
-        protected void ValidatePrincipal()
-        {
-            RuleFor(it => it.Principal).NotNull().WithMessage("主体不能为空");
-        }
     }
 }

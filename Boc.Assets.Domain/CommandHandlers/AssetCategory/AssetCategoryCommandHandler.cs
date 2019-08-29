@@ -15,16 +15,19 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetCategory
     {
         private readonly IAssetCategoryRepository _assetCategoryRepository;
         private readonly IOrganizationRepository _orgRepository;
+        private readonly IUser _user;
 
         public AssetCategoryCommandHandler(
             IUnitOfWork unitOfWork,
             IBus bus,
             INotificationHandler<DomainNotification> notifications,
             IAssetCategoryRepository assetCategoryRepository,
-            IOrganizationRepository orgRepository) : base(unitOfWork, bus, notifications)
+            IOrganizationRepository orgRepository,
+            IUser user) : base(unitOfWork, bus, notifications)
         {
             _assetCategoryRepository = assetCategoryRepository;
             _orgRepository = orgRepository;
+            _user = user;
         }
 
         public async Task<bool> Handle(ChangeMeteringUnitCommand request, CancellationToken cancellationToken)
@@ -38,7 +41,7 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetCategory
             await _assetCategoryRepository.ChangeMeteringUnitAsync(request.AssetCategoryId, request.AssetMeteringUnit);
             if (await CommitAsync())
             {
-                await _bus.RaiseEventAsync(new NonAuditEvent(request.Principal, NonAuditEventType.资产分类计量单位变更));
+                await Bus.RaiseEventAsync(new NonAuditEvent(_user, NonAuditEventType.资产分类计量单位变更));
                 return true;
             }
             return false;

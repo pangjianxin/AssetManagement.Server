@@ -16,9 +16,5 @@ namespace Boc.Assets.Domain.Commands.Validations.Organization
         {
             RuleFor(it => it.OrgNam).NotNull().NotEmpty().WithMessage("机构名称不能为空");
         }
-        protected void ValidatePrincipal()
-        {
-            RuleFor(it => it.Principal).NotNull().WithMessage("主体不能为空");
-        }
     }
 }

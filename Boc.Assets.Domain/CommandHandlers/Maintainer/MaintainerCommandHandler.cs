@@ -14,24 +14,19 @@ namespace Boc.Assets.Domain.CommandHandlers.Maintainer
         IRequestHandler<DeleteMaintainerCommand, bool>
     {
         private readonly IMaintainerRepository _maintainerRepository;
-        private readonly IAssetRepository _assetRepository;
-        private readonly IOrganizationRepository _orgRepository;
 
         public MaintainerCommandHandler(
             IUnitOfWork unitOfWork,
             IBus bus,
             INotificationHandler<DomainNotification> notifications,
-            IMaintainerRepository maintainerRepository,
-            IAssetRepository assetRepository,
-            IOrganizationRepository orgRepository) : base(unitOfWork, bus, notifications)
+            IMaintainerRepository maintainerRepository
+         ) : base(unitOfWork, bus, notifications)
         {
             _maintainerRepository = maintainerRepository;
-            _assetRepository = assetRepository;
-            _orgRepository = orgRepository;
         }
         public async Task<bool> Handle(AddMaintainerCommand request, CancellationToken cancellationToken)
         {
-            if (! request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -59,7 +54,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Maintainer
             var entity = await _maintainerRepository.GetByIdAsync(request.MaintainerId);
             if (entity == null)
             {
-                await _bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的主键未能找到相应的服务商实体"));
+                await Bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的主键未能找到相应的服务商实体"));
                 return false;
             }
             _maintainerRepository.Remove(entity);

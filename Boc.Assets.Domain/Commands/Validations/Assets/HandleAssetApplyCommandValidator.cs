@@ -8,7 +8,6 @@ namespace Boc.Assets.Domain.Commands.Validations.Assets
         {
             ValidateEventId();
             ValidateAssetId();
-            ValidatePrincipal();
         }
     }
 }

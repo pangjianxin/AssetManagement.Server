@@ -28,5 +28,13 @@ namespace Boc.Assets.Application.ViewModels.Maintainers
         /// 维修工人座机
         /// </summary>
         public string OfficePhone { get; set; }
+        /// <summary>
+        /// 发布机构
+        /// </summary>
+        public Guid OrganizationId { get; set; }
+        /// <summary>
+        /// 归属二级行
+        /// </summary>
+        public string Org2 { get; set; }
     }
 }

@@ -9,7 +9,6 @@ namespace Boc.Assets.Domain.Commands.Validations.AssetStockTakings
             ValidateTaskName();
             ValidateTaskComment();
             ValidateExpiryDate();
-            ValidatePrincipal();
         }
     }
 }

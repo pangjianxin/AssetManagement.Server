@@ -1,16 +1,15 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.Assets;
-using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
     public class ExchangeAssetCommand : AssetCommand
     {
-        public ExchangeAssetCommand(IUser principal,
+        public ExchangeAssetCommand(
             Guid targetOrgId,
             Guid exchangeOrgId,
             Guid assetId,
-            string message) : base(principal)
+            string message)
         {
             TargetOrgId = targetOrgId;
             ExchangeOrgId = exchangeOrgId;

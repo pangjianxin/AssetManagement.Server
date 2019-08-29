@@ -10,7 +10,6 @@ namespace Boc.Assets.Domain.Commands.Validations.Maintainers
             ValidateCompanyName();
             ValidateMaintainerName();
             ValidateTelephone();
-            ValidatePrincipal();
         }
     }
 }

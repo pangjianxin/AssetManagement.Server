@@ -1,14 +1,9 @@
 ﻿using Boc.Assets.Domain.Core.Commands;
-using Boc.Assets.Domain.Core.SharedKernel;
 
 namespace Boc.Assets.Domain.Commands.Employee
 {
     public abstract class EmployeeCommand : Command
     {
-        public EmployeeCommand(IUser principal) : base(principal)
-        {
-
-        }
         /// <summary>
         /// 员工姓名
         /// </summary>

@@ -13,7 +13,7 @@ namespace Boc.Assets.Application.ServiceInterfaces
     {
 
         Task<PaginatedList<AssetApplyDto>> PaginationAsync(SieveModel model, Expression<Func<AssetApply, bool>> predicate = null);
-        Task RemoveAsync(RemoveAssetApply model);
+        Task RemoveAsync(Remove model);
         Task ApplyAssetAsync(ApplyAsset model);
         Task RevokeAsync(Revoke model);
         Task HandleAsync(HandleAssetApply model);

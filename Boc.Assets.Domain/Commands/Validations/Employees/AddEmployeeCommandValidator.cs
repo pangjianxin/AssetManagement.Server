@@ -9,7 +9,6 @@ namespace Boc.Assets.Domain.Commands.Validations.Employees
             ValidateName();
             ValidateIdentifier();
             ValidateOrg2();
-            ValidatePrincipal();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Boc.Assets.Domain.Commands.Validations.Assets
         public RemoveAssetApplyCommandValidator()
         {
             ValidateEventId();
-            ValidatePrincipal();
+
         }
     }
 }

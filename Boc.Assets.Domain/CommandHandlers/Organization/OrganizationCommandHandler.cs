@@ -16,14 +16,17 @@ namespace Boc.Assets.Domain.CommandHandlers.Organization
         IRequestHandler<ResetOrgPasswordCommand, bool>
     {
         private readonly IOrganizationRepository _orgRepository;
+        private readonly IUser _user;
 
         public OrganizationCommandHandler(
             IUnitOfWork unitOfWork,
             IBus bus,
             INotificationHandler<DomainNotification> notifications,
-            IOrganizationRepository orgRepository) : base(unitOfWork, bus, notifications)
+            IOrganizationRepository orgRepository,
+            IUser user) : base(unitOfWork, bus, notifications)
         {
             _orgRepository = orgRepository;
+            _user = user;
         }
 
 
@@ -38,8 +41,8 @@ namespace Boc.Assets.Domain.CommandHandlers.Organization
             var org = await _orgRepository.ChangeOrgShortNameAsync(command.OrgIdentifier, command.OrgShortNam);
             if (await CommitAsync())
             {
-                await _bus.RaiseEventAsync(
-                    new NonAuditEvent(command.Principal, NonAuditEventType.机构简称变更));
+                await Bus.RaiseEventAsync(
+                    new NonAuditEvent(_user, NonAuditEventType.机构简称变更));
                 return true;
             }
             return false;
@@ -56,8 +59,8 @@ namespace Boc.Assets.Domain.CommandHandlers.Organization
                 await _orgRepository.ChangeOrgPassword(request.OrgIdentifier, request.OldPassword, request.NewPassword);
             if (await CommitAsync())
             {
-                await _bus.RaiseEventAsync(
-                    new NonAuditEvent(request.Principal, NonAuditEventType.机构密码变更));
+                await Bus.RaiseEventAsync(
+                    new NonAuditEvent(_user, NonAuditEventType.机构密码变更));
                 return true;
             }
             return false;
@@ -73,8 +76,8 @@ namespace Boc.Assets.Domain.CommandHandlers.Organization
             var org = await _orgRepository.ResetOrgPassword(request.OrgIdentifier);
             if (await CommitAsync())
             {
-                await _bus.RaiseEventAsync(
-                    new NonAuditEvent(request.Principal, NonAuditEventType.机构密码重置));
+                await Bus.RaiseEventAsync(
+                    new NonAuditEvent(_user, NonAuditEventType.机构密码重置));
                 return false;
             }
             return true;

@@ -1,11 +1,10 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.OrganizationSpace;
-using Boc.Assets.Domain.Core.SharedKernel;
 
 namespace Boc.Assets.Domain.Commands.OrganizationSpace
 {
     public class CreateSpaceCommand : OrgSpaceCommand
     {
-        public CreateSpaceCommand(IUser principal, string spaceName, string spaceDescription) : base(principal)
+        public CreateSpaceCommand(string spaceName, string spaceDescription)
         {
             SpaceName = spaceName;
             SpaceDescription = spaceDescription;

@@ -1,12 +1,10 @@
 ﻿using Boc.Assets.Domain.Core.Commands;
-using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 
 namespace Boc.Assets.Domain.Commands.Maintainers
 {
     public abstract class MaintainerCommand : Command
     {
-        protected MaintainerCommand(IUser principal) : base(principal) { }
         /// <summary>
         /// 主键
         /// </summary>

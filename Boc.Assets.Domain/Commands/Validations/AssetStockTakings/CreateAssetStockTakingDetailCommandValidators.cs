@@ -47,7 +47,6 @@ namespace Boc.Assets.Domain.Commands.Validations.AssetStockTakings
             ValidateAssetStockTakingOrganizationId();
             ValidateResponsibilityIdentity();
             ValidateResponsibilityName();
-            ValidatePrincipal();
         }
     }
 }

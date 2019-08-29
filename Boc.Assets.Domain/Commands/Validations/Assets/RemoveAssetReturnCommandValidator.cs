@@ -2,10 +2,9 @@
 
 namespace Boc.Assets.Domain.Commands.Validations.Assets
 {
-    public class HandleAssetExchangeCommandValidator : AssetCommandValidator<HandleAssetExchangeCommand>
+    public class RemoveAssetReturnCommandValidator : AssetCommandValidator<RemoveAssetReturnCommand>
     {
-
-        public HandleAssetExchangeCommandValidator()
+        public RemoveAssetReturnCommandValidator()
         {
             ValidateEventId();
         }

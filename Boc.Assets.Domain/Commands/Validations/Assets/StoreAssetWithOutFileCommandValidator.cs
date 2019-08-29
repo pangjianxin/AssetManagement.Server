@@ -31,7 +31,6 @@ namespace Boc.Assets.Domain.Commands.Validations.Assets
             ValidateAssetLocation();
             ValidateCreateDateTime();
             ValidateTagNumber();
-            ValidatePrincipal();
         }
     }
 }

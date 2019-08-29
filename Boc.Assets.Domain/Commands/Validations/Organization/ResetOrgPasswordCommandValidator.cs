@@ -8,7 +8,7 @@ namespace Boc.Assets.Domain.Commands.Validations.Organization
         public ResetOrgPasswordCommandValidator()
         {
             ValidateOrgIdentifier();
-            ValidatePrincipal();
+
         }
     }
 }

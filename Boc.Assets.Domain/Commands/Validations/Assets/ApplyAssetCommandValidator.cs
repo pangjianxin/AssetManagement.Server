@@ -15,7 +15,6 @@ namespace Boc.Assets.Domain.Commands.Validations.Assets
             ValidateAssetCategoryId();
             ValidateTargetOrgId();
             ValidateMessage();
-            ValidatePrincipal();
         }
     }
 }

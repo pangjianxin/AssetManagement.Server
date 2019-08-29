@@ -9,7 +9,7 @@ namespace Boc.Assets.Domain.Commands.Validations.OrganizationSpace
             ValidateSpaceId();
             ValidateSpaceName();
             ValidateSpaceDescription();
-            ValidatePrincipal();
+ 
         }
     }
 }

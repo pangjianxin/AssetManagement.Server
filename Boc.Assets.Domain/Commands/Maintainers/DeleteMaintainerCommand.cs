@@ -1,12 +1,11 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.Maintainers;
-using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 
 namespace Boc.Assets.Domain.Commands.Maintainers
 {
     public class DeleteMaintainerCommand : MaintainerCommand
     {
-        public DeleteMaintainerCommand(IUser principal, Guid maintainerId) : base(principal)
+        public DeleteMaintainerCommand(Guid maintainerId)
         {
             MaintainerId = maintainerId;
         }
