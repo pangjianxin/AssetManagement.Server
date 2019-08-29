@@ -1,4 +1,5 @@
-﻿using Boc.Assets.Application.ServiceInterfaces;
+﻿using System.Linq;
+using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.ViewModels.AssetCategory;
 using Boc.Assets.Domain.Core.Notifications;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers
 {
-    [Route("api/assetcategory")]
+    [Route("api/assetCategory")]
     public class AssetCategoryController : ApiController
     {
         private readonly IAssetCategoryService _assetCategoryService;
@@ -30,9 +31,9 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [HttpGet("secondary/pagination")]
         [Permission(Permissions.Controllers.AssetCategory, Permissions.Actions.AssetCategory_Read_Secondary)]
-        public async Task<IActionResult> ReadSecondary(SieveModel model)
+        public async Task<IActionResult> SecondaryPagination(SieveModel model)
         {
-            var result = await _assetCategoryService.PaginationAsync(model);
+            var result = await _assetCategoryService.PaginationAsync(model,it=>it.CategoryOrgRegistrations.Select(that=>that.OrganizationId).Contains(_user.OrgId));
             XPaginationHeader(result);
             return AppResponse(result);
         }
@@ -56,7 +57,7 @@ namespace Boc.Assets.Web.Controllers
         /// 当前机构权限
         /// </summary>
         /// <returns></returns>
-        [HttpGet("current/meteringunits")]
+        [HttpGet("current/units")]
         [Permission(Permissions.Controllers.AssetCategory, Permissions.Actions.AssetCategory_Read_Current)]
         public IActionResult GetMeteringUnits()
         {
@@ -69,7 +70,7 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPut("secondary/changemeteringunit")]
+        [HttpPut("secondary/changeMeteringUnit")]
         [Permission(Permissions.Controllers.AssetCategory, Permissions.Actions.AssetCategory_Modify_Secondary)]
         public async Task<IActionResult> ChangeMeteringUnit([FromBody]ChangeMeteringUnit model)
         {

@@ -371,6 +371,27 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                     b.ToTable("AssetReturns");
                 });
 
+            modelBuilder.Entity("Boc.Assets.Domain.Models.Assets.CategoryOrgRegistration", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("AssetCategoryId");
+
+                    b.Property<string>("Org2")
+                        .HasMaxLength(20);
+
+                    b.Property<Guid>("OrganizationId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssetCategoryId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("CategoryOrgRegistrations");
+                });
+
             modelBuilder.Entity("Boc.Assets.Domain.Models.Assets.Maintainer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -439,8 +460,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<Guid?>("ManagementLineId");
 
                     b.Property<string>("Org1")
                         .IsRequired()
@@ -685,6 +704,19 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                                 .HasForeignKey("Boc.Assets.Domain.Models.Assets.OrganizationInfo", "AssetDeployId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
+                });
+
+            modelBuilder.Entity("Boc.Assets.Domain.Models.Assets.CategoryOrgRegistration", b =>
+                {
+                    b.HasOne("Boc.Assets.Domain.Models.Assets.AssetCategory", "AssetCategory")
+                        .WithMany("CategoryOrgRegistrations")
+                        .HasForeignKey("AssetCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Boc.Assets.Domain.Models.Organizations.Organization", "Organization")
+                        .WithMany("CategoryOrgRegistrations")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Boc.Assets.Domain.Models.Assets.Maintainer", b =>

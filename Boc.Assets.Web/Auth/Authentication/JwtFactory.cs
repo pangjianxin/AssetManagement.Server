@@ -33,8 +33,7 @@ namespace Boc.Assets.Web.Auth.Authentication
                 new Claim("roleId",orgDto.RoleId.ToString()),
                 new Claim("orgName",orgDto.OrgNam),
                 new Claim("orgIdentifier",orgDto.OrgIdentifier),
-                new Claim("org2",orgDto.Org2),
-                new Claim("managementLineId",orgDto.ManagementLineId.ToString()),
+                new Claim("org2",orgDto.Org2)
             };
             var securityToken = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,

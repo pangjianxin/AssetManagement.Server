@@ -7,6 +7,7 @@ using Boc.Assets.Domain.Models;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Repositories;
+using Boc.Assets.Domain.Services;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IAssetReturnRepository _assetReturnRepository;
         private readonly IAssetDeployRepository _assetDeployRepository;
+        private readonly IAssetDomainService _assetDomainService;
 
         public AssetReturnCommandHandler(
             IUnitOfWork unitOfWork,
@@ -30,12 +32,14 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             IAssetRepository assetRepository,
             IOrganizationRepository organizationRepository,
             IAssetReturnRepository assetReturnRepository,
-            IAssetDeployRepository assetDeployRepository) : base(unitOfWork, bus, notifications)
+            IAssetDeployRepository assetDeployRepository,
+            IAssetDomainService assetDomainService) : base(unitOfWork, bus, notifications)
         {
             _assetRepository = assetRepository;
             _organizationRepository = organizationRepository;
             _assetReturnRepository = assetReturnRepository;
             _assetDeployRepository = assetDeployRepository;
+            _assetDomainService = assetDomainService;
         }
         public async Task<bool> Handle(ReturnAssetCommand request, CancellationToken cancellationToken)
         {
@@ -96,7 +100,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 await _bus.RaiseEventAsync(new DomainNotification("状态错误", "传入的资产状态不为在途，不能接收该资产，请核对"));
                 return false;
             }
-            var deploy = asset.HandleAssetReturn(assetReturn);
+            var deploy = _assetDomainService.HandleAssetReturn(asset, assetReturn);
             _assetRepository.Update(asset);
             await _assetDeployRepository.AddAsync(deploy);
             if (await CommitAsync())
@@ -118,7 +122,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             {
                 await _bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的事件参数有误，没有找到对应的事件，请联系管理员"));
                 return false;
-            }       
+            }
             var asset = await _assetRepository.GetByIdAsync(assetReturn.AssetId);
             asset.ModifyAssetStatus(AssetStatus.在用);
             _assetRepository.Update(asset);

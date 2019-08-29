@@ -7,6 +7,7 @@ using Boc.Assets.Domain.Models;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Repositories;
+using Boc.Assets.Domain.Services;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,8 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
         private readonly IAssetRepository _assetRepository;
         private readonly IAssetApplyRepository _assetApplyRepository;
         private readonly IAssetDeployRepository _assetDeployRepository;
+        private readonly IAssetDomainService _assetDomainService;
+
 
         public AssetApplyCommandHandler(
             IUnitOfWork unitOfWork,
@@ -33,13 +36,15 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             IOrganizationRepository organizationRepository,
             IAssetRepository assetRepository,
             IAssetApplyRepository assetApplyRepository,
-            IAssetDeployRepository assetDeployRepository) : base(unitOfWork, bus, notifications)
+            IAssetDeployRepository assetDeployRepository,
+            IAssetDomainService assetDomainService) : base(unitOfWork, bus, notifications)
         {
             _assetCategoryRepository = assetCategoryRepository;
             _organizationRepository = organizationRepository;
             _assetRepository = assetRepository;
             _assetApplyRepository = assetApplyRepository;
             _assetDeployRepository = assetDeployRepository;
+            _assetDomainService = assetDomainService;
         }
         public async Task<bool> Handle(ApplyAssetCommand request, CancellationToken cancellationToken)
         {
@@ -109,7 +114,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
             //资产申请返回一个deploy对象
-            var deploy = asset.HandleAssetApplying(assetApply);
+            var deploy = _assetDomainService.HandleAssetApplying(asset, assetApply);
             //资产申请后该资产状态变为在用
             _assetRepository.Update(asset);
             //将资产申请返回的deploy对象持久化到数据库

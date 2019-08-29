@@ -13,12 +13,14 @@ using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.Repositories;
 using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Repositories;
+using Boc.Assets.Domain.Services;
 using Boc.Assets.Domain.SignalR;
 using Boc.Assets.Infrastructure.Bus;
 using Boc.Assets.Infrastructure.DataBase;
 using Boc.Assets.Infrastructure.Identity;
 using Boc.Assets.Infrastructure.Repository;
 using Boc.Assets.Infrastructure.Repository.EventSourcing;
+using Boc.Assets.Infrastructure.Services;
 using Boc.Assets.Infrastructure.UnitOfWork;
 using Boc.Assets.Web.Auth.Authentication;
 using Boc.Assets.Web.Auth.Authorization;
@@ -104,6 +106,8 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<ISieveCustomFilterMethods, EntitiesSieveFilterMethods>();
             services.AddScoped<ISieveCustomSortMethods, EntitiesSieveSortMethods>();
             services.AddScoped<ISieveProcessor, PangSieveProcessor>();
+            //domain service
+            services.AddScoped<IAssetDomainService, AssetDomainService>();
             //Mediator
             services.AddMediatR(typeof(OrganizationCommandHandler));
             //domain event handlers
@@ -133,6 +137,7 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetApplyRepository, AssetApplyRepository>();
             services.AddScoped<IAssetReturnRepository, AssetReturnRepository>();
             services.AddScoped<IAssetExchangeRepository, AssetExchangeRepository>();
+            services.AddScoped<ICategoryOrgRegistrationRepository, CategoryOrgRegistrationRepository>();
 
             //application services
             services.AddScoped<IOrganizationService, OrganizationService>();
@@ -149,6 +154,7 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetReturnService, AssetReturnService>();
             services.AddScoped<IAssetExchangeService, AssetExchangeService>();
             services.AddScoped<IOrganizationRoleService, OrganizationRoleService>();
+            services.AddScoped<ICategoryOrgRegistrationService, CategoryOrgRegistrationService>();
 
         }
         private static void AddJwtAuthentication(IServiceCollection services, IConfiguration config)
@@ -191,7 +197,7 @@ namespace Boc.Assets.Web.Extensions
                         ClockSkew = TimeSpan.FromMinutes(5),
 
                     };
-                    //signalr需要这个配置
+                    //SignalR需要这个配置
                     option.Events = new JwtBearerEvents()
                     {
                         OnMessageReceived = context =>

@@ -14,12 +14,12 @@ namespace Boc.Assets.Domain.Models.Organizations
         private ICollection<Asset> _assetsBelongs;
         private ICollection<Asset> _assetsStores;
         private ICollection<AssetStockTakingOrganization> _assetStockTakingOrganizations;
+        private ICollection<CategoryOrgRegistration> _categoryOrgRegistrations;
         private OrganizationRole _role;
         public Organization(ILazyLoader lazyLoader = null)
         {
             _lazyLoader = lazyLoader;
         }
-        public Guid? ManagementLineId { get; set; }
         public Guid RoleId { get; set; }
         public string OrgIdentifier { get; set; }
         public string OrgNam { get; set; }
@@ -75,8 +75,13 @@ namespace Boc.Assets.Domain.Models.Organizations
             set => _assetStockTakingOrganizations = value;
         }
         /// <summary>
-        /// 机构发布的维修信息
+        /// 机构管理的资产分类的注册表
         /// </summary>
+        public ICollection<CategoryOrgRegistration> CategoryOrgRegistrations
+        {
+            get => _lazyLoader.Load(this, ref _categoryOrgRegistrations);
+            set => _categoryOrgRegistrations = value;
+        }
         #region methods
 
         public void ChangeOrgShortName(string orgShortName)

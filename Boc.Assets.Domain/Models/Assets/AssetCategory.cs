@@ -13,6 +13,7 @@ namespace Boc.Assets.Domain.Models.Assets
         private readonly ILazyLoader _lazyLoader;
         private ICollection<Asset> _assets;
         private ICollection<Maintainer> _maintainers;
+        private ICollection<CategoryOrgRegistration> _categoryOrgRegistrations;
         public AssetCategory(ILazyLoader lazyLoader)
         {
             _lazyLoader = lazyLoader;
@@ -27,6 +28,11 @@ namespace Boc.Assets.Domain.Models.Assets
         {
             get => _lazyLoader.Load(this, ref _maintainers);
             set => _maintainers = value;
+        }
+        public ICollection<CategoryOrgRegistration> CategoryOrgRegistrations
+        {
+            get => _lazyLoader.Load(this, ref _categoryOrgRegistrations);
+            set => _categoryOrgRegistrations = value;
         }
         public string AssetFirstLevelCategory { get; set; }
         public string AssetSecondLevelCategory { get; set; }

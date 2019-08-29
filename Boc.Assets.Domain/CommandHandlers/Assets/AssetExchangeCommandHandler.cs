@@ -6,6 +6,7 @@ using Boc.Assets.Domain.Events.Assets;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Repositories;
+using Boc.Assets.Domain.Services;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
         private readonly IAssetRepository _assetRepository;
         private readonly IAssetExchangeRepository _assetExchangeRepository;
         private readonly IAssetDeployRepository _assetDeployRepository;
+        private readonly IAssetDomainService _assetDomainService;
 
         public AssetExchangeCommandHandler(
             IUnitOfWork unitOfWork,
@@ -29,12 +31,14 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             IOrganizationRepository organizationRepository,
             IAssetRepository assetRepository,
             IAssetExchangeRepository assetExchangeRepository,
-            IAssetDeployRepository assetDeployRepository) : base(unitOfWork, bus, notifications)
+            IAssetDeployRepository assetDeployRepository,
+            IAssetDomainService assetDomainService) : base(unitOfWork, bus, notifications)
         {
             _organizationRepository = organizationRepository;
             _assetRepository = assetRepository;
             _assetExchangeRepository = assetExchangeRepository;
             _assetDeployRepository = assetDeployRepository;
+            _assetDomainService = assetDomainService;
         }
         public async Task<bool> Handle(ExchangeAssetCommand request, CancellationToken cancellationToken)
         {
@@ -110,7 +114,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             }
             //如果事件和资产都存在，那么继续
             //①处理资产调配并返回调配记录
-            var deploy = asset.HandleAssetExchanging(assetExchange);
+            var deploy = _assetDomainService.HandleAssetExchanging(asset, assetExchange);
             //②持久化这个记录
             _assetRepository.Update(asset);
             await _assetDeployRepository.AddAsync(deploy);
