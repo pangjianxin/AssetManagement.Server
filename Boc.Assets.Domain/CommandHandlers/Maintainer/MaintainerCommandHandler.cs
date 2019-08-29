@@ -31,7 +31,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Maintainer
         }
         public async Task<bool> Handle(AddMaintainerCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (! request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;

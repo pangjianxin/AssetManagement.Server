@@ -1,6 +1,5 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Employees;
-using System.Threading.Tasks;
+﻿using Boc.Assets.Domain.Commands.Validations.Employees;
+using Boc.Assets.Domain.Core.SharedKernel;
 
 namespace Boc.Assets.Domain.Commands.Employee
 {
@@ -15,9 +14,9 @@ namespace Boc.Assets.Domain.Commands.Employee
             Telephone = telephone;
             OfficePhone = officePhone;
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new AddEmployeeCommandValidator().ValidateAsync(this);
+            ValidationResult = new AddEmployeeCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

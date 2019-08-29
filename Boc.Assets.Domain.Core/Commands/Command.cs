@@ -2,7 +2,6 @@
 using FluentValidation.Results;
 using MediatR;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Core.Commands
 {
@@ -18,6 +17,6 @@ namespace Boc.Assets.Domain.Core.Commands
             Timestamp = DateTime.Now;
         }
 
-        public abstract Task<bool> IsValid();
+        public abstract bool IsValid();
     }
 }

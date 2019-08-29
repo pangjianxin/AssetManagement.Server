@@ -1,7 +1,6 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Maintainers;
+﻿using Boc.Assets.Domain.Commands.Validations.Maintainers;
+using Boc.Assets.Domain.Core.SharedKernel;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Commands.Maintainers
 {
@@ -12,9 +11,9 @@ namespace Boc.Assets.Domain.Commands.Maintainers
             MaintainerId = maintainerId;
         }
 
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new DeleteMaintainerCommandValidator().ValidateAsync(this);
+            ValidationResult = new DeleteMaintainerCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

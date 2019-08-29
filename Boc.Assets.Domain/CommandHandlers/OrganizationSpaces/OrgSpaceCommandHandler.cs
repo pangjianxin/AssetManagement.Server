@@ -26,7 +26,7 @@ namespace Boc.Assets.Domain.CommandHandlers.OrganizationSpaces
 
         public async Task<bool> Handle(CreateSpaceCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (! request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -47,7 +47,7 @@ namespace Boc.Assets.Domain.CommandHandlers.OrganizationSpaces
 
         public async Task<bool> Handle(ModifySpaceInfoCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (! request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;

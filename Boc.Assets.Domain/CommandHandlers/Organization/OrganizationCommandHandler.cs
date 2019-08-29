@@ -30,7 +30,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Organization
         public async Task<bool> Handle(ChangeOrgShortNameCommand command, CancellationToken cancellationToken)
         {
             //验证参数是否通过验证，如果没有，则写入DomainNotification中。
-            if (!await command.IsValid())
+            if (!command.IsValid())
             {
                 await NotifyValidationErrors(command);
                 return false;
@@ -47,7 +47,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Organization
 
         public async Task<bool> Handle(ChangeOrgPasswordCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -65,7 +65,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Organization
 
         public async Task<bool> Handle(ResetOrgPasswordCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;

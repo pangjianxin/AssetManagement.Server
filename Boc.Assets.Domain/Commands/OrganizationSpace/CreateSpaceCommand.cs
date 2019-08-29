@@ -1,6 +1,5 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.OrganizationSpace;
-using System.Threading.Tasks;
+﻿using Boc.Assets.Domain.Commands.Validations.OrganizationSpace;
+using Boc.Assets.Domain.Core.SharedKernel;
 
 namespace Boc.Assets.Domain.Commands.OrganizationSpace
 {
@@ -11,9 +10,9 @@ namespace Boc.Assets.Domain.Commands.OrganizationSpace
             SpaceName = spaceName;
             SpaceDescription = spaceDescription;
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new CreateSpaceCommandValidator().ValidateAsync(this);
+            ValidationResult = new CreateSpaceCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

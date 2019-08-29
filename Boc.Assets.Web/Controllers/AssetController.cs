@@ -55,13 +55,13 @@ namespace Boc.Assets.Web.Controllers
         /// 当前机构按条线的汇总数量
         /// </summary>
         /// <returns></returns>
-        //[HttpGet("current/categories/managerOrg")]
-        //[Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Current)]
-        //public async Task<IActionResult> CountByManagerOrgCurrent()
-        //{
-        //    var categories = await _assetService.CategoriesByManagementLineAsync(it => it.OrganizationStoredId == _user.OrgId);
-        //    return AppResponse(categories);
-        //}
+        [HttpGet("current/categories/managerOrg")]
+        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Current)]
+        public async Task<IActionResult> CountByManagerOrgCurrent()
+        {
+            var categories = await _assetService.CategoriesByManagerOrg(it => it.StoredOrgIdentifier == _user.OrgIdentifier);
+            return AppResponse(categories);
+        }
         /// <summary>
         /// 修改资产位置
         /// 当前机构权限

@@ -1,8 +1,7 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.AssetStockTakings;
+﻿using Boc.Assets.Domain.Commands.Validations.AssetStockTakings;
+using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Commands.AssetStockTaking
 {
@@ -23,9 +22,9 @@ namespace Boc.Assets.Domain.Commands.AssetStockTaking
             ExcludedOrganizations = excludedOrganizations;
         }
         public IEnumerable<Guid> ExcludedOrganizations { get; set; }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new CreateAssetStockTakingCommandValidator().ValidateAsync(this);
+            ValidationResult = new CreateAssetStockTakingCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

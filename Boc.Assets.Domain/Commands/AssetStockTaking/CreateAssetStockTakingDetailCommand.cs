@@ -1,8 +1,7 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
+﻿using Boc.Assets.Domain.Commands.Validations.AssetStockTakings;
+using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.AssetStockTakings;
-using Boc.Assets.Domain.Validations.AssetStockTakings;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Commands.AssetStockTaking
 {
@@ -38,9 +37,9 @@ namespace Boc.Assets.Domain.Commands.AssetStockTaking
         public string AssetStockTakingLocation { get; set; }
         public StockTakingStatus StockTakingStatus { get; set; }
         public string Message { get; set; }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new CreateAssetStockTakingDetailCommandValidators().ValidateAsync(this);
+            ValidationResult = new CreateAssetStockTakingDetailCommandValidators().Validate(this);
             return ValidationResult.IsValid;
         }
     }

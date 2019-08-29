@@ -28,8 +28,7 @@ namespace Boc.Assets.Application.AutoMapper
             //资产和DTO之间的映射
             CreateMap<Asset, AssetDto>()
                 .ForMember(it => it.AssetId, config => config.MapFrom(it => it.Id))
-                .ForMember(it => it.AssetCategoryDto, config => config.MapFrom(it => it.AssetCategory))
-                .ForMember(it => it.OrgBelonged, config => config.MapFrom(it => it.OrganizationBelonged));
+                .ForMember(it => it.AssetCategoryDto, config => config.MapFrom(it => it.AssetCategory));
             //机构空间和DTO之间的映射
             CreateMap<OrganizationSpace, OrgSpaceDto>()
                 .ForMember(it => it.SpaceId, config => config.MapFrom(it => it.Id));
@@ -39,15 +38,18 @@ namespace Boc.Assets.Application.AutoMapper
             //资产申请事件和DTO之间的映射
             CreateMap<AssetApply, AssetApplyDto>()
                 .ForMember(it => it.Status, config => config.MapFrom(it => it.Status.ToString()))
-                .ForMember(it => it.EventId, config => config.MapFrom(it => it.Id));
+                .ForMember(it => it.EventId, config => config.MapFrom(it => it.Id))
+                .ForMember(it => it.DateTimeFromNow, config => config.MapFrom(it => it.DateTimeFromNow()));
             //资产交回事件和DTO之间的映射
             CreateMap<AssetReturn, AssetReturnDto>()
                 .ForMember(it => it.Status, config => config.MapFrom(it => it.Status.ToString()))
-                .ForMember(it => it.EventId, config => config.MapFrom(it => it.Id));
+                .ForMember(it => it.EventId, config => config.MapFrom(it => it.Id))
+                .ForMember(it => it.DateTimeFromNow, config => config.MapFrom(it => it.DateTimeFromNow()));
             //资产机构间调换和DTO之间的映射
             CreateMap<AssetExchange, AssetExchangeDto>()
                 .ForMember(it => it.Status, config => config.MapFrom(it => it.Status.ToString()))
-                .ForMember(it => it.EventId, config => config.MapFrom(it => it.Id));
+                .ForMember(it => it.EventId, config => config.MapFrom(it => it.Id))
+                .ForMember(it => it.DateTimeFromNow, config => config.MapFrom(it => it.DateTimeFromNow()));
             //资产调配记录和DTO之间的映射
             CreateMap<AssetDeploy, AssetDeployDto>()
                 .ForMember(it => it.AssetDeployCategory,

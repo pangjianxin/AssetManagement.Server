@@ -1,7 +1,6 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Maintainers;
+﻿using Boc.Assets.Domain.Commands.Validations.Maintainers;
+using Boc.Assets.Domain.Core.SharedKernel;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Commands.Maintainers
 {
@@ -23,9 +22,9 @@ namespace Boc.Assets.Domain.Commands.Maintainers
             OrganizationId = principal.OrgId;
             Org2 = principal.Org2;
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new AddMaintainerCommandValidator().ValidateAsync(this);
+            ValidationResult = new AddMaintainerCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

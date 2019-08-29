@@ -1,8 +1,7 @@
 ﻿using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Assets;
-using Boc.Assets.Domain.Validations.AssetCategory;
 using System;
-using System.Threading.Tasks;
+using Boc.Assets.Domain.Commands.Validations.AssetCategory;
 
 namespace Boc.Assets.Domain.Commands.AssetCategory
 {
@@ -14,9 +13,9 @@ namespace Boc.Assets.Domain.Commands.AssetCategory
             AssetMeteringUnit = meteringUnit;
         }
 
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new ChangeMeteringUnitValidator().ValidateAsync(this);
+            ValidationResult = new ChangeMeteringUnitValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

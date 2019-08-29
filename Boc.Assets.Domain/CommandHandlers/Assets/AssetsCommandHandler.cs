@@ -35,7 +35,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
 
         public async Task<bool> Handle(ModifyAssetLocationCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -51,7 +51,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
 
         public async Task<bool> Handle(StoreAssetWithOutFileCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;

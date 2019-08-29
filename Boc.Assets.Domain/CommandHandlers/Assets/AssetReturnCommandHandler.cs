@@ -43,7 +43,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
         }
         public async Task<bool> Handle(ReturnAssetCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -78,7 +78,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
         }
         public async Task<bool> Handle(HandleAssetReturnCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -112,7 +112,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
         }
         public async Task<bool> Handle(RevokeAssetReturnCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;

@@ -2,6 +2,7 @@
 using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Organizations;
 using System;
+using System.Text;
 
 namespace Boc.Assets.Domain.Models
 {
@@ -42,6 +43,34 @@ namespace Boc.Assets.Domain.Models
         {
             Status = AuditEntityStatus.已撤销;
             Message = message;
+        }
+
+        public virtual string DateTimeFromNow()
+        {
+            DateTime current = DateTime.Now;
+            var span = current.Subtract(TimeStamp);
+            var timeStrBuilder = new StringBuilder();
+            if (span.Days > 0)
+            {
+                timeStrBuilder.Append($"{span.Days}天");
+            }
+
+            if (span.Hours > 0)
+            {
+                timeStrBuilder.Append($"{span.Hours}小时");
+            }
+
+            if (span.Minutes > 0)
+            {
+                timeStrBuilder.Append($"{span.Minutes}分钟");
+            }
+
+            if (span.Seconds > 0)
+            {
+                timeStrBuilder.Append($"{span.Seconds}秒");
+            }
+
+            return timeStrBuilder.ToString();
         }
         #endregion
     }

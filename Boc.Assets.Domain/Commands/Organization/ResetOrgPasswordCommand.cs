@@ -1,6 +1,5 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Organization;
-using System.Threading.Tasks;
+﻿using Boc.Assets.Domain.Commands.Validations.Organization;
+using Boc.Assets.Domain.Core.SharedKernel;
 
 namespace Boc.Assets.Domain.Commands.Organization
 {
@@ -10,9 +9,9 @@ namespace Boc.Assets.Domain.Commands.Organization
         {
             OrgIdentifier = orgIdentifier;
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new ResetOrgPasswordCommandValidator().ValidateAsync(this);
+            ValidationResult = new ResetOrgPasswordCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

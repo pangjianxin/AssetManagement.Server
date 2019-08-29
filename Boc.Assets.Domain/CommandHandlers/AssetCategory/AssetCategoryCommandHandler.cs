@@ -29,7 +29,7 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetCategory
 
         public async Task<bool> Handle(ChangeMeteringUnitCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;

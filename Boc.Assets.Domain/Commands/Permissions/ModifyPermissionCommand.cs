@@ -1,8 +1,7 @@
-﻿using Boc.Assets.Domain.Core.Commands;
+﻿using Boc.Assets.Domain.Commands.Validations.Permissions;
+using Boc.Assets.Domain.Core.Commands;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Permissions;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Commands.Permissions
 {
@@ -13,9 +12,9 @@ namespace Boc.Assets.Domain.Commands.Permissions
         public ModifyPermissionCommand(IUser principal) : base(principal)
         {
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new ModifyPermissionCommandValidator().ValidateAsync(this);
+            ValidationResult = new ModifyPermissionCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

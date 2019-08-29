@@ -1,7 +1,6 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Assets;
+﻿using Boc.Assets.Domain.Commands.Validations.Assets;
+using Boc.Assets.Domain.Core.SharedKernel;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
@@ -13,9 +12,9 @@ namespace Boc.Assets.Domain.Commands.Assets
             EventId = eventId;
         }
 
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new HandleAssetReturnCommandValidator().ValidateAsync(this);
+            ValidationResult = new HandleAssetReturnCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

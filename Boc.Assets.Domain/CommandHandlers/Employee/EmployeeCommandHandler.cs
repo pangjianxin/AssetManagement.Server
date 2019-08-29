@@ -27,7 +27,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Employee
 
         public async Task<bool> Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (! request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;

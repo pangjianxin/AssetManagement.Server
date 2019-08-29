@@ -44,6 +44,16 @@ namespace Boc.Assets.Application.ServiceImplements
             _sieveOptions = options.Value;
         }
         #region update
+
+        public async Task<IEnumerable<dynamic>> CategoriesByManagerOrg(Expression<Func<Asset, bool>> predicate)
+        {
+            var result = from asset in _assetRepository.GetAll(predicate)
+                         group asset by asset.OrganizationBelonged.OrgIdentifier
+                into final
+                         select new { name = final.Key, value = final.Count() };
+            return await result.ToListAsync();
+        }
+
         public async Task ModifyAssetLocationAsync(ModifyAssetLocation model)
         {
             var command = _mapper.Map<ModifyAssetLocationCommand>(model);

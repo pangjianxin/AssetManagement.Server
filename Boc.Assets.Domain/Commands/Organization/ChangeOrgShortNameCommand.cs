@@ -1,6 +1,5 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Organization;
-using System.Threading.Tasks;
+﻿using Boc.Assets.Domain.Commands.Validations.Organization;
+using Boc.Assets.Domain.Core.SharedKernel;
 
 namespace Boc.Assets.Domain.Commands.Organization
 {
@@ -12,9 +11,9 @@ namespace Boc.Assets.Domain.Commands.Organization
             OrgIdentifier = orgIdentifier;
             OrgShortNam = orgShortNam;
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new ChangeOrgShortNameCommandValidator().ValidateAsync(this);
+            ValidationResult = new ChangeOrgShortNameCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

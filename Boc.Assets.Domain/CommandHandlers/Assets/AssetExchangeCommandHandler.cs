@@ -42,7 +42,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
         }
         public async Task<bool> Handle(ExchangeAssetCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -93,7 +93,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
 
         public async Task<bool> Handle(HandleAssetExchangeCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -128,7 +128,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
         }
         public async Task<bool> Handle(RevokeAssetExchangeCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;

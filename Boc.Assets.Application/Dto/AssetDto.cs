@@ -46,9 +46,9 @@ namespace Boc.Assets.Application.Dto
         /// </summary>
         public AssetCategoryDto AssetCategoryDto { get; set; }
         /// <summary>
-        /// 资产责任中心信息
+        /// 资产所属机构外键
         /// </summary>
-        public OrgDto OrgBelonged { get; set; }
+        public Guid OrganizationBelongedId { get; set; }
         /// <summary>
         /// 资产存放机构名称
         /// </summary>

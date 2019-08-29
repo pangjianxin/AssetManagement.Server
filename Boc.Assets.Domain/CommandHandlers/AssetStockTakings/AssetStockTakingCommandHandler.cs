@@ -38,7 +38,7 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetStockTakings
 
         public async Task<bool> Handle(CreateAssetStockTakingCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -82,7 +82,7 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetStockTakings
 
         public async Task<bool> Handle(CreateAssetStockTakingDetailCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
