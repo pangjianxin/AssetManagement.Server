@@ -5,11 +5,16 @@ namespace Boc.Assets.Domain.Events.Assets
 {
     public class AssetExchangeHandledEvent : Event
     {
-        public AssetExchangeHandledEvent(AssetExchange assetExchange)
+        public AssetExchange AssetExchange { get; }
+        public string Message { get; }
+        public AssetExchangeHandledEvent(AssetExchange assetExchange,string message)
         {
             AssetExchange = assetExchange;
+            Message = message;
+        }       
+        public override string ToString()
+        {
+            return "资产机构简调换已处理";
         }
-
-        public AssetExchange AssetExchange { get; }
     }
 }

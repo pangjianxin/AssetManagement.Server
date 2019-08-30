@@ -78,7 +78,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             await _assetApplyRepository.AddAsync(assetApply);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new AssetApplyEvent(assetApply));
+                await Bus.RaiseEventAsync(new AssetApplyNotifiedEvent(assetApply, request.Message));
                 return true;
             }
             return false;
@@ -126,7 +126,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             {
                 //所有步骤处理完成后该资产申请事件的状态要变更为完成，该项操作由一个资产申请事件完成状态/事件来进行处理
                 //因为要考虑后期发送signalR什么的操作，所以这里要做一下业务解耦
-                await Bus.RaiseEventAsync(new AssetApplyHandledEvent(assetApply));
+                await Bus.RaiseEventAsync(new AssetApplyHandledEvent(assetApply, request.Message));
                 return true;
             }
             return false;
@@ -165,6 +165,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             assetApply = _assetApplyRepository.Remove(assetApply);
             if (await CommitAsync())
             {
+                await Bus.RaiseEventAsync(new AssetApplyRemovedEvent(assetApply, request.Message));
                 return true;
             }
             return false;

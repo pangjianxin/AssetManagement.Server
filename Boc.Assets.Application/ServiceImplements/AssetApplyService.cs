@@ -59,7 +59,7 @@ namespace Boc.Assets.Application.ServiceImplements
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task RemoveAsync(Remove model)
+        public async Task RemoveAsync(RemoveAssetApply model)
         {
             var command = _mapper.Map<RemoveAssetApplyCommand>(model);
             await _bus.SendCommandAsync(command);

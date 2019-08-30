@@ -2,7 +2,7 @@
 
 namespace Boc.Assets.Application.FluentValidations.Assets
 {
-    public class RemoveAssetApplyValidator : AssetValidator<Remove>
+    public class RemoveAssetApplyValidator : AssetValidator<RemoveAssetApply>
     {
         public RemoveAssetApplyValidator()
         {

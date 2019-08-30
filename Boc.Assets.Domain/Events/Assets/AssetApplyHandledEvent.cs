@@ -8,10 +8,16 @@ namespace Boc.Assets.Domain.Events.Assets
     /// </summary>
     public class AssetApplyHandledEvent : Event
     {
-        public AssetApplyHandledEvent(AssetApply assetApply)
+        public AssetApply AssetApply { get; }
+        public string Message { get; }
+        public AssetApplyHandledEvent(AssetApply assetApply, string message)
         {
             AssetApply = assetApply;
+            Message = message;
         }
-        public AssetApply AssetApply { get; }
+        public override string ToString()
+        {
+            return "资产申请已处理";
+        }
     }
 }

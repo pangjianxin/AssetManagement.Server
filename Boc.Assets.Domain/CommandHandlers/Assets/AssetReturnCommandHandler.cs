@@ -75,7 +75,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             await _assetReturnRepository.AddAsync(assetReturn);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new AssetReturnEvent(assetReturn));
+                await Bus.RaiseEventAsync(new AssetReturnNotifiedEvent(assetReturn, request.Message));
                 return true;
             }
             return false;
@@ -109,7 +109,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             await _assetDeployRepository.AddAsync(deploy);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new AssetReturnHandledEvent(assetReturn));
+                await Bus.RaiseEventAsync(new AssetReturnHandledEvent(assetReturn, request.Message));
                 return true;
             }
             return false;

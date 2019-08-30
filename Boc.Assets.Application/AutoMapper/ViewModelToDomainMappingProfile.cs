@@ -77,11 +77,12 @@ namespace Boc.Assets.Application.AutoMapper
                     c.MaintainerName, c.Telephone, c.OfficePhone));
             CreateMap<DeleteMaintainer, DeleteMaintainerCommand>()
                 .ConstructUsing(c => new DeleteMaintainerCommand(c.MaintainerId));
-            CreateMap<Remove, RemoveAssetApplyCommand>()
+            CreateMap<RemoveAssetApply, RemoveAssetApplyCommand>()
                 .ConstructUsing(c => new RemoveAssetApplyCommand(c.EventId));
-            CreateMap<Remove, RemoveAssetReturnCommand>()
+            CreateMap<RemoveAssetReturn, RemoveAssetReturnCommand>()
                 .ConstructUsing(c => new RemoveAssetReturnCommand(c.EventId));
-
+            CreateMap<RemoveAssetExchange, RemoveAssetExchangeCommand>()
+                .ConstructUsing(c => new RemoveAssetExchangeCommand(c.EventId));
             CreateMap<ModifyPermission, ModifyPermissionCommand>();
 
 

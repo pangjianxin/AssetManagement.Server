@@ -16,7 +16,8 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
     public class AssetExchangeCommandHandler : CommandHandler,
         IRequestHandler<ExchangeAssetCommand, bool>,
         IRequestHandler<HandleAssetExchangeCommand, bool>,
-        IRequestHandler<RevokeAssetExchangeCommand, bool>
+        IRequestHandler<RevokeAssetExchangeCommand, bool>,
+        IRequestHandler<RemoveAssetExchangeCommand, bool>
     {
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IAssetRepository _assetRepository;
@@ -89,7 +90,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             if (await CommitAsync())
             {
                 //⑤生成一个资产申请调换的事件
-                await Bus.RaiseEventAsync(new AssetExchangeEvent(assetExchange));
+                await Bus.RaiseEventAsync(new AssetExchangeNotifiedEvent(assetExchange, request.Message));
             }
             return true;
         }
@@ -124,7 +125,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             if (await CommitAsync())
             {
                 //③发送一个资产调配已处理的事件
-                await Bus.RaiseEventAsync(new AssetExchangeHandledEvent(assetExchange));
+                await Bus.RaiseEventAsync(new AssetExchangeHandledEvent(assetExchange, request.Message));
                 return true;
             }
             return false;
@@ -152,6 +153,39 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             }
             //如果上述满足，那么将该条资产的状态复原
             asset.ModifyAssetStatus(AssetStatus.在用);
+            if (await CommitAsync())
+            {
+                //然后发送资产调配事件撤销的事件以供后续处理
+                await Bus.RaiseEventAsync(new AssetExchangeRevokedEvent(assetExchange, request.Message));
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> Handle(RemoveAssetExchangeCommand request, CancellationToken cancellationToken)
+        {
+            if (!request.IsValid())
+            {
+                await NotifyValidationErrors(request);
+                return false;
+            }
+            //查看事件是否存在
+            var assetExchange = await _assetExchangeRepository.GetByIdAsync(request.EventId);
+            if (assetExchange == null)
+            {
+                await Bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的事件参数有误，没有找到对应的事件，请联系管理员"));
+                return false;
+            }
+            //查看资产是否存在
+            var asset = await _assetRepository.GetByIdAsync(assetExchange.AssetId);
+            if (asset == null)
+            {
+                await Bus.RaiseEventAsync(new DomainNotification("系统错误", "未找到相关资产，请联系管理员"));
+                return false;
+            }
+            //如果上述满足，那么将该条资产的状态复原
+            asset.ModifyAssetStatus(AssetStatus.在用);
+            _assetExchangeRepository.Remove(assetExchange);
             if (await CommitAsync())
             {
                 //然后发送资产调配事件撤销的事件以供后续处理

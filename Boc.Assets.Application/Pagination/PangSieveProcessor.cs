@@ -16,18 +16,18 @@ namespace Boc.Assets.Application.Pagination
         private readonly IOptions<SieveOptions> _options;
         private readonly ISieveCustomSortMethods _customSortMethods;
         private readonly ISieveCustomFilterMethods _customFilterMethods;
-        private readonly SievePropertyMapper mapper = new SievePropertyMapper();
+        private readonly SievePropertyMapper _mapper = new SievePropertyMapper();
 
         public PangSieveProcessor(IOptions<SieveOptions> options,
             ISieveCustomSortMethods customSortMethods,
             ISieveCustomFilterMethods customFilterMethods) : base(options, customSortMethods, customFilterMethods)
         {
-            mapper = MapProperties(mapper);
+            _mapper = MapProperties(_mapper);
             _options = options;
             _customSortMethods = customSortMethods;
             _customFilterMethods = customFilterMethods;
         }
-        protected override SievePropertyMapper MapProperties(SievePropertyMapper mapper)
+        protected sealed override SievePropertyMapper MapProperties(SievePropertyMapper mapper)
         {
             //机构
             mapper.Property<Organization>(it => it.OrgIdentifier).CanSort();

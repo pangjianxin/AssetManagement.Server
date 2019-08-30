@@ -5,11 +5,17 @@ namespace Boc.Assets.Domain.Events.Assets
 {
     public class AssetReturnHandledEvent : Event
     {
-        public AssetReturnHandledEvent(AssetReturn assetReturn)
+        public AssetReturn AssetReturn { get; }
+        public string Message { get; }
+        public AssetReturnHandledEvent(AssetReturn assetReturn, string message)
         {
             AssetReturn = assetReturn;
+            Message = message;
         }
 
-        public AssetReturn AssetReturn { get; }
+        public override string ToString()
+        {
+            return "资产交回已处理";
+        }
     }
 }
