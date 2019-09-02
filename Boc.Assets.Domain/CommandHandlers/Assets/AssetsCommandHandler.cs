@@ -101,7 +101,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                     AssetStatus = AssetStatus.在库,
                     InStoreDateTime = DateTime.Now,
                     LastModifyDateTime = DateTime.Now,
-                    LastModifyComment = request.Message,
+                    LatestDeployRecord = request.Message,
                     CreateDateTime = request.CreateDateTime,
                     OrganizationBelongedId = _user.OrgId,
                     StoredOrgIdentifier = _user.OrgIdentifier,

@@ -6,6 +6,8 @@ namespace Boc.Assets.Domain.Commands.Validations.Maintainers
     {
         public AddMaintainerCommandValidator()
         {
+            ValidateOrganizationId();
+            ValidateOrg2();
             ValidateCategoryId();
             ValidateCompanyName();
             ValidateMaintainerName();

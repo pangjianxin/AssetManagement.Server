@@ -28,16 +28,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
 
                     b.Property<DateTime>("ExpiryDateTime");
 
-                    b.Property<string>("ManagementLineDescription")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<Guid>("ManagementLineId");
-
-                    b.Property<string>("ManagementLineName")
-                        .IsRequired()
-                        .HasMaxLength(20);
-
                     b.Property<Guid>("PublisherId");
 
                     b.Property<string>("PublisherIdentifier")
@@ -238,6 +228,8 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
 
                     b.Property<string>("AssetCategoryThirdLevel");
 
+                    b.Property<string>("LastModifiedContent");
+
                     b.Property<string>("Message");
 
                     b.Property<string>("Org2")
@@ -292,6 +284,8 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<string>("LastModifiedContent");
+
                     b.Property<string>("Message");
 
                     b.Property<string>("Org2")
@@ -335,6 +329,8 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                     b.Property<Guid>("AssetId");
 
                     b.Property<string>("AssetName");
+
+                    b.Property<string>("LastModifiedContent");
 
                     b.Property<string>("Message");
 

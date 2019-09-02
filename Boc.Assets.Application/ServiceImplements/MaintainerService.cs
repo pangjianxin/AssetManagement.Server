@@ -8,6 +8,7 @@ using Boc.Assets.Application.Sieve.Services;
 using Boc.Assets.Application.ViewModels.Maintainers;
 using Boc.Assets.Domain.Commands.Maintainers;
 using Boc.Assets.Domain.Core.Bus;
+using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -26,22 +27,27 @@ namespace Boc.Assets.Application.ServiceImplements
         private readonly ISieveProcessor _sievingProcessor;
         private readonly SieveOptions _sieveOptions;
         private readonly IMaintainerRepository _maintainerRepository;
+        private readonly IUser _user;
 
         public MaintainerService(
             IBus bus,
             IMapper mapper,
             ISieveProcessor sievingProcessor,
             IOptions<SieveOptions> sieveOptions,
-            IMaintainerRepository maintainerRepository)
+            IMaintainerRepository maintainerRepository,
+            IUser user)
         {
             _bus = bus;
             _mapper = mapper;
             _sievingProcessor = sievingProcessor;
             _sieveOptions = sieveOptions.Value;
             _maintainerRepository = maintainerRepository;
+            _user = user;
         }
         public async Task AddMaintainerAsync(AddMaintainer model)
         {
+            model.OrganizationId = _user.OrgId;
+            model.Org2 = _user.Org2;
             var command = _mapper.Map<AddMaintainerCommand>(model);
             await _bus.SendCommandAsync(command);
         }

@@ -40,7 +40,7 @@ namespace Boc.Assets.Application.Dto
         /// <summary>
         /// 最后一次修改备注
         /// </summary>
-        public string LastModifyComment { get; set; }
+        public string LatestDeployRecord { get; set; }
         /// <summary>
         /// 资产分类dto
         /// </summary>

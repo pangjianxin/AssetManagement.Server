@@ -13,7 +13,7 @@ namespace Boc.Assets.Domain.SignalR
     {
         public async Task SendMessageAsync(string userId, string message)
         {
-            await this.Clients.User(userId).SendAsync("ReciveMessage", message);
+            await this.Clients.User(userId).SendAsync("ReceiveMessage", message);
         }
     }
 }

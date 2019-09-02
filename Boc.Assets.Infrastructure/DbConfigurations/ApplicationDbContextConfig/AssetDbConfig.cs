@@ -24,7 +24,7 @@ namespace Boc.Assets.Infrastructure.DbConfigurations.ApplicationDbContextConfig
             //资产编号
             builder.Property(it => it.AssetNo).HasMaxLength(100);
             //资产最后修改备注
-            builder.Property(it => it.LastModifyComment).HasMaxLength(100);
+            builder.Property(it => it.LatestDeployRecord).HasMaxLength(100);
             //资产存放机构号
             builder.Property(it => it.StoredOrgIdentifier).HasMaxLength(20);
             //资产存放机构名称

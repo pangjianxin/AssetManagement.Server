@@ -70,7 +70,7 @@ namespace Boc.Assets.Domain.Models.Assets
         /// <summary>
         /// 最后一次修改备注
         /// </summary>
-        public string LastModifyComment { get; set; }
+        public string LatestDeployRecord { get; set; }
         /// <summary>
         /// 生产日期
         /// </summary>
@@ -112,19 +112,86 @@ namespace Boc.Assets.Domain.Models.Assets
         #endregion
 
         #region methods
-
+        /// <summary>
+        /// 资产交回逻辑
+        /// </summary>
+        /// <param name="storedOrgIdentifier"></param>
+        /// <param name="storedOrgName"></param>
+        public void HandleReturn(string storedOrgIdentifier, string storedOrgName)
+        {
+            LastModifyDateTime = DateTime.Now;
+            AssetStatus = AssetStatus.在库;
+            LatestDeployRecord = $"从【{StoredOrgIdentifier}】到【{storedOrgIdentifier}】";
+            AssetLocation = "暂无";
+            StoredOrgIdentifier = storedOrgIdentifier;
+            StoredOrgName = storedOrgName;
+        }
+        /// <summary>
+        /// 申请资产逻辑
+        /// </summary>
+        /// <param name="storedOrgIdentifier"></param>
+        /// <param name="storedOrgName"></param>
+        public void HandleApply(string storedOrgIdentifier, string storedOrgName)
+        {
+            LastModifyDateTime = DateTime.Now;
+            AssetStatus = AssetStatus.在用;
+            LatestDeployRecord = $"从【{StoredOrgIdentifier}】到【{storedOrgIdentifier}】";
+            AssetLocation = "暂无";
+            StoredOrgIdentifier = storedOrgIdentifier;
+            StoredOrgName = storedOrgName;
+        }
+        /// <summary>
+        /// 资产调换的逻辑
+        /// </summary>
+        /// <param name="exchangeOrgIdentifier"></param>
+        /// <param name="exchangeOrgName"></param>
+        public void HandleExchange(string exchangeOrgIdentifier, string exchangeOrgName)
+        {
+            AssetStatus = AssetStatus.在用;
+            LastModifyDateTime = DateTime.Now;
+            LatestDeployRecord = $"从【{StoredOrgIdentifier}】到【{exchangeOrgIdentifier}】";
+            AssetLocation = "暂无";
+            StoredOrgIdentifier = exchangeOrgIdentifier;
+            StoredOrgName = exchangeOrgName;
+        }
+        /// <summary>
+        /// 撤销资产交回申请
+        /// </summary>
+        public void RevokeReturn()
+        {
+            AssetStatus = AssetStatus.在用;
+        }
+        /// <summary>
+        /// 删除资产交回申请
+        /// </summary>
+        public void RemoveReturn()
+        {
+            AssetStatus = AssetStatus.在用;
+        }
+        /// <summary>
+        /// 撤销资产调换申请
+        /// </summary>
+        public void RevokeExchange()
+        {
+            AssetStatus = AssetStatus.在用;
+        }
+        /// <summary>
+        /// 删除资产调换申请
+        /// </summary>
+        public void RemoveExchange()
+        {
+            AssetStatus = AssetStatus.在用;
+        }
         public void ModifyAssetLocation(string assetLocation)
         {
             AssetLocation = assetLocation;
             LastModifyDateTime = DateTime.Now;
-            LastModifyComment = "资产修改了存放位置";
         }
 
         public void ModifyAssetStatus(AssetStatus targetStatus)
         {
-            LastModifyDateTime = DateTime.Now;
-            LastModifyComment = $"资产状态由{AssetStatus.ToString()}变更为{targetStatus.ToString()}";
             AssetStatus = targetStatus;
+            LastModifyDateTime = DateTime.Now;
         }
         #endregion
     }

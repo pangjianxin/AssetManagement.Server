@@ -4,7 +4,6 @@ using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Events.Assets;
 using Boc.Assets.Domain.Models.Assets;
-using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Repositories;
 using Boc.Assets.Domain.Services;
 using MediatR;
@@ -78,15 +77,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
             //如果备选资产符合调配规则那么继续
-            //①修改资产状态为在途
-            asset.ModifyAssetStatus(AssetStatus.在途);
-            //②将修改状态后的资产持久化到数据库
-            _assetRepository.Update(asset);
-            //③创建一个AssetExchange实例
-            var assetExchange = new AssetExchange(_user, targetOrg, exchangeOrg, asset.Id, asset.AssetName,
-                request.Message);
-            //④将这个AssetExchange实例持久化到数据库
-            await _assetExchangeRepository.AddAsync(assetExchange);
+            var assetExchange = await _assetDomainService.CreateAssetExchange(asset, _user, targetOrg, exchangeOrg, request.Message);
             if (await CommitAsync())
             {
                 //⑤生成一个资产申请调换的事件
@@ -118,13 +109,10 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             }
             //如果事件和资产都存在，那么继续
             //①处理资产调配并返回调配记录
-            var deploy = _assetDomainService.HandleAssetExchanging(asset, assetExchange);
-            //②持久化这个记录
-            _assetRepository.Update(asset);
-            await _assetDeployRepository.AddAsync(deploy);
+            await _assetDomainService.HandleAssetExchange(asset, assetExchange, request.Message);
             if (await CommitAsync())
             {
-                //③发送一个资产调配已处理的事件
+                //②发送一个资产调配已处理的事件
                 await Bus.RaiseEventAsync(new AssetExchangeHandledEvent(assetExchange, request.Message));
                 return true;
             }
@@ -152,7 +140,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
             //如果上述满足，那么将该条资产的状态复原
-            asset.ModifyAssetStatus(AssetStatus.在用);
+            _assetDomainService.RemoveAssetExchange(asset, assetExchange, request.Message);
             if (await CommitAsync())
             {
                 //然后发送资产调配事件撤销的事件以供后续处理
@@ -184,8 +172,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
             //如果上述满足，那么将该条资产的状态复原
-            asset.ModifyAssetStatus(AssetStatus.在用);
-            _assetExchangeRepository.Remove(assetExchange);
+            _assetDomainService.RemoveAssetExchange(asset, assetExchange, request.Message);
             if (await CommitAsync())
             {
                 //然后发送资产调配事件撤销的事件以供后续处理

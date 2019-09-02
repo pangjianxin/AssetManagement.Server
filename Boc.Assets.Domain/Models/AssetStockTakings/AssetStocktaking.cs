@@ -52,18 +52,6 @@ namespace Boc.Assets.Domain.Models.AssetStockTakings
         /// </summary>
         public string PublisherOrg2 { get; set; }
         /// <summary>
-        /// 盘点任务归属条线外键
-        /// </summary>
-        public Guid ManagementLineId { get; set; }
-        /// <summary>
-        /// 盘点任务归属条线的名称
-        /// </summary>
-        public string ManagementLineName { get; set; }
-        /// <summary>
-        /// 盘点任务归属条线的描述
-        /// </summary>
-        public string ManagementLineDescription { get; set; }
-        /// <summary>
         /// 盘点任务名称
         /// </summary>
         public string TaskName { get; set; }
@@ -87,7 +75,7 @@ namespace Boc.Assets.Domain.Models.AssetStockTakings
         #region methods
         public bool IsExpiry()
         {
-            return this.ExpiryDateTime <= DateTime.Now;
+            return ExpiryDateTime <= DateTime.Now;
         }
         /// <summary>
         /// 时间进度

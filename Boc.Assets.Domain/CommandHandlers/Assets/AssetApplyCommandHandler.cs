@@ -5,7 +5,6 @@ using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Events.Assets;
 using Boc.Assets.Domain.Models;
 using Boc.Assets.Domain.Models.Assets;
-using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Repositories;
 using Boc.Assets.Domain.Services;
 using MediatR;
@@ -49,6 +48,12 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             _assetDomainService = assetDomainService;
             _user = user;
         }
+        /// <summary>
+        /// 新增一个资产申请（AssetApply）
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<bool> Handle(ApplyAssetCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
@@ -70,12 +75,11 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
 
-            var assetApply = new AssetApply(_user,
-                targetOrg,
-                assetCategory.Id,
-                assetCategory.AssetThirdLevelCategory,
-                request.Message);
-            await _assetApplyRepository.AddAsync(assetApply);
+            var assetApply = await _assetDomainService.CreateAssetApply(_user,
+                  targetOrg,
+                  assetCategory.Id,
+                  assetCategory.AssetThirdLevelCategory,
+                  request.Message);
             if (await CommitAsync())
             {
                 await Bus.RaiseEventAsync(new AssetApplyNotifiedEvent(assetApply, request.Message));
@@ -83,6 +87,12 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             }
             return false;
         }
+        /// <summary>
+        /// 处理资产申请
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<bool> Handle(HandleAssetApplyCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
@@ -116,12 +126,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 await Bus.RaiseEventAsync(new DomainNotification("状态错误", "事件状态不为待处理，不能处理该事件，请联系管理员"));
                 return false;
             }
-            //资产申请返回一个deploy对象
-            var deploy = _assetDomainService.HandleAssetApplying(asset, assetApply);
-            //资产申请后该资产状态变为在用
-            _assetRepository.Update(asset);
-            //将资产申请返回的deploy对象持久化到数据库
-            await _assetDeployRepository.AddAsync(deploy);
+            await _assetDomainService.HandleAssetApply(asset, assetApply, request.Message);
             if (await CommitAsync())
             {
                 //所有步骤处理完成后该资产申请事件的状态要变更为完成，该项操作由一个资产申请事件完成状态/事件来进行处理
@@ -131,6 +136,12 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             }
             return false;
         }
+        /// <summary>
+        /// 撤销资产申请
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<bool> Handle(RevokeAssetApplyCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
@@ -144,8 +155,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 await Bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的事件参数有误，没有找到对应的事件，请联系管理员"));
                 return false;
             }
-            assetApply.Revoke(request.Message);
-            _assetApplyRepository.Update(assetApply);
+            _assetDomainService.RevokeAssetApply(assetApply, request.Message);
             if (await CommitAsync())
             {
                 await Bus.RaiseEventAsync(new AssetApplyRevokedEvent(assetApply, request.Message));
@@ -156,13 +166,18 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
 
         public async Task<bool> Handle(RemoveAssetApplyCommand request, CancellationToken cancellationToken)
         {
+            if (!request.IsValid())
+            {
+                await Bus.RaiseEventAsync(new DomainNotification("客户端错误", "模型有效性验证未通过"));
+                return false;
+            }
             var assetApply = await _assetApplyRepository.GetByIdAsync(request.EventId);
             if (assetApply == null)
             {
                 await Bus.RaiseEventAsync(new DomainNotification("系统错误", "为找到指定的事件进行处理，请联系管理员"));
                 return false;
             }
-            assetApply = _assetApplyRepository.Remove(assetApply);
+            _assetDomainService.RemoveAssetApply(assetApply, request.Message);
             if (await CommitAsync())
             {
                 await Bus.RaiseEventAsync(new AssetApplyRemovedEvent(assetApply, request.Message));

@@ -1,6 +1,6 @@
-﻿using System;
-using Boc.Assets.Domain.Commands.Maintainers;
+﻿using Boc.Assets.Domain.Commands.Maintainers;
 using FluentValidation;
+using System;
 
 namespace Boc.Assets.Domain.Commands.Validations.Maintainers
 {
@@ -27,6 +27,16 @@ namespace Boc.Assets.Domain.Commands.Validations.Maintainers
         protected void ValidateMaintainerId()
         {
             RuleFor(it => it.MaintainerId).NotEqual(Guid.Empty).WithMessage("服务商主键不能为空(Guid.Empty)");
+        }
+
+        protected void ValidateOrg2()
+        {
+            RuleFor(it => it.Org2).Must(it => !string.IsNullOrEmpty(it)).WithMessage("二级行机构号不能为空");
+        }
+
+        protected void ValidateOrganizationId()
+        {
+            RuleFor(it => it.OrganizationId).NotEqual(Guid.Empty).WithMessage("发布机构信息不能为空");
         }
     }
 }
