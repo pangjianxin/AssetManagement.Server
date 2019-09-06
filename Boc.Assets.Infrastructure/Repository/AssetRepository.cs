@@ -11,13 +11,5 @@ namespace Boc.Assets.Infrastructure.Repository
         public AssetRepository(ApplicationDbContext context) : base(context)
         {
         }
-
-        public async Task<Asset> ModifyAssetLocation(Guid assetId, string assetInstoredLocation)
-        {
-            var asset = await DbSet.FindAsync(assetId);
-            asset.ModifyAssetLocation(assetInstoredLocation);
-            Update(asset);
-            return asset;
-        }
     }
 }

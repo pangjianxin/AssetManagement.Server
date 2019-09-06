@@ -7,6 +7,6 @@ namespace Boc.Assets.Domain.Repositories
 {
     public interface IAssetCategoryRepository : IRepository<AssetCategory>
     {
-        Task ChangeMeteringUnitAsync(Guid assetCategoryId, AssetMeteringUnit meteringUnit);
+        
     }
 }

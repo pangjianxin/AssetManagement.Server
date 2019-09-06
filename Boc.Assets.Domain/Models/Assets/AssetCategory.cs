@@ -45,6 +45,11 @@ namespace Boc.Assets.Domain.Models.Assets
         {
             return $"{AssetFirstLevelCategory}|{AssetSecondLevelCategory}|{AssetThirdLevelCategory}";
         }
+
+        public void ChangeUnit(AssetMeteringUnit unit)
+        {
+            AssetMeteringUnit = unit;
+        }
     }
     public enum AssetMeteringUnit
     {

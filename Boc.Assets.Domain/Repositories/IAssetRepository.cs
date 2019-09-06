@@ -7,6 +7,6 @@ namespace Boc.Assets.Domain.Repositories
 {
     public interface IAssetRepository : IRepository<Asset>
     {
-        Task<Asset> ModifyAssetLocation(Guid assetId, string assetInstoredLocation);
+
     }
 }

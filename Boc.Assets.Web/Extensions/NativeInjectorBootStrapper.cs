@@ -120,7 +120,8 @@ namespace Boc.Assets.Web.Extensions
             services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
             #endregion
             //event sourcing
-            services.AddScoped(typeof(IEventSource<>), typeof(EfCoreEventSource<>));
+            services.AddScoped<IEventStore, EfCoreEventStore>();
+            services.AddScoped<IEventRepository, EfCoreEventRepository>();
             //entities repositories
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IAssetRepository, AssetRepository>();
@@ -144,7 +145,6 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetService, AssetService>();
             services.AddScoped<IAssetCategoryService, AssetCategoryService>();
             services.AddScoped<IOrgSpaceService, OrgSpaceService>();
-            services.AddScoped<INonAuditEventService, NonAuditEventService>();
             services.AddScoped<IAssetDeployService, AssetDeployService>();
             services.AddScoped<IAssetStockTakingService, AssetStockTakingService>();
             services.AddScoped<IEmployeeService, EmployService>();

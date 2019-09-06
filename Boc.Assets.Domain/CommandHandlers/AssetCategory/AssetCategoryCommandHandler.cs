@@ -2,7 +2,7 @@
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Events;
+using Boc.Assets.Domain.Events.AssetCategory;
 using Boc.Assets.Domain.Repositories;
 using MediatR;
 using System.Threading;
@@ -37,11 +37,11 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetCategory
                 await NotifyValidationErrors(request);
                 return false;
             }
-
-            await _assetCategoryRepository.ChangeMeteringUnitAsync(request.AssetCategoryId, request.AssetMeteringUnit);
+            var category = await _assetCategoryRepository.GetByIdAsync(request.AssetCategoryId);
+            category.ChangeUnit(request.AssetMeteringUnit);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new NonAuditEvent(_user, NonAuditEventType.资产分类计量单位变更));
+                await Bus.RaiseEventAsync(new CategoryMeteringUnitChangedEvent(category.Id));
                 return true;
             }
             return false;

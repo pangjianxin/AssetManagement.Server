@@ -3,19 +3,12 @@ using System;
 
 namespace Boc.Assets.Domain.Core.Events
 {
-    public abstract class Event : INotification
+    public abstract class Event : Message, INotification
     {
-        public Guid Id { get; set; }
         public DateTime TimeStamp { get; set; }
-        #region methods
-        public string DateTimeFromNow
+        protected Event()
         {
-            get
-            {
-                var span = DateTime.Now - TimeStamp;
-                return $"{span.Days}天,{span.Hours}小时,{span.Minutes}分钟,{span.Seconds}秒";
-            }
+            TimeStamp = DateTime.Now;
         }
-        #endregion  
     }
 }
