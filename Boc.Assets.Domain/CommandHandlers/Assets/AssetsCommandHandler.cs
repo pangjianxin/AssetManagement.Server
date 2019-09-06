@@ -40,7 +40,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 await NotifyValidationErrors(request);
                 return false;
             }
-            var asset = await _assetRepository.ModifyAssetLocation(request.AssetId, request.AssetLocation);
+            await _assetRepository.ModifyAssetLocation(request.AssetId, request.AssetLocation);
             if (await CommitAsync())
             {
                 await Bus.RaiseEventAsync(new NonAuditEvent(_user, NonAuditEventType.资产存放位置信息变更));
@@ -90,6 +90,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 tagNumber.Append(tagNumberSuffix);
                 var asset = new Asset
                 {
+                    AssetStatus = AssetStatus.在库,
                     Id = Guid.NewGuid(),
                     AssetLocation = request.AssetLocation,
                     AssetCategoryId = category.Id,
@@ -98,7 +99,6 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                     AssetDescription = request.AssetDescription,
                     AssetType = request.AssetType,
                     AssetTagNumber = tagNumber.ToString(),
-                    AssetStatus = AssetStatus.在库,
                     InStoreDateTime = DateTime.Now,
                     LastModifyDateTime = DateTime.Now,
                     LatestDeployRecord = request.Message,

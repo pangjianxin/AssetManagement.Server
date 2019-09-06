@@ -48,28 +48,27 @@ namespace Boc.Assets.Application.ServiceImplements
             var paggedList = await result.ToListAsync();
             return new PaginatedList<AssetExchangeDto>(_sieveOptions, model.Page, model.PageSize, count, paggedList);
         }
-        public async Task<AssetExchangeDto> RemoveAsync(Guid eventId)
+        public async Task<bool> RemoveAssetExchangeAsync(RemoveAssetExchange model)
         {
-            var assetExchange = await _assetExchangeRepository.GetByIdAsync(eventId);
-            assetExchange = _assetExchangeRepository.Remove(assetExchange);
-            return _mapper.Map<AssetExchangeDto>(assetExchange);
+            var command = _mapper.Map<RemoveAssetExchangeCommand>(model);
+            return await _bus.SendCommandAsync(command);
         }
 
-        public async Task HandleAsync(HandleAssetExchange model)
+        public async Task HandleAssetExchangeAsync(HandleAssetExchange model)
         {
             var command = _mapper.Map<HandleAssetExchangeCommand>(model);
             await _bus.SendCommandAsync(command);
         }
 
-        public async Task RevokeAsync(Revoke model)
+        public async Task RevokeAssetExchangeAsync(RevokeAssetExchange model)
         {
             var command = _mapper.Map<RevokeAssetExchangeCommand>(model);
             await _bus.SendCommandAsync(command);
         }
 
-        public async Task AssetExchangeAsync(ExchangeAsset model)
+        public async Task CreateAssetExchangeAsync(ExchangeAsset model)
         {
-            var command = _mapper.Map<ExchangeAssetCommand>(model);
+            var command = _mapper.Map<CreateAssetExchangeCommand>(model);
             await _bus.SendCommandAsync(command);
         }
 

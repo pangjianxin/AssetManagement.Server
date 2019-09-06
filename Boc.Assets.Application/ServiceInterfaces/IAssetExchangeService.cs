@@ -2,11 +2,10 @@
 using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.ViewModels.Assets;
-using Boc.Assets.Domain.Events.Assets;
+using Boc.Assets.Domain.Models.Assets.Audit;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Boc.Assets.Domain.Models.Assets.Audit;
 
 namespace Boc.Assets.Application.ServiceInterfaces
 {
@@ -15,9 +14,9 @@ namespace Boc.Assets.Application.ServiceInterfaces
 
         Task<PaginatedList<AssetExchangeDto>> PaginationAsync(SieveModel model,
             Expression<Func<AssetExchange, bool>> predicate);
-        Task<AssetExchangeDto> RemoveAsync(Guid eventId);
-        Task HandleAsync(HandleAssetExchange model);
-        Task RevokeAsync(Revoke model);
-        Task AssetExchangeAsync(ExchangeAsset model);
+        Task<bool> RemoveAssetExchangeAsync(RemoveAssetExchange model);
+        Task HandleAssetExchangeAsync(HandleAssetExchange model);
+        Task RevokeAssetExchangeAsync(RevokeAssetExchange model);
+        Task CreateAssetExchangeAsync(ExchangeAsset model);
     }
 }

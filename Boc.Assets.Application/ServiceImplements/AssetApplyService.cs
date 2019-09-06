@@ -55,7 +55,7 @@ namespace Boc.Assets.Application.ServiceImplements
                 _sieveOptions, model.Page, model.PageSize, count, pagination);
         }
         /// <summary>
-        /// 发起删除资产申请的申请
+        /// 删除资产申请
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -71,7 +71,7 @@ namespace Boc.Assets.Application.ServiceImplements
         /// <returns></returns>
         public async Task ApplyAssetAsync(ApplyAsset model)
         {
-            var command = _mapper.Map<ApplyAssetCommand>(model);
+            var command = _mapper.Map<CreateAssetApplyCommand>(model);
             await _bus.SendCommandAsync(command);
         }
         /// <summary>
@@ -79,7 +79,7 @@ namespace Boc.Assets.Application.ServiceImplements
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task RevokeAsync(Revoke model)
+        public async Task RevokeAsync(RevokeAssetApply model)
         {
             var command = _mapper.Map<RevokeAssetApplyCommand>(model);
             await _bus.SendCommandAsync(command);

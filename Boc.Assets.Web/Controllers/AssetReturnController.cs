@@ -6,7 +6,6 @@ using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Web.Auth.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers
@@ -14,14 +13,14 @@ namespace Boc.Assets.Web.Controllers
     [Route("api/assetReturn")]
     public class AssetReturnController : ApiController
     {
-        private readonly IAssetReturnService _assetReturningEventService;
+        private readonly IAssetReturnService _assetReturnService;
 
         public AssetReturnController(INotificationHandler<DomainNotification> notifications,
             IUser user,
-            IAssetReturnService assetReturningEventService)
+            IAssetReturnService assetReturnService)
             : base(notifications, user)
         {
-            _assetReturningEventService = assetReturningEventService;
+            _assetReturnService = assetReturnService;
         }
         /// <summary>
         /// 前五条数据
@@ -33,7 +32,7 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.AssetReturn, Permissions.Actions.AssetReturn_Read_Secondary)]
         public async Task<IActionResult> PaginationSecondary(SieveModel model)
         {
-            var pagination = await _assetReturningEventService.PaginationAsync(model, it => it.TargetOrgId == _user.OrgId);
+            var pagination = await _assetReturnService.PaginationAsync(model, it => it.TargetOrgId == _user.OrgId);
             XPaginationHeader(pagination);
             return AppResponse(pagination);
         }
@@ -47,7 +46,7 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.AssetReturn, Permissions.Actions.AssetReturn_Read_Current)]
         public async Task<IActionResult> PaginationCurrent(SieveModel model)
         {
-            var pagination = await _assetReturningEventService.PaginationAsync(model, it => it.RequestOrgId == _user.OrgId);
+            var pagination = await _assetReturnService.PaginationAsync(model, it => it.RequestOrgId == _user.OrgId);
             XPaginationHeader(pagination);
             return AppResponse(pagination);
         }
@@ -59,22 +58,23 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [HttpPost("return")]
         [Permission(Permissions.Controllers.AssetReturn, Permissions.Actions.AssetReturn_Create_Current)]
-        public async Task<IActionResult> ReturnAsset([FromBody] ReturnAsset model)
+        public async Task<IActionResult> CreateAssetReturn([FromBody] ReturnAsset model)
         {
-            await _assetReturningEventService.AssetReturnAsync(model);
+            await _assetReturnService.CreateAssetReturnAsync(model);
             return AppResponse(null, "操作成功");
         }
+
         /// <summary>
         /// 删除相应交回事件
         /// 当前权限
         /// </summary>
-        /// <param name="eventId"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("remove")]
         [Permission(Permissions.Controllers.AssetReturn, Permissions.Actions.AssetReturn_Delete_Current)]
-        public async Task<IActionResult> Remove(Guid eventId)
+        public async Task<IActionResult> RemoveAssetReturn(RemoveAssetReturn model)
         {
-            var @event = await _assetReturningEventService.RemoveAsync(eventId);
+            var @event = await _assetReturnService.RemoveAssetReturnAsync(model);
             return AppResponse(@event, "事件已删除");
         }
         /// <summary>
@@ -85,9 +85,9 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [HttpPut("secondary/handle")]
         [Permission(Permissions.Controllers.AssetReturn, Permissions.Actions.AssetReturn_Modify_Secondary)]
-        public async Task<IActionResult> Handle([FromBody]HandleAssetReturn model)
+        public async Task<IActionResult> HandleAssetReturn([FromBody]HandleAssetReturn model)
         {
-            await _assetReturningEventService.HandleAsync(model);
+            await _assetReturnService.HandleAssetReturnAsync(model);
             return AppResponse(null, "操作成功");
         }
         /// <summary>
@@ -98,9 +98,9 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [HttpPut("revoke")]
         [Permission(Permissions.Controllers.AssetReturn, Permissions.Actions.AssetReturn_Modify_Secondary)]
-        public async Task<IActionResult> Revoke([FromBody]Revoke model)
+        public async Task<IActionResult> RevokeAssetReturn([FromBody]RevokeAssetReturn model)
         {
-            await _assetReturningEventService.RevokeAsync(model);
+            await _assetReturnService.RevokeAssetReturnAsync(model);
             return AppResponse(null, "事件已撤销");
         }
     }

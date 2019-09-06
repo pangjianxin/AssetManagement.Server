@@ -90,7 +90,7 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [HttpDelete("revoke")]
         [Permission(Permissions.Controllers.AssetApply, Permissions.Actions.AssetApply_Modify_Secondary)]
-        public async Task<IActionResult> Revoke(Revoke model)
+        public async Task<IActionResult> Revoke(RevokeAssetApply model)
         {
             await _assetApplyService.RevokeAsync(model);
             return AppResponse(null, "事件已撤销");

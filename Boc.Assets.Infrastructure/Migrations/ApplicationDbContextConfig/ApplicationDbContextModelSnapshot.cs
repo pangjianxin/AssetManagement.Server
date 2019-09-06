@@ -145,10 +145,10 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
 
                     b.Property<DateTime?>("InStoreDateTime");
 
-                    b.Property<string>("LastModifyComment")
-                        .HasMaxLength(100);
-
                     b.Property<DateTime?>("LastModifyDateTime");
+
+                    b.Property<string>("LatestDeployRecord")
+                        .HasMaxLength(100);
 
                     b.Property<Guid?>("OrganizationBelongedId");
 
@@ -205,14 +205,22 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
 
                     b.Property<int>("AssetDeployCategory");
 
+                    b.Property<Guid>("AssetId");
+
                     b.Property<string>("AssetName")
                         .IsRequired()
                         .HasMaxLength(100);
+
+                    b.Property<string>("AssetNo");
 
                     b.Property<string>("AssetTagNumber")
                         .HasMaxLength(100);
 
                     b.Property<DateTime>("CreateDateTime");
+
+                    b.Property<string>("Org2")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.HasKey("Id");
 
@@ -627,8 +635,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                         {
                             b1.Property<Guid>("AssetDeployId");
 
-                            b1.Property<string>("Org2");
-
                             b1.Property<Guid>("OrgId");
 
                             b1.Property<string>("OrgIdentifier")
@@ -653,8 +659,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                         {
                             b1.Property<Guid>("AssetDeployId");
 
-                            b1.Property<string>("Org2");
-
                             b1.Property<Guid>("OrgId");
 
                             b1.Property<string>("OrgIdentifier")
@@ -678,8 +682,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                     b.OwnsOne("Boc.Assets.Domain.Models.Assets.OrganizationInfo", "ImportOrgInfo", b1 =>
                         {
                             b1.Property<Guid>("AssetDeployId");
-
-                            b1.Property<string>("Org2");
 
                             b1.Property<Guid>("OrgId");
 

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Boc.Assets.Domain.CommandHandlers.Assets
 {
     public class AssetApplyCommandHandler : CommandHandler,
-        IRequestHandler<ApplyAssetCommand, bool>,
+        IRequestHandler<CreateAssetApplyCommand, bool>,
         IRequestHandler<HandleAssetApplyCommand, bool>,
         IRequestHandler<RevokeAssetApplyCommand, bool>,
         IRequestHandler<RemoveAssetApplyCommand, bool>
@@ -54,7 +54,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<bool> Handle(ApplyAssetCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CreateAssetApplyCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
             {
@@ -82,7 +82,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                   request.Message);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new AssetApplyNotifiedEvent(assetApply, request.Message));
+                await Bus.RaiseEventAsync(new AssetApplyCreatedEvent(assetApply, request.Message));
                 return true;
             }
             return false;
@@ -177,7 +177,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 await Bus.RaiseEventAsync(new DomainNotification("系统错误", "为找到指定的事件进行处理，请联系管理员"));
                 return false;
             }
-            _assetDomainService.RemoveAssetApply(assetApply, request.Message);
+            _assetDomainService.RemoveAssetApply(assetApply);
             if (await CommitAsync())
             {
                 await Bus.RaiseEventAsync(new AssetApplyRemovedEvent(assetApply, request.Message));

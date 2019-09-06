@@ -22,14 +22,14 @@ namespace Boc.Assets.Domain.CommandHandlers
             Bus = bus;
             Notifications = (DomainNotificationHandler)notifications;
         }
-        protected async Task NotifyValidationErrors(Command command)
+        protected virtual async Task NotifyValidationErrors(Command command)
         {
             foreach (var error in command.ValidationResult.Errors)
             {
                 await Bus.RaiseEventAsync(new DomainNotification(command.GetType().Name, error.ErrorMessage));
             }
         }
-        public async Task<bool> CommitAsync()
+        public virtual async Task<bool> CommitAsync()
         {
             //首先检查DomainNotification里面有没有FluentValidation检查出来的command错误
             if (Notifications.HasNotifications()) return false;

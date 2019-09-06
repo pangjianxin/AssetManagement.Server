@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Boc.Assets.Domain.CommandHandlers.Assets
 {
     public class AssetExchangeCommandHandler : CommandHandler,
-        IRequestHandler<ExchangeAssetCommand, bool>,
+        IRequestHandler<CreateAssetExchangeCommand, bool>,
         IRequestHandler<HandleAssetExchangeCommand, bool>,
         IRequestHandler<RevokeAssetExchangeCommand, bool>,
         IRequestHandler<RemoveAssetExchangeCommand, bool>
@@ -21,7 +21,6 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IAssetRepository _assetRepository;
         private readonly IAssetExchangeRepository _assetExchangeRepository;
-        private readonly IAssetDeployRepository _assetDeployRepository;
         private readonly IAssetDomainService _assetDomainService;
         private readonly IUser _user;
 
@@ -32,18 +31,16 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             IOrganizationRepository organizationRepository,
             IAssetRepository assetRepository,
             IAssetExchangeRepository assetExchangeRepository,
-            IAssetDeployRepository assetDeployRepository,
             IAssetDomainService assetDomainService,
             IUser user) : base(unitOfWork, bus, notifications)
         {
             _organizationRepository = organizationRepository;
             _assetRepository = assetRepository;
             _assetExchangeRepository = assetExchangeRepository;
-            _assetDeployRepository = assetDeployRepository;
             _assetDomainService = assetDomainService;
             _user = user;
         }
-        public async Task<bool> Handle(ExchangeAssetCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CreateAssetExchangeCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
             {
@@ -132,15 +129,8 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 await Bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的事件参数有误，没有找到对应的事件，请联系管理员"));
                 return false;
             }
-            //查看资产是否存在
-            var asset = await _assetRepository.GetByIdAsync(assetExchange.AssetId);
-            if (asset == null)
-            {
-                await Bus.RaiseEventAsync(new DomainNotification("系统错误", "未找到相关资产，请联系管理员"));
-                return false;
-            }
-            //如果上述满足，那么将该条资产的状态复原
-            _assetDomainService.RemoveAssetExchange(asset, assetExchange, request.Message);
+            //如果上述满足，那么...
+            _assetDomainService.RevokeAssetExchange(assetExchange, request.Message);
             if (await CommitAsync())
             {
                 //然后发送资产调配事件撤销的事件以供后续处理
@@ -172,7 +162,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
             //如果上述满足，那么将该条资产的状态复原
-            _assetDomainService.RemoveAssetExchange(asset, assetExchange, request.Message);
+            _assetDomainService.RemoveAssetExchange(asset, assetExchange);
             if (await CommitAsync())
             {
                 //然后发送资产调配事件撤销的事件以供后续处理

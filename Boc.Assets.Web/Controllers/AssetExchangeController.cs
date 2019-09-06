@@ -6,7 +6,6 @@ using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Web.Auth.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers
@@ -58,9 +57,9 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [HttpPost("exchange")]
         [Permission(Permissions.Controllers.AssetExchange, Permissions.Actions.AssetExchange_Create_Current)]
-        public async Task<IActionResult> ExchangeAssetAsync([FromBody] ExchangeAsset model)
+        public async Task<IActionResult> CreateAssetExchangeAsync([FromBody] ExchangeAsset model)
         {
-            await _assetExchangeService.AssetExchangeAsync(model);
+            await _assetExchangeService.CreateAssetExchangeAsync(model);
             return AppResponse(null, "操作成功");
         }
         /// <summary>
@@ -72,7 +71,7 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.AssetExchange, Permissions.Actions.AssetExchange_Modify_Secondary)]
         public async Task<IActionResult> HandleAssetExchangeAsync([FromBody] HandleAssetExchange model)
         {
-            await _assetExchangeService.HandleAsync(model);
+            await _assetExchangeService.HandleAssetExchangeAsync(model);
             return AppResponse(null, "操作成功");
         }
         /// <summary>
@@ -83,22 +82,23 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [HttpPut("revoke")]
         [Permission(Permissions.Controllers.AssetExchange, Permissions.Actions.AssetExchange_Modify_Secondary)]
-        public async Task<IActionResult> Revoke([FromBody]Revoke model)
+        public async Task<IActionResult> RevokeAssetExchangeAsync([FromBody]RevokeAssetExchange model)
         {
-            await _assetExchangeService.RevokeAsync(model);
+            await _assetExchangeService.RevokeAssetExchangeAsync(model);
             return AppResponse(null, "事件已撤销");
         }
+
         /// <summary>
         /// 删除机构调配事件
         /// 当前机构权限
         /// </summary>
-        /// <param name="eventId"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("remove")]
         [Permission(Permissions.Controllers.AssetExchange, Permissions.Actions.AssetExchange_Delete_Current)]
-        public async Task<IActionResult> Remove(Guid eventId)
+        public async Task<IActionResult> Remove(RemoveAssetExchange model)
         {
-            var @event = await _assetExchangeService.RemoveAsync(eventId);
+            var @event = await _assetExchangeService.RemoveAssetExchangeAsync(model);
             return AppResponse(@event, "事件已删除");
         }
     }

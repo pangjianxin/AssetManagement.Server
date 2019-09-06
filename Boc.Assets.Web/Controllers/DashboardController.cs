@@ -50,35 +50,33 @@ namespace Boc.Assets.Web.Controllers
             return AppResponse(categories, null);
         }
 
-        //[HttpGet("secondaryadmin/assets/pagination")]
-        //[Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Read_Secondary)]
-        //public async Task<IActionResult> SecondaryAssetsPaginationAsync(SieveModel model, Guid? categoryId = null, string status = null)
-        //{
-        //    Expression<Func<Asset, bool>> expression = it => it.AssetCategory.ManagementLineId == _user.ManagementLineId;
-        //    if (categoryId != null)
-        //    {
-        //        expression = it =>
-        //                     it.AssetCategoryId == categoryId.Value
-        //                     && it.AssetCategory.ManagementLineId == _user.ManagementLineId
-        //                     && it.Organization.Org2 == _user.Org2;
+        [HttpGet("secondaryadmin/assets/pagination")]
+        [Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Read_Secondary)]
+        public async Task<IActionResult> SecondaryAssetsPaginationAsync(SieveModel model, Guid categoryId, string status = null)
+        {
+            Expression<Func<Asset, bool>> expression = it => it.OrganizationBelongedId == _user.OrgId;
+            if (categoryId != Guid.Empty)
+            {
+                expression = it =>
+                    it.AssetCategoryId == categoryId
+                    && it.OrganizationBelongedId == _user.OrgId;
 
-        //    }
+            }
 
-        //    if (!string.IsNullOrEmpty(status))
-        //    {
-        //        var parseResult = Enum.TryParse(status, out AssetStatus assetStatus);
-        //        if (parseResult)
-        //        {
-        //            expression = it => it.AssetStatus == assetStatus
-        //                               && it.AssetCategory.ManagementLineId == _user.ManagementLineId
-        //                               && it.Organization.Org2 == _user.Org2
-        //                               && it.AssetCategoryId == categoryId.Value;
-        //        }
-        //    }
-        //    var pagination = await _assetService.PaginationAsync(model, expression);
-        //    XPaginationHeader(pagination);
-        //    return AppResponse(pagination);
-        //}
+            if (!string.IsNullOrEmpty(status))
+            {
+                var parseResult = Enum.TryParse(status, out AssetStatus assetStatus);
+                if (parseResult)
+                {
+                    expression = it => it.AssetStatus == assetStatus
+                                       && it.OrganizationBelongedId == _user.OrgId
+                                       && it.AssetCategoryId == categoryId;
+                }
+            }
+            var pagination = await _assetService.PaginationAsync(model, expression);
+            XPaginationHeader(pagination);
+            return AppResponse(pagination);
+        }
         [HttpGet("current/assets/pagination")]
         [Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Read_Current)]
         public async Task<IActionResult> CurrentAssetPagination(SieveModel model, Guid? categoryId = null)

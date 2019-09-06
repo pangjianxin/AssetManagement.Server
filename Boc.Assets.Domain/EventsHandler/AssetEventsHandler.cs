@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Boc.Assets.Domain.EventsHandler
 {
     public class AssetEventsHandler :
-        INotificationHandler<AssetApplyNotifiedEvent>,
+        INotificationHandler<AssetApplyCreatedEvent>,
         INotificationHandler<AssetApplyHandledEvent>,
         INotificationHandler<AssetApplyRevokedEvent>,
         INotificationHandler<AssetApplyRemovedEvent>,
@@ -37,7 +37,7 @@ namespace Boc.Assets.Domain.EventsHandler
         /// <param name="notification"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task Handle(AssetApplyNotifiedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(AssetApplyCreatedEvent notification, CancellationToken cancellationToken)
         {
             await _hubContext.Clients.User(notification.AssetApply.RequestOrgIdentifier).Notify(notification.AssetApply.TargetOrgNam,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Boc.Assets.Domain.CommandHandlers.Assets
 {
     public class AssetReturnCommandHandler : CommandHandler,
-        IRequestHandler<ReturnAssetCommand, bool>,
+        IRequestHandler<CreateAssetReturnCommand, bool>,
         IRequestHandler<HandleAssetReturnCommand, bool>,
         IRequestHandler<RevokeAssetReturnCommand, bool>,
         IRequestHandler<RemoveAssetReturnCommand, bool>
@@ -44,7 +44,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             _assetDomainService = assetDomainService;
             _user = user;
         }
-        public async Task<bool> Handle(ReturnAssetCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CreateAssetReturnCommand request, CancellationToken cancellationToken)
         {
             if (!request.IsValid())
             {
@@ -129,14 +129,8 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 await Bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的事件参数有误，没有找到对应的事件，请联系管理员"));
                 return false;
             }
-            var asset = await _assetRepository.GetByIdAsync(assetReturn.AssetId);
-            //修改资产的状态，资产状态继续变更为在用
-            asset.ModifyAssetStatus(AssetStatus.在用);
-            //修改资产交回申请的状态，变更为已撤销
-            assetReturn.Revoke(request.Message);
-            //更新数据库中的状态
-            _assetReturnRepository.Update(assetReturn);
-            _assetRepository.Update(asset);
+            // 交给资产领域服务来进行相应的处理
+            _assetDomainService.RevokeAssetReturn(assetReturn, request.Message);
             //提交
             if (await CommitAsync())
             {
@@ -160,9 +154,12 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
             var asset = await _assetRepository.GetByIdAsync(assetReturn.AssetId);
-            asset.ModifyAssetStatus(AssetStatus.在用);
-            _assetRepository.Update(asset);
-            _assetReturnRepository.Remove(assetReturn);
+            if (asset == null)
+            {
+                await Bus.RaiseEventAsync(new DomainNotification("系统错误", "未能找到相应的资产，请核对"));
+                return false;
+            }
+            _assetDomainService.RemoveAssetReturn(asset, assetReturn);
             if (await CommitAsync())
             {
                 await Bus.RaiseEventAsync(new AssetReturnRevokedEvent(assetReturn, request.Message));

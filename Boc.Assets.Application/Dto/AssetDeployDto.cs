@@ -6,10 +6,10 @@ namespace Boc.Assets.Application.Dto
     {
         public string AssetDeployCategory { get; set; }
         public DateTime CreateDateTime { get; set; }
+        public string AssetNo { get; set; }
         public string DateTimeFromNow { get; set; }
         public string Org2 { get; set; }
         public Guid AssetId { get; set; }
-        public string AssetNo { get; set; }
         public string AssetTagNumber { get; set; }
         public string AssetName { get; set; }
         public string ExportOrgIdentifier { get; set; }
