@@ -2,7 +2,7 @@
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Events;
+using Boc.Assets.Domain.Events.OrgSpace;
 using Boc.Assets.Domain.Repositories;
 using MediatR;
 using System.Threading;
@@ -42,7 +42,7 @@ namespace Boc.Assets.Domain.CommandHandlers.OrganizationSpaces
                 _user.OrgNam);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new NonAuditEvent(_user, NonAuditEventType.新增机构空间));
+                await Bus.RaiseEventAsync(new SpaceCreatedEvent(_user.OrgId, space.SpaceName));
                 return true;
             }
             return false;
@@ -60,7 +60,7 @@ namespace Boc.Assets.Domain.CommandHandlers.OrganizationSpaces
                 request.SpaceDescription);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new NonAuditEvent(_user, NonAuditEventType.机构空间名称或描述变更));
+                await Bus.RaiseEventAsync(new SpaceModifiedEvent(_user.OrgId, space.SpaceName));
                 return true;
             }
             return false;

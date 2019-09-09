@@ -82,7 +82,10 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                   request.Message);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new AssetApplyCreatedEvent(assetApply, request.Message));
+                await Bus.RaiseEventAsync(new AssetApplyCreatedEvent(
+                    _user.OrgId,
+                    assetApply,
+                    request.Message));
                 return true;
             }
             return false;
@@ -131,7 +134,10 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             {
                 //所有步骤处理完成后该资产申请事件的状态要变更为完成，该项操作由一个资产申请事件完成状态/事件来进行处理
                 //因为要考虑后期发送signalR什么的操作，所以这里要做一下业务解耦
-                await Bus.RaiseEventAsync(new AssetApplyHandledEvent(assetApply, request.Message));
+                await Bus.RaiseEventAsync(new AssetApplyHandledEvent(
+                    _user.OrgId,
+                    assetApply,
+                    request.Message));
                 return true;
             }
             return false;
@@ -158,7 +164,10 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             _assetDomainService.RevokeAssetApply(assetApply, request.Message);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new AssetApplyRevokedEvent(assetApply, request.Message));
+                await Bus.RaiseEventAsync(new AssetApplyRevokedEvent(
+                    _user.OrgId,
+                    assetApply,
+                    request.Message));
                 return true;
             }
             return false;
@@ -180,7 +189,10 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             _assetDomainService.RemoveAssetApply(assetApply);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new AssetApplyRemovedEvent(assetApply, request.Message));
+                await Bus.RaiseEventAsync(new AssetApplyRemovedEvent(
+                    _user.OrgId,
+                    assetApply,
+                    request.Message));
                 return true;
             }
             return false;

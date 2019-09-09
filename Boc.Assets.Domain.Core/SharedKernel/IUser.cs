@@ -10,7 +10,6 @@ namespace Boc.Assets.Domain.Core.SharedKernel
         string OrgIdentifier { get; }
         string OrgNam { get; }
         string Org2 { get; }
-        Guid ManagementLineId { get; }
         bool IsAuthenticated();
         IEnumerable<Claim> GetClaimsIdentity();
     }

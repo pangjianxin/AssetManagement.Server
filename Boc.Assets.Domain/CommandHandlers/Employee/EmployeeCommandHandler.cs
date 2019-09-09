@@ -2,7 +2,7 @@
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Events;
+using Boc.Assets.Domain.Events.Employees;
 using Boc.Assets.Domain.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +54,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Employee
             var result = await _employeeRepository.AddAsync(employee);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new NonAuditEvent(_user, NonAuditEventType.机构添加员工));
+                await Bus.RaiseEventAsync(new EmployeeAddedEvent(_user.OrgId, result.Name, result.Identifier));
                 return true;
             }
             return false;

@@ -72,7 +72,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             var assetReturn = await _assetDomainService.CreateAssetReturn(asset, _user, targetOrg, request.Message);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new AssetReturnNotifiedEvent(assetReturn, request.Message));
+                await Bus.RaiseEventAsync(new AssetReturnCreatedEvent(_user.OrgId, assetReturn, request.Message));
                 return true;
             }
             return false;
@@ -111,7 +111,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             await _assetDomainService.HandleAssetReturn(asset, assetReturn, request.Message);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new AssetReturnHandledEvent(assetReturn, request.Message));
+                await Bus.RaiseEventAsync(new AssetReturnHandledEvent(_user.OrgId, assetReturn, request.Message));
                 return true;
             }
             return false;
@@ -134,7 +134,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             //提交
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new AssetReturnRevokedEvent(assetReturn, request.Message));
+                await Bus.RaiseEventAsync(new AssetReturnRevokedEvent(_user.OrgId, assetReturn, request.Message));
                 return true;
             }
             return false;
@@ -162,7 +162,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             _assetDomainService.RemoveAssetReturn(asset, assetReturn);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new AssetReturnRevokedEvent(assetReturn, request.Message));
+                await Bus.RaiseEventAsync(new AssetReturnRevokedEvent(_user.OrgId, assetReturn, request.Message));
                 return true;
             }
             return false;

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Boc.Assets.Application.Dto;
-using Boc.Assets.Domain.Events;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Models.AssetStockTakings;
@@ -32,9 +31,6 @@ namespace Boc.Assets.Application.AutoMapper
             //机构空间和DTO之间的映射
             CreateMap<OrganizationSpace, OrgSpaceDto>()
                 .ForMember(it => it.SpaceId, config => config.MapFrom(it => it.Id));
-            //非审计事件和DTO之间的映射
-            CreateMap<NonAuditEvent, NonAuditEventDto>()
-                .ForMember(it => it.Type, config => config.MapFrom(it => it.Type.ToString()));
             //资产申请事件和DTO之间的映射
             CreateMap<AssetApply, AssetApplyDto>()
                 .ForMember(it => it.Status, config => config.MapFrom(it => it.Status.ToString()))

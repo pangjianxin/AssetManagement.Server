@@ -21,7 +21,7 @@ namespace Boc.Assets.Domain.Core.Events
         public string Data { get; private set; }
 
         public string User { get; private set; }
-        public virtual string DateTimeFromNow
+        public string DateTimeFromNow
         {
             get
             {

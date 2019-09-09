@@ -21,7 +21,6 @@ namespace Boc.Assets.Infrastructure.Identity
 
         public string Org2 => _httpContextAccessor.HttpContext.User.FindFirst("org2").Value;
 
-        public Guid ManagementLineId => Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirst("managementLineId").Value);
         public bool IsAuthenticated()
         {
             return _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;

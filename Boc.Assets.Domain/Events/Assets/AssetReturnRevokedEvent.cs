@@ -1,17 +1,23 @@
-﻿using Boc.Assets.Domain.Core.Events;
+﻿using System;
+using Boc.Assets.Domain.Core.Events;
 using Boc.Assets.Domain.Models.Assets.Audit;
 
 namespace Boc.Assets.Domain.Events.Assets
 {
     public class AssetReturnRevokedEvent : Event
     {
-        public AssetReturn AssetReturn { get; }
-        public string Message { get; }
-        public AssetReturnRevokedEvent(AssetReturn assetReturn, string message)
+        public AssetReturnRevokedEvent(Guid aggregateId, AssetReturn assetReturn, string message)
         {
-            AssetReturn = assetReturn;
+            AssetName = assetReturn.AssetName;
+            RequestOrgIdentifier = assetReturn.RequestOrgIdentifier;
+            TargetOrgIdentifier = assetReturn.TargetOrgIdentifier;
             Message = message;
+            AggregateId = aggregateId;
         }
+        public string AssetName { get; set; }
+        public string RequestOrgIdentifier { get; set; }
+        public string TargetOrgIdentifier { get; set; }
+        public string Message { get; }
         public override string ToString()
         {
             return "资产交回已撤销";

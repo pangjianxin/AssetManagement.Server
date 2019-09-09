@@ -14,11 +14,11 @@ namespace Boc.Assets.Domain.EventsHandler
         INotificationHandler<AssetApplyHandledEvent>,
         INotificationHandler<AssetApplyRevokedEvent>,
         INotificationHandler<AssetApplyRemovedEvent>,
-        INotificationHandler<AssetReturnNotifiedEvent>,
+        INotificationHandler<AssetReturnCreatedEvent>,
         INotificationHandler<AssetReturnHandledEvent>,
         INotificationHandler<AssetReturnRevokedEvent>,
         INotificationHandler<AssetReturnRemovedEvent>,
-        INotificationHandler<AssetExchangeNotifiedEvent>,
+        INotificationHandler<AssetExchangeCreatedEvent>,
         INotificationHandler<AssetExchangeHandledEvent>,
         INotificationHandler<AssetExchangeRevokedEvent>,
         INotificationHandler<AssetExchangeRemovedEvent>
@@ -39,10 +39,10 @@ namespace Boc.Assets.Domain.EventsHandler
         /// <returns></returns>
         public async Task Handle(AssetApplyCreatedEvent notification, CancellationToken cancellationToken)
         {
-            await _hubContext.Clients.User(notification.AssetApply.RequestOrgIdentifier).Notify(notification.AssetApply.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
-                $"{notification}申请已送达");
-            await _hubContext.Clients.User(notification.AssetApply.TargetOrgIdentifier).Notify(notification.AssetApply.RequestOrgNam,
+                $"{notification}已送达");
+            await _hubContext.Clients.User(notification.TargetOrgIdentifier).Notify(notification.RequestOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
                 $"发起了{notification}");
         }
@@ -56,9 +56,9 @@ namespace Boc.Assets.Domain.EventsHandler
         public async Task Handle(AssetApplyHandledEvent notification, CancellationToken cancellationToken)
         {
 
-            await _hubContext.Clients.User(notification.AssetApply.RequestOrgIdentifier).Notify(notification.AssetApply.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
-                $"{notification.AssetApply}已通过审核");
+                $"资产申请已通过审核");
         }
         /// <summary>
         /// 资产申请撤销通知
@@ -69,9 +69,9 @@ namespace Boc.Assets.Domain.EventsHandler
         public async Task Handle(AssetApplyRevokedEvent notification, CancellationToken cancellationToken)
         {
 
-            await _hubContext.Clients.User(notification.AssetApply.RequestOrgIdentifier).Notify(notification.AssetApply.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
-                $"{notification.AssetApply}没有通过审核");
+                $"资产申请没有通过审核");
         }
         /// <summary>
         /// 资产申请删除的通知
@@ -81,9 +81,9 @@ namespace Boc.Assets.Domain.EventsHandler
         /// <returns></returns>
         public async Task Handle(AssetApplyRemovedEvent notification, CancellationToken cancellationToken)
         {
-            await _hubContext.Clients.User(notification.AssetApply.RequestOrgIdentifier).Notify(notification.AssetApply.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
-                $"{notification.AssetApply}已删除");
+                $"资产申请已删除");
         }
         #endregion
         #region assetReturn
@@ -93,12 +93,12 @@ namespace Boc.Assets.Domain.EventsHandler
         /// <param name="notification"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task Handle(AssetReturnNotifiedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(AssetReturnCreatedEvent notification, CancellationToken cancellationToken)
         {
-            await _hubContext.Clients.User(notification.AssetReturn.RequestOrgIdentifier).Notify(notification.AssetReturn.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
                 $"{notification}申请已送达");
-            await _hubContext.Clients.User(notification.AssetReturn.TargetOrgIdentifier).Notify(notification.AssetReturn.RequestOrgNam,
+            await _hubContext.Clients.User(notification.TargetOrgIdentifier).Notify(notification.RequestOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
                 $"发起了{notification}");
         }
@@ -111,9 +111,9 @@ namespace Boc.Assets.Domain.EventsHandler
         public async Task Handle(AssetReturnHandledEvent notification, CancellationToken cancellationToken)
         {
 
-            await _hubContext.Clients.User(notification.AssetReturn.RequestOrgIdentifier).Notify(notification.AssetReturn.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
-                $"{notification.AssetReturn}已通过审核");
+                $"资产交回申请已通过审核");
         }
         /// <summary>
         /// 资产交回撤销的通知
@@ -124,9 +124,9 @@ namespace Boc.Assets.Domain.EventsHandler
         public async Task Handle(AssetReturnRevokedEvent notification, CancellationToken cancellationToken)
         {
 
-            await _hubContext.Clients.User(notification.AssetReturn.RequestOrgIdentifier).Notify(notification.AssetReturn.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
-                $"{notification.AssetReturn}没有通过审核");
+                $"你的资产交回没有通过审核");
         }
         /// <summary>
         /// 资产交回已删除的通知
@@ -136,9 +136,9 @@ namespace Boc.Assets.Domain.EventsHandler
         /// <returns></returns>
         public async Task Handle(AssetExchangeRemovedEvent notification, CancellationToken cancellationToken)
         {
-            await _hubContext.Clients.User(notification.AssetExchange.RequestOrgIdentifier).Notify(notification.AssetExchange.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
-                $"{notification.AssetExchange}已删除");
+                $"资产调换申请已删除");
         }
         #endregion
         #region assetExchange
@@ -148,12 +148,12 @@ namespace Boc.Assets.Domain.EventsHandler
         /// <param name="notification"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task Handle(AssetExchangeNotifiedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(AssetExchangeCreatedEvent notification, CancellationToken cancellationToken)
         {
-            await _hubContext.Clients.User(notification.AssetExchange.RequestOrgIdentifier).Notify(notification.AssetExchange.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
                 $"{notification}申请已送达");
-            await _hubContext.Clients.User(notification.AssetExchange.TargetOrgIdentifier).Notify(notification.AssetExchange.RequestOrgNam,
+            await _hubContext.Clients.User(notification.TargetOrgIdentifier).Notify(notification.RequestOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
                 $"发起了{notification}");
         }
@@ -165,9 +165,9 @@ namespace Boc.Assets.Domain.EventsHandler
         /// <returns></returns>
         public async Task Handle(AssetExchangeHandledEvent notification, CancellationToken cancellationToken)
         {
-            await _hubContext.Clients.User(notification.AssetExchange.RequestOrgIdentifier).Notify(notification.AssetExchange.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
-                $"{notification.AssetExchange}已通过审核");
+                $"资产调换已通过审核");
         }
         /// <summary>
         /// 资产交回删除的通知
@@ -177,9 +177,9 @@ namespace Boc.Assets.Domain.EventsHandler
         /// <returns></returns>
         public async Task Handle(AssetReturnRemovedEvent notification, CancellationToken cancellationToken)
         {
-            await _hubContext.Clients.User(notification.AssetReturn.RequestOrgIdentifier).Notify(notification.AssetReturn.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
-                $"{notification.AssetReturn}已删除");
+                $"资产交回申请已删除");
         }
         /// <summary>
         /// 资产调换撤销的通知
@@ -189,9 +189,9 @@ namespace Boc.Assets.Domain.EventsHandler
         /// <returns></returns>
         public async Task Handle(AssetExchangeRevokedEvent notification, CancellationToken cancellationToken)
         {
-            await _hubContext.Clients.User(notification.AssetExchange.RequestOrgIdentifier).Notify(notification.AssetExchange.TargetOrgNam,
+            await _hubContext.Clients.User(notification.RequestOrgIdentifier).Notify(notification.TargetOrgIdentifier,
                 DateTime.Now.ToLocalTime().ToString(CultureInfo.InvariantCulture),
-                $"{notification.AssetExchange}没有通过审核");
+                $"资产机构间调换没有通过审核");
         }
         #endregion
     }

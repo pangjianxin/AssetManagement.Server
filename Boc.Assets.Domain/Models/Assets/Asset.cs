@@ -112,10 +112,11 @@ namespace Boc.Assets.Domain.Models.Assets
         #endregion
 
         #region methods
-        public void ModifyAssetLocation(string assetLocation)
+        public string ModifyAssetLocation(string assetLocation)
         {
             AssetLocation = assetLocation;
             LastModifyDateTime = DateTime.Now;
+            return AssetLocation;
         }
 
         public void StatusChanged(AssetStatus targetStatus)

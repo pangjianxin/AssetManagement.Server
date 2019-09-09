@@ -1,5 +1,6 @@
 ﻿using Boc.Assets.Domain.Core.Events;
 using Boc.Assets.Domain.Models.Assets.Audit;
+using System;
 
 namespace Boc.Assets.Domain.Events.Assets
 {
@@ -8,13 +9,18 @@ namespace Boc.Assets.Domain.Events.Assets
     /// </summary>
     public class AssetApplyHandledEvent : Event
     {
-        public AssetApply AssetApply { get; }
-        public string Message { get; }
-        public AssetApplyHandledEvent(AssetApply assetApply, string message)
+        public AssetApplyHandledEvent(Guid aggregateId, AssetApply assetApply, string message)
         {
-            AssetApply = assetApply;
+            AggregateId = aggregateId;
+            AssetCategory = assetApply.AssetCategoryThirdLevel;
+            RequestOrgIdentifier = assetApply.RequestOrgIdentifier;
+            TargetOrgIdentifier = assetApply.TargetOrgIdentifier;
             Message = message;
         }
+        public string RequestOrgIdentifier { get; set; }
+        public string TargetOrgIdentifier { get; set; }
+        public string AssetCategory { get; set; }
+        public string Message { get; }
         public override string ToString()
         {
             return "资产申请已处理";

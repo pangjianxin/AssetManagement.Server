@@ -78,7 +78,10 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             if (await CommitAsync())
             {
                 //⑤生成一个资产申请调换的事件
-                await Bus.RaiseEventAsync(new AssetExchangeNotifiedEvent(assetExchange, request.Message));
+                await Bus.RaiseEventAsync(new AssetExchangeCreatedEvent(
+                    _user.OrgId,
+                    assetExchange,
+                    request.Message));
             }
             return true;
         }
@@ -110,7 +113,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             if (await CommitAsync())
             {
                 //②发送一个资产调配已处理的事件
-                await Bus.RaiseEventAsync(new AssetExchangeHandledEvent(assetExchange, request.Message));
+                await Bus.RaiseEventAsync(new AssetExchangeHandledEvent(_user.OrgId, assetExchange, request.Message));
                 return true;
             }
             return false;
@@ -134,7 +137,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             if (await CommitAsync())
             {
                 //然后发送资产调配事件撤销的事件以供后续处理
-                await Bus.RaiseEventAsync(new AssetExchangeRevokedEvent(assetExchange, request.Message));
+                await Bus.RaiseEventAsync(new AssetExchangeRevokedEvent(_user.OrgId, assetExchange, request.Message));
                 return true;
             }
             return false;
@@ -166,7 +169,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             if (await CommitAsync())
             {
                 //然后发送资产调配事件撤销的事件以供后续处理
-                await Bus.RaiseEventAsync(new AssetExchangeRevokedEvent(assetExchange, request.Message));
+                await Bus.RaiseEventAsync(new AssetExchangeRevokedEvent(_user.OrgId, assetExchange, request.Message));
                 return true;
             }
             return false;

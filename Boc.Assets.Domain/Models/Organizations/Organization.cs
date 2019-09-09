@@ -84,9 +84,10 @@ namespace Boc.Assets.Domain.Models.Organizations
         }
         #region methods
 
-        public void ChangeOrgShortName(string orgShortName)
+        public string ChangeOrgShortName(string orgShortName)
         {
-            this.OrgShortNam = orgShortName;
+            OrgShortNam = orgShortName;
+            return OrgShortNam;
         }
 
         public void ResetPassword()

@@ -20,7 +20,6 @@ using Boc.Assets.Infrastructure.DataBase;
 using Boc.Assets.Infrastructure.Identity;
 using Boc.Assets.Infrastructure.Repository;
 using Boc.Assets.Infrastructure.Repository.EventSourcing;
-using Boc.Assets.Infrastructure.Services;
 using Boc.Assets.Infrastructure.UnitOfWork;
 using Boc.Assets.Web.Auth.Authentication;
 using Boc.Assets.Web.Auth.Authorization;
@@ -40,6 +39,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Boc.Assets.Infrastructure.DomainServices;
 
 namespace Boc.Assets.Web.Extensions
 {

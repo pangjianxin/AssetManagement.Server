@@ -1,14 +1,14 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
+﻿using System;
+using System.Threading.Tasks;
+using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Models.Organizations;
 using Boc.Assets.Domain.Repositories;
 using Boc.Assets.Domain.Services;
-using System;
-using System.Threading.Tasks;
 
-namespace Boc.Assets.Infrastructure.Services
+namespace Boc.Assets.Infrastructure.DomainServices
 {
     public class AssetDomainService : IAssetDomainService
     {

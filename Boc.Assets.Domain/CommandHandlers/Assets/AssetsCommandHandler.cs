@@ -2,6 +2,7 @@
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
+using Boc.Assets.Domain.Events.Assets;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
 using MediatR;
@@ -41,10 +42,11 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             }
 
             var asset = await _assetRepository.GetByIdAsync(request.AssetId);
-            asset.ModifyAssetLocation(request.AssetLocation);
+            var beforeChangedLocation = asset.AssetLocation;
+            var afterChangedLocation = asset.ModifyAssetLocation(request.AssetLocation);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new NonAuditEvent(_user, NonAuditEventType.资产存放位置信息变更));
+                await Bus.RaiseEventAsync(new AssetLocationChangedEvent(_user.OrgId, beforeChangedLocation, afterChangedLocation));
                 return true;
             }
             return false;

@@ -41,7 +41,7 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetCategory
             category.ChangeUnit(request.AssetMeteringUnit);
             if (await CommitAsync())
             {
-                await Bus.RaiseEventAsync(new CategoryMeteringUnitChangedEvent(category.Id));
+                await Bus.RaiseEventAsync(new CategoryMeteringUnitChangedEvent(_user.OrgId));
                 return true;
             }
             return false;
