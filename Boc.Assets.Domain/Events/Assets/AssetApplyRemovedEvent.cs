@@ -20,9 +20,5 @@ namespace Boc.Assets.Domain.Events.Assets
         public string RequestOrgIdentifier { get; set; }
         public string TargetOrgIdentifier { get; set; }
         public string Message { get; }
-        public override string ToString()
-        {
-            return "资产申请已删除";
-        }
     }
 }

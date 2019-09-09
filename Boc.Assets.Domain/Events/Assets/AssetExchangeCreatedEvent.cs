@@ -21,9 +21,5 @@ namespace Boc.Assets.Domain.Events.Assets
         public string ExchangeOrgIdentifier { get; set; }
         public string TargetOrgIdentifier { get; set; }
         public string Message { get; }
-        public override string ToString()
-        {
-            return "资产机构间调换";
-        }
     }
 }

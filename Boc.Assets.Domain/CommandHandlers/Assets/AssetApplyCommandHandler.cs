@@ -23,7 +23,6 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IAssetRepository _assetRepository;
         private readonly IAssetApplyRepository _assetApplyRepository;
-        private readonly IAssetDeployRepository _assetDeployRepository;
         private readonly IAssetDomainService _assetDomainService;
         private readonly IUser _user;
 
@@ -36,7 +35,6 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             IOrganizationRepository organizationRepository,
             IAssetRepository assetRepository,
             IAssetApplyRepository assetApplyRepository,
-            IAssetDeployRepository assetDeployRepository,
             IAssetDomainService assetDomainService,
             IUser user) : base(unitOfWork, bus, notifications)
         {
@@ -44,7 +42,6 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             _organizationRepository = organizationRepository;
             _assetRepository = assetRepository;
             _assetApplyRepository = assetApplyRepository;
-            _assetDeployRepository = assetDeployRepository;
             _assetDomainService = assetDomainService;
             _user = user;
         }

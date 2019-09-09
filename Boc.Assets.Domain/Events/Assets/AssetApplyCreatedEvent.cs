@@ -18,9 +18,5 @@ namespace Boc.Assets.Domain.Events.Assets
         public string AssetCategory { get; set; }
         public string RequestOrgIdentifier { get; set; }
         public string TargetOrgIdentifier { get; set; }
-        public override string ToString()
-        {
-            return "资产申请";
-        }
     }
 }

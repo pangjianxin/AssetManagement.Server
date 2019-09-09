@@ -69,7 +69,7 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetStockTakings
             }
 
             var assetStockTakingOrganizations = new List<AssetStockTakingOrganization>();
-            foreach (Models.Organizations.Organization targetOrganization in targetOrganizations)
+            foreach (var targetOrganization in targetOrganizations)
             {
                 assetStockTakingOrganizations.Add(new AssetStockTakingOrganization(targetOrganization.Id, assetStockTaking.Id));
             }
@@ -92,7 +92,7 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetStockTakings
             }
 
             var isExist = await _detailRepository.GetAll(it => it.AssetStockTakingOrganizationId == request.AssetStockTakingOrganizationId
-                                                               && it.AssetId == request.AssetId).AnyAsync();
+                                                               && it.AssetId == request.AssetId).AnyAsync(cancellationToken: cancellationToken);
             if (isExist)
             {
                 await Bus.RaiseEventAsync(new DomainNotification("重复", "同一资产多次盘点"));

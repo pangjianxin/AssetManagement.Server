@@ -1,12 +1,12 @@
-﻿using System;
-using Boc.Assets.Domain.Core.Events;
+﻿using Boc.Assets.Domain.Core.Events;
 using Boc.Assets.Domain.Models.Assets.Audit;
+using System;
 
 namespace Boc.Assets.Domain.Events.Assets
 {
     public class AssetExchangeRevokedEvent : Event
     {
-        
+
         public AssetExchangeRevokedEvent(Guid aggregateId, AssetExchange assetExchange, string message)
         {
             AssetName = assetExchange.AssetName;
@@ -21,9 +21,5 @@ namespace Boc.Assets.Domain.Events.Assets
         public string ExchangeOrgIdentifier { get; set; }
         public string TargetOrgIdentifier { get; set; }
         public string Message { get; }
-        public override string ToString()
-        {
-            return "资产机构简调换已撤销";
-        }
     }
 }
