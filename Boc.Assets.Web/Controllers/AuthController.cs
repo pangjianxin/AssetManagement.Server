@@ -1,5 +1,4 @@
-﻿using Boc.Assets.Application.Dto;
-using Boc.Assets.Application.ServiceInterfaces;
+﻿using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.ViewModels.Login;
 using Boc.Assets.Application.ViewModels.Organization;
@@ -9,8 +8,6 @@ using Boc.Assets.Web.Auth.Authentication;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers
@@ -44,26 +41,11 @@ namespace Boc.Assets.Web.Controllers
             {
                 return AppResponse();
             }
-            var organization = await _organizationService.GetByOrgIdentifierAsync(model.OrgIdentifier);
             var accessToken = await _jwtFactory.CreateTokenAsync(model.OrgIdentifier);
             return AppResponse(new
             {
-                organization,
                 access_token = accessToken
             }, "登录成功");
-        }
-        /// <summary>
-        /// 获取用户额外信息
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("userEndPoint")]
-        [Authorize]
-        public async Task<IActionResult> UserInfoEndPoint()
-        {
-            var orgId = User.Claims.Single(it => it.Type == "orgId").Value;
-            OrgDto organization = await _organizationService.GetByIdAsync(Guid.Parse(orgId));
-            var accessToken = await _jwtFactory.CreateTokenAsync(organization.OrgIdentifier);
-            return AppResponse(new { organization, access_token = accessToken }, "success");
         }
         /// <summary>
         /// 修改用户简称

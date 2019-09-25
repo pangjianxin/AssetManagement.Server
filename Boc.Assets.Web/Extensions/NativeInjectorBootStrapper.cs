@@ -12,11 +12,12 @@ using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.Repositories;
 using Boc.Assets.Domain.Core.SharedKernel;
+using Boc.Assets.Domain.EventsHandler.SignalR;
 using Boc.Assets.Domain.Repositories;
 using Boc.Assets.Domain.Services;
-using Boc.Assets.Domain.SignalR;
 using Boc.Assets.Infrastructure.Bus;
 using Boc.Assets.Infrastructure.DataBase;
+using Boc.Assets.Infrastructure.DomainServices;
 using Boc.Assets.Infrastructure.Identity;
 using Boc.Assets.Infrastructure.Repository;
 using Boc.Assets.Infrastructure.Repository.EventSourcing;
@@ -39,7 +40,6 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using Boc.Assets.Infrastructure.DomainServices;
 
 namespace Boc.Assets.Web.Extensions
 {
@@ -117,6 +117,7 @@ namespace Boc.Assets.Web.Extensions
 
             //signalR
             services.AddSignalR();
+            services.AddSingleton<IOnlineUserInfo, OnLineUserInfoInMemory>();
             services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
             #endregion
             //event sourcing
@@ -204,7 +205,7 @@ namespace Boc.Assets.Web.Extensions
                         {
                             // If the request is for our hub...
                             var path = context.HttpContext.Request.Path;
-                            if (path.StartsWithSegments("/eventMessage"))
+                            if (path.StartsWithSegments("/eventMessage") || path.StartsWithSegments("/chat"))
                             {
                                 var accessToken = context.Request.Query["access_token"];
                                 // Read the token out of the query string

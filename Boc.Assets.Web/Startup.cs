@@ -1,4 +1,4 @@
-﻿using Boc.Assets.Domain.SignalR;
+﻿using Boc.Assets.Domain.EventsHandler.SignalR;
 using Boc.Assets.Web.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,7 +33,7 @@ namespace Boc.Assets.Web
             app.UseAuthentication();
             app.UseSignalR(route =>
             {
-                route.MapHub<EventMessageHub>("/eventMessage");
+                route.MapHub<ChatHub>("/chat");
             });
             app.UseMvc();
 
