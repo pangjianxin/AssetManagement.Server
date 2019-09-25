@@ -1,5 +1,6 @@
 ﻿using Boc.Assets.Domain.Core.Events;
 using Boc.Assets.Domain.Models.Assets.Audit;
+using System;
 
 namespace Boc.Assets.Domain.Events.Assets
 {
@@ -8,10 +9,17 @@ namespace Boc.Assets.Domain.Events.Assets
     /// </summary>
     public class AssetApplyHandledEvent : Event
     {
-        public AssetApplyHandledEvent(AssetApply assetApply)
+        public AssetApplyHandledEvent(Guid aggregateId, AssetApply assetApply, string message)
         {
-            AssetApply = assetApply;
+            AggregateId = aggregateId;
+            AssetCategory = assetApply.AssetCategoryThirdLevel;
+            RequestOrgIdentifier = assetApply.RequestOrgIdentifier;
+            TargetOrgIdentifier = assetApply.TargetOrgIdentifier;
+            Message = message;
         }
-        public AssetApply AssetApply { get; }
+        public string RequestOrgIdentifier { get; set; }
+        public string TargetOrgIdentifier { get; set; }
+        public string AssetCategory { get; set; }
+        public string Message { get; }
     }
 }

@@ -12,10 +12,12 @@ using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.Repositories;
 using Boc.Assets.Domain.Core.SharedKernel;
+using Boc.Assets.Domain.EventsHandler.SignalR;
 using Boc.Assets.Domain.Repositories;
-using Boc.Assets.Domain.SignalR;
+using Boc.Assets.Domain.Services;
 using Boc.Assets.Infrastructure.Bus;
 using Boc.Assets.Infrastructure.DataBase;
+using Boc.Assets.Infrastructure.DomainServices;
 using Boc.Assets.Infrastructure.Identity;
 using Boc.Assets.Infrastructure.Repository;
 using Boc.Assets.Infrastructure.Repository.EventSourcing;
@@ -104,6 +106,8 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<ISieveCustomFilterMethods, EntitiesSieveFilterMethods>();
             services.AddScoped<ISieveCustomSortMethods, EntitiesSieveSortMethods>();
             services.AddScoped<ISieveProcessor, PangSieveProcessor>();
+            //domain service
+            services.AddScoped<IAssetDomainService, AssetDomainService>();
             //Mediator
             services.AddMediatR(typeof(OrganizationCommandHandler));
             //domain event handlers
@@ -113,16 +117,17 @@ namespace Boc.Assets.Web.Extensions
 
             //signalR
             services.AddSignalR();
+            services.AddSingleton<IOnlineUserInfo, OnLineUserInfoInMemory>();
             services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
             #endregion
             //event sourcing
-            services.AddScoped(typeof(IEventSource<>), typeof(EfCoreEventSource<>));
+            services.AddScoped<IEventStore, EfCoreEventStore>();
+            services.AddScoped<IEventRepository, EfCoreEventRepository>();
             //entities repositories
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IAssetCategoryRepository, AssetCategoryRepository>();
             services.AddScoped<IOrgSpaceRepository, OrgSpaceRepository>();
-            services.AddScoped<IManagementLineRepository, ManagementLineRepository>();
             services.AddScoped<IAssetDeployRepository, AssetDeployRepository>();
             services.AddScoped<IAssetStockTakingRepository, AssetStockTakingRepository>();
             services.AddScoped<IAssetStockTakingOrganizationRepository, AssetStockTakingOrganizationRepository>();
@@ -134,14 +139,13 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetApplyRepository, AssetApplyRepository>();
             services.AddScoped<IAssetReturnRepository, AssetReturnRepository>();
             services.AddScoped<IAssetExchangeRepository, AssetExchangeRepository>();
+            services.AddScoped<ICategoryOrgRegistrationRepository, CategoryOrgRegistrationRepository>();
 
             //application services
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IAssetService, AssetService>();
             services.AddScoped<IAssetCategoryService, AssetCategoryService>();
             services.AddScoped<IOrgSpaceService, OrgSpaceService>();
-            services.AddScoped<INonAuditEventService, NonAuditEventService>();
-            services.AddScoped<IManagementLineService, ManagementLineService>();
             services.AddScoped<IAssetDeployService, AssetDeployService>();
             services.AddScoped<IAssetStockTakingService, AssetStockTakingService>();
             services.AddScoped<IEmployeeService, EmployService>();
@@ -151,6 +155,7 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetReturnService, AssetReturnService>();
             services.AddScoped<IAssetExchangeService, AssetExchangeService>();
             services.AddScoped<IOrganizationRoleService, OrganizationRoleService>();
+            services.AddScoped<ICategoryOrgRegistrationService, CategoryOrgRegistrationService>();
 
         }
         private static void AddJwtAuthentication(IServiceCollection services, IConfiguration config)
@@ -193,14 +198,14 @@ namespace Boc.Assets.Web.Extensions
                         ClockSkew = TimeSpan.FromMinutes(5),
 
                     };
-                    //signalr需要这个配置
+                    //SignalR需要这个配置
                     option.Events = new JwtBearerEvents()
                     {
                         OnMessageReceived = context =>
                         {
                             // If the request is for our hub...
                             var path = context.HttpContext.Request.Path;
-                            if (path.StartsWithSegments("/eventMessage"))
+                            if (path.StartsWithSegments("/eventMessage") || path.StartsWithSegments("/chat"))
                             {
                                 var accessToken = context.Request.Query["access_token"];
                                 // Read the token out of the query string

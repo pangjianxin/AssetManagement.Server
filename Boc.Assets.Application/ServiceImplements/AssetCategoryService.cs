@@ -1,6 +1,11 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Boc.Assets.Application.Dto;
+using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.Sieve.Services;
@@ -12,12 +17,8 @@ using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
-namespace Boc.Assets.Application.Pagination
+namespace Boc.Assets.Application.ServiceImplements
 {
     public class AssetCategoryService : IAssetCategoryService
     {
@@ -25,13 +26,11 @@ namespace Boc.Assets.Application.Pagination
         private readonly IMapper _mapper;
         private readonly IBus _bus;
         private readonly ISieveProcessor _sieveProcessor;
-        private readonly IUser _user;
         private readonly SieveOptions _sieveOptions;
 
         public AssetCategoryService(IAssetCategoryRepository assetCategoryRepository,
             IMapper mapper,
             IBus bus,
-            IUser user,
             ISieveProcessor sieveProcessor,
             IOptions<SieveOptions> sieveOptions)
         {
@@ -39,7 +38,6 @@ namespace Boc.Assets.Application.Pagination
             _mapper = mapper;
             _bus = bus;
             _sieveProcessor = sieveProcessor;
-            _user = user;
             _sieveOptions = sieveOptions.Value;
         }
 

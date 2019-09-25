@@ -1,21 +1,19 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Assets;
+﻿using Boc.Assets.Domain.Commands.Validations.Assets;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
     public class HandleAssetReturnCommand : AssetCommand
     {
 
-        public HandleAssetReturnCommand(IUser principal, Guid eventId) : base(principal)
+        public HandleAssetReturnCommand(Guid eventId)
         {
             EventId = eventId;
         }
 
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new HandleAssetReturnCommandValidator().ValidateAsync(this);
+            ValidationResult = new HandleAssetReturnCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

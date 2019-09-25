@@ -1,20 +1,18 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Maintainers;
+﻿using Boc.Assets.Domain.Commands.Validations.Maintainers;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Commands.Maintainers
 {
     public class DeleteMaintainerCommand : MaintainerCommand
     {
-        public DeleteMaintainerCommand(IUser principal, Guid maintainerId) : base(principal)
+        public DeleteMaintainerCommand(Guid maintainerId)
         {
             MaintainerId = maintainerId;
         }
 
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new DeleteMaintainerCommandValidator().ValidateAsync(this);
+            ValidationResult = new DeleteMaintainerCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

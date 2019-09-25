@@ -1,23 +1,17 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
+﻿using Boc.Assets.Domain.Core.Events;
 using FluentValidation.Results;
-using MediatR;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Core.Commands
 {
-    public abstract class Command : IRequest<bool>
+    public abstract class Command : Message
     {
-        public IUser Principal { get; protected set; }
-        public DateTime Timestamp { get; protected set; }
-        public ValidationResult ValidationResult { get; protected set; }
-
-        protected Command(IUser principal)
+        protected Command()
         {
-            Principal = principal;
             Timestamp = DateTime.Now;
         }
-
-        public abstract Task<bool> IsValid();
+        public DateTime Timestamp { get; private set; }
+        public ValidationResult ValidationResult { get; protected set; }
+        public abstract bool IsValid();
     }
 }

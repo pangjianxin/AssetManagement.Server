@@ -13,9 +13,9 @@ namespace Boc.Assets.Application.ServiceInterfaces
     {
         Task<PaginatedList<AssetReturnDto>> PaginationAsync(SieveModel model,
             Expression<Func<AssetReturn, bool>> predicate);
-        Task<AssetReturnDto> RemoveAsync(Guid eventId);
-        Task RevokeAsync(Revoke model);
-        Task HandleAsync(HandleAssetReturn model);
-        Task AssetReturnAsync(ReturnAsset model);
+        Task<bool> RemoveAssetReturnAsync(RemoveAssetReturn model);
+        Task RevokeAssetReturnAsync(RevokeAssetReturn model);
+        Task HandleAssetReturnAsync(HandleAssetReturn model);
+        Task CreateAssetReturnAsync(ReturnAsset model);
     }
 }

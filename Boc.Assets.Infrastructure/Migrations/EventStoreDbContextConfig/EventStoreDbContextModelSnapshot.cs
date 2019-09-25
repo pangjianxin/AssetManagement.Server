@@ -19,32 +19,24 @@ namespace Boc.Assets.Infrastructure.migrations.eventstoredbcontextconfig
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Boc.Assets.Domain.Events.NonAuditEvent", b =>
+            modelBuilder.Entity("Boc.Assets.Domain.Core.Events.StoredEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Org2")
-                        .IsRequired()
-                        .HasMaxLength(20);
+                    b.Property<Guid>("AggregateId");
 
-                    b.Property<Guid>("OrgId");
+                    b.Property<string>("Data");
 
-                    b.Property<string>("OrgIdentifier")
-                        .IsRequired()
-                        .HasMaxLength(20);
-
-                    b.Property<string>("OrgNam")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                    b.Property<string>("MessageType");
 
                     b.Property<DateTime>("TimeStamp");
 
-                    b.Property<int>("Type");
+                    b.Property<string>("User");
 
                     b.HasKey("Id");
 
-                    b.ToTable("NonAuditEvents");
+                    b.ToTable("StoredEvents");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,21 +1,19 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Assets;
+﻿using Boc.Assets.Domain.Commands.Validations.Assets;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
     public class HandleAssetApplyCommand : AssetCommand
     {
 
-        public HandleAssetApplyCommand(IUser principal, Guid eventId, Guid assetId) : base(principal)
+        public HandleAssetApplyCommand(Guid eventId, Guid assetId)
         {
             EventId = eventId;
             AssetId = assetId;
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new HandleAssetApplyCommandValidator().ValidateAsync(this);
+            ValidationResult = new HandleAssetApplyCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

@@ -44,6 +44,16 @@ namespace Boc.Assets.Application.ServiceImplements
             _sieveOptions = options.Value;
         }
         #region update
+
+        public async Task<IEnumerable<dynamic>> CategoriesByManagerOrg(Expression<Func<Asset, bool>> predicate)
+        {
+            var result = from asset in _assetRepository.GetAll(predicate)
+                         group asset by asset.OrganizationBelonged.OrgIdentifier
+                into final
+                         select new { name = final.Key, value = final.Count() };
+            return await result.ToListAsync();
+        }
+
         public async Task ModifyAssetLocationAsync(ModifyAssetLocation model)
         {
             var command = _mapper.Map<ModifyAssetLocationCommand>(model);
@@ -66,15 +76,6 @@ namespace Boc.Assets.Application.ServiceImplements
                 into m
 
                          select new { name = m.Key.AssetThirdLevelCategory, value = m.Count(), description = m.Key.Id };
-            return await result.ToListAsync();
-        }
-
-        public async Task<IEnumerable<dynamic>> CategoriesByManagementLineAsync(Expression<Func<Asset, bool>> predicate)
-        {
-            var result = from n in _assetRepository.GetAll(predicate)
-                         group n by n.AssetCategory.ManagementLine
-                into m
-                         select new { name = m.Key.ManagementLineName, value = m.Count() };
             return await result.ToListAsync();
         }
 

@@ -1,14 +1,10 @@
 ﻿using Boc.Assets.Domain.Core.Commands;
-using Boc.Assets.Domain.Core.SharedKernel;
 using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
     public abstract class AssetCommand : Command
     {
-        protected AssetCommand(IUser principal) : base(principal)
-        {
-        }
         /// <summary>
         /// 资产序号
         /// </summary>

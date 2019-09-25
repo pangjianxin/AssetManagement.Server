@@ -1,20 +1,18 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Assets;
+﻿using Boc.Assets.Domain.Commands.Validations.Assets;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
     public class RevokeAssetApplyCommand : AssetCommand
     {
-        public RevokeAssetApplyCommand(IUser principal, Guid eventId, string message) : base(principal)
+        public RevokeAssetApplyCommand(Guid eventId, string message)
         {
             EventId = eventId;
             Message = message;
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new RevokeAssetApplyCommandValidator().ValidateAsync(this);
+            ValidationResult = new RevokeAssetApplyCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

@@ -1,19 +1,17 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.OrganizationSpace;
-using System.Threading.Tasks;
+﻿using Boc.Assets.Domain.Commands.Validations.OrganizationSpace;
 
 namespace Boc.Assets.Domain.Commands.OrganizationSpace
 {
     public class CreateSpaceCommand : OrgSpaceCommand
     {
-        public CreateSpaceCommand(IUser principal, string spaceName, string spaceDescription) : base(principal)
+        public CreateSpaceCommand(string spaceName, string spaceDescription)
         {
             SpaceName = spaceName;
             SpaceDescription = spaceDescription;
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new CreateSpaceCommandValidator().ValidateAsync(this);
+            ValidationResult = new CreateSpaceCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

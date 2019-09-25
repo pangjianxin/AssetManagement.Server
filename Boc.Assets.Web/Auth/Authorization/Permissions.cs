@@ -13,8 +13,6 @@
             public const string Dashboard = "仪表板";
             public const string Employe = "员工";
             public const string Maintainer = "资产维修供应商";
-            public const string ManagementLine = "机构条线";
-            public const string NonAuditEvent = "用户事件";
             public const string OrganizationSpace = "机构空间";
             public const string Permission = "权限";
         }
@@ -83,14 +81,7 @@
             public const string Maintainer_Read_Secondary = "二级行读取";
             public const string Maintainer_Modify_Secondary = "二级行更新";
 
-            /*机构条线的操作权限*/
-            public const string ManagementLine_Read = "读取";
 
-            /*用户事件的操作权限*/
-            public const string NonAuditEvent_Read_Current = "本机构读取";
-            public const string NonAuditEvent_Delete_Current = "本机构删除";
-            public const string NonAuditEvent_Delete_Secondary = "二级行删除";
-            public const string NonAuditEvent_Read_Secondary = "二级行读取";
 
             /*机构空间的操作权限*/
             public const string OrgSpace_Read_Current = "本机构读取";

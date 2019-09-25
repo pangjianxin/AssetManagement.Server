@@ -7,7 +7,14 @@ namespace Boc.Assets.Domain.Models.Assets
     public class AssetDeploy : EntityBase
     {
         public AssetDeployCategory AssetDeployCategory { get; set; }
+        /// <summary>
+        /// 创建日期
+        /// </summary>
         public DateTime CreateDateTime { get; set; } = DateTime.Now;
+        /// <summary>
+        /// 资产索引
+        /// </summary>
+        public Guid AssetId { get; set; }
         /// <summary>
         /// 调配资产标签号
         /// </summary>
@@ -16,8 +23,25 @@ namespace Boc.Assets.Domain.Models.Assets
         /// 调配资产名称
         /// </summary>
         public string AssetName { get; set; }
+        /// <summary>
+        /// 资产编号
+        /// </summary>
+        public string AssetNo { get; set; }
+        /// <summary>
+        /// 二级机构号
+        /// </summary>
+        public string Org2 { get; set; }
+        /// <summary>
+        /// 资产输出机构
+        /// </summary>
         public OrganizationInfo ExportOrgInfo { get; set; }
+        /// <summary>
+        /// 资产输入机构
+        /// </summary>
         public OrganizationInfo ImportOrgInfo { get; set; }
+        /// <summary>
+        /// 审批机构
+        /// </summary>
         public OrganizationInfo AuthorizeOrgInfo { get; set; }
         #region methods
         /// <summary>
@@ -28,7 +52,7 @@ namespace Boc.Assets.Domain.Models.Assets
         {
             get
             {
-                var span = DateTime.Now - CreateDateTime;
+                var span = DateTime.Now.Subtract(CreateDateTime);
                 if (span.TotalDays > 60)
                 {
                     return "2个月前";
@@ -82,7 +106,6 @@ namespace Boc.Assets.Domain.Models.Assets
 
     public class OrganizationInfo : ValueObject
     {
-        public string Org2 { get; set; }
         public Guid OrgId { get; set; }
         public string OrgIdentifier { get; set; }
         public string OrgNam { get; set; }

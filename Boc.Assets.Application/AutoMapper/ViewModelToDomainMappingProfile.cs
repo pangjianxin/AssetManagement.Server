@@ -24,47 +24,47 @@ namespace Boc.Assets.Application.AutoMapper
         public ViewModelToDomainMappingProfile()
         {
             CreateMap<ChangeOrgShortName, ChangeOrgShortNameCommand>()
-                .ConstructUsing(c => new ChangeOrgShortNameCommand(c.Principal, c.OrgIdentifier, c.OrgShortNam));
+                .ConstructUsing(c => new ChangeOrgShortNameCommand(c.OrgIdentifier, c.OrgShortNam));
             CreateMap<ResetOrgPassword, ResetOrgPasswordCommand>()
-                .ConstructUsing(c => new ResetOrgPasswordCommand(c.Principal, c.OrgIdentifier));
+                .ConstructUsing(c => new ResetOrgPasswordCommand(c.OrgIdentifier));
             CreateMap<ChangeOrgPassword, ChangeOrgPasswordCommand>()
-                .ConstructUsing(c => new ChangeOrgPasswordCommand(c.Principal, c.OrgIdentifier,
+                .ConstructUsing(c => new ChangeOrgPasswordCommand(c.OrgIdentifier,
                     c.OldPassword, c.NewPassword, c.ConfirmPassword));
             CreateMap<ChangeMeteringUnit, ChangeMeteringUnitCommand>()
-                .ConstructUsing(c => new ChangeMeteringUnitCommand(c.Principal, c.AssetCategoryId, c.AssetMeteringUnit));
+                .ConstructUsing(c => new ChangeMeteringUnitCommand(c.AssetCategoryId, c.AssetMeteringUnit));
             CreateMap<CreateSpace, CreateSpaceCommand>()
-                .ConstructUsing(c => new CreateSpaceCommand(c.Principal, c.SpaceName, c.SpaceDescription));
+                .ConstructUsing(c => new CreateSpaceCommand(c.SpaceName, c.SpaceDescription));
             CreateMap<ModifySpaceInfo, ModifySpaceInfoCommand>()
-                .ConstructUsing(c => new ModifySpaceInfoCommand(c.Principal, c.SpaceId, c.SpaceName, c.SpaceDescription));
+                .ConstructUsing(c => new ModifySpaceInfoCommand(c.SpaceId, c.SpaceName, c.SpaceDescription));
             CreateMap<ModifyAssetLocation, ModifyAssetLocationCommand>()
-                .ConstructUsing(c => new ModifyAssetLocationCommand(c.Principal, c.AssetId, c.AssetLocation));
-            CreateMap<ApplyAsset, ApplyAssetCommand>()
-                .ConstructUsing(c => new ApplyAssetCommand(c.Principal, c.TargetOrgId, c.AssetCategoryId, c.Message));
+                .ConstructUsing(c => new ModifyAssetLocationCommand(c.AssetId, c.AssetLocation));
+            CreateMap<ApplyAsset, CreateAssetApplyCommand>()
+                .ConstructUsing(c => new CreateAssetApplyCommand(c.TargetOrgId, c.AssetCategoryId, c.Message));
             CreateMap<HandleAssetApply, HandleAssetApplyCommand>()
-                .ConstructUsing(c => new HandleAssetApplyCommand(c.Principal, c.EventId, c.AssetId));
-            CreateMap<ReturnAsset, ReturnAssetCommand>()
-                .ConstructUsing(c => new ReturnAssetCommand(c.Principal, c.TargetOrgId, c.AssetId, c.Message));
+                .ConstructUsing(c => new HandleAssetApplyCommand(c.EventId, c.AssetId));
+            CreateMap<ReturnAsset, CreateAssetReturnCommand>()
+                .ConstructUsing(c => new CreateAssetReturnCommand(c.TargetOrgId, c.AssetId, c.Message));
             CreateMap<HandleAssetReturn, HandleAssetReturnCommand>()
-                .ConstructUsing(c => new HandleAssetReturnCommand(c.Principal, c.EventId));
-            CreateMap<ExchangeAsset, ExchangeAssetCommand>()
-                .ConstructUsing(c => new ExchangeAssetCommand(c.Principal, c.TargetOrgId, c.ExchangeOrgId, c.AssetId, c.Message));
+                .ConstructUsing(c => new HandleAssetReturnCommand(c.EventId));
+            CreateMap<ExchangeAsset, CreateAssetExchangeCommand>()
+                .ConstructUsing(c => new CreateAssetExchangeCommand(c.TargetOrgId, c.ExchangeOrgId, c.AssetId, c.Message));
             CreateMap<HandleAssetExchange, HandleAssetExchangeCommand>()
-                .ConstructUsing(c => new HandleAssetExchangeCommand(c.Principal, c.EventId));
-            CreateMap<Revoke, RevokeAssetApplyCommand>()
-                .ConstructUsing(c => new RevokeAssetApplyCommand(c.Principal, c.EventId, c.Message));
-            CreateMap<Revoke, RevokeAssetReturnCommand>()
-                .ConstructUsing(c => new RevokeAssetReturnCommand(c.Principal, c.EventId, c.Message));
-            CreateMap<Revoke, RevokeAssetExchangeCommand>()
-                .ConstructUsing(c => new RevokeAssetExchangeCommand(c.Principal, c.EventId, c.Message));
+                .ConstructUsing(c => new HandleAssetExchangeCommand(c.EventId));
+            CreateMap<RevokeAssetApply, RevokeAssetApplyCommand>()
+                .ConstructUsing(c => new RevokeAssetApplyCommand(c.EventId, c.Message));
+            CreateMap<RevokeAssetReturn, RevokeAssetReturnCommand>()
+                .ConstructUsing(c => new RevokeAssetReturnCommand(c.EventId, c.Message));
+            CreateMap<RevokeAssetExchange, RevokeAssetExchangeCommand>()
+                .ConstructUsing(c => new RevokeAssetExchangeCommand(c.EventId, c.Message));
             CreateMap<StoreAsset, StoreAssetWithOutFileCommand>()
-                .ConstructUsing(c => new StoreAssetWithOutFileCommand(c.Principal, c.AssetName, c.Brand, c.AssetDescription, c.AssetType, c.AssetLocation, c.AssetCategoryId, c.CreateDateTime, c.StartTagNumber, c.EndTagNumber));
+                .ConstructUsing(c => new StoreAssetWithOutFileCommand(c.AssetName, c.Brand, c.AssetDescription, c.AssetType, c.AssetLocation, c.AssetCategoryId, c.CreateDateTime, c.StartTagNumber, c.EndTagNumber));
             CreateMap<CreateAssetStockTaking, CreateAssetStockTakingCommand>()
                 .ConstructUsing(c =>
-                    new CreateAssetStockTakingCommand(c.Principal, c.TaskName, c.TaskComment, c.ExpiryDateTime, c.ExcludedOrganizations));
+                    new CreateAssetStockTakingCommand(c.TaskName, c.TaskComment, c.ExpiryDateTime, c.ExcludedOrganizations));
             CreateMap<AddEmployee, AddEmployeeCommand>()
-                .ConstructUsing(c => new AddEmployeeCommand(c.Principal, c.Name, c.Identifier, c.Org2, c.Telephone, c.OfficePhone));
+                .ConstructUsing(c => new AddEmployeeCommand(c.Name, c.Identifier, c.Org2, c.Telephone, c.OfficePhone));
             CreateMap<CreateAssetStockTakingDetail, CreateAssetStockTakingDetailCommand>()
-                .ConstructUsing(c => new CreateAssetStockTakingDetailCommand(c.Principal, c.AssetId,
+                .ConstructUsing(c => new CreateAssetStockTakingDetailCommand(c.AssetId,
                     c.AssetStockTakingOrganizationId,
                     c.ResponsibilityIdentity,
                     c.ResponsibilityName,
@@ -73,12 +73,16 @@ namespace Boc.Assets.Application.AutoMapper
                     (StockTakingStatus)c.StockTakingStatus,
                     c.Message));
             CreateMap<AddMaintainer, AddMaintainerCommand>()
-                .ConstructUsing(c => new AddMaintainerCommand(c.Principal, c.AssetCategoryId, c.CompanyName,
+                .ConstructUsing(c => new AddMaintainerCommand(c.OrganizationId, c.Org2, c.AssetCategoryId, c.CompanyName,
                     c.MaintainerName, c.Telephone, c.OfficePhone));
             CreateMap<DeleteMaintainer, DeleteMaintainerCommand>()
-                .ConstructUsing(c => new DeleteMaintainerCommand(c.Principal, c.MaintainerId));
+                .ConstructUsing(c => new DeleteMaintainerCommand(c.MaintainerId));
             CreateMap<RemoveAssetApply, RemoveAssetApplyCommand>()
-                .ConstructUsing(c => new RemoveAssetApplyCommand(c.Principal, c.EventId));
+                .ConstructUsing(c => new RemoveAssetApplyCommand(c.EventId));
+            CreateMap<RemoveAssetReturn, RemoveAssetReturnCommand>()
+                .ConstructUsing(c => new RemoveAssetReturnCommand(c.EventId));
+            CreateMap<RemoveAssetExchange, RemoveAssetExchangeCommand>()
+                .ConstructUsing(c => new RemoveAssetExchangeCommand(c.EventId));
             CreateMap<ModifyPermission, ModifyPermissionCommand>();
 
 

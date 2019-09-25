@@ -13,16 +13,16 @@ namespace Boc.Assets.Web.Controllers
 {
     public abstract class ApiController : ControllerBase
     {
-        protected readonly DomainNotificationHandler _notifications;
+        protected readonly DomainNotificationHandler Notifications;
         protected readonly IUser _user;
         protected ApiController(INotificationHandler<DomainNotification> notifications, IUser user)
         {
-            _notifications = notifications as DomainNotificationHandler;
+            Notifications = notifications as DomainNotificationHandler;
             _user = user;
         }
         protected bool IsValidOperation()
         {
-            return !(_notifications.HasNotifications());
+            return !(Notifications.HasNotifications());
         }
         protected IActionResult AppResponse(object data = null, string message = null)
         {
@@ -30,7 +30,7 @@ namespace Boc.Assets.Web.Controllers
             {
                 return Ok(new ActionHandleResult(true, message, data));
             }
-            var messages = _notifications.GetNotifications().Select(it => KeyValuePair.Create(it.Key, it.Value));
+            var messages = Notifications.GetNotifications().Select(it => KeyValuePair.Create(it.Key, it.Value));
             var finalMessage = new StringBuilder();
             foreach (var item in messages)
             {

@@ -24,13 +24,17 @@ namespace Boc.Assets.Infrastructure.DbConfigurations.ApplicationDbContextConfig
             //资产编号
             builder.Property(it => it.AssetNo).HasMaxLength(100);
             //资产最后修改备注
-            builder.Property(it => it.LastModifyComment).HasMaxLength(100);
+            builder.Property(it => it.LatestDeployRecord).HasMaxLength(100);
+            //资产存放机构号
+            builder.Property(it => it.StoredOrgIdentifier).HasMaxLength(20);
+            //资产存放机构名称
+            builder.Property(it => it.StoredOrgName).HasMaxLength(50);
             //配置外键关系--资产分类
             builder.HasOne(it => it.AssetCategory).WithMany(it => it.Assets)
                 .HasForeignKey(it => it.AssetCategoryId);
-            //配置外键关系--机构信息
-            builder.HasOne(it => it.Organization).WithMany(it => it.Assets)
-                .HasForeignKey(it => it.OrganizationId)
+            //配置外键关系--所属机构信息
+            builder.HasOne(it => it.OrganizationBelonged).WithMany(it => it.AssetsBelongs)
+                .HasForeignKey(it => it.OrganizationBelongedId)
                 .OnDelete(DeleteBehavior.SetNull);
         }
     }

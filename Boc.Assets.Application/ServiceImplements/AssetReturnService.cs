@@ -8,7 +8,6 @@ using Boc.Assets.Application.Sieve.Services;
 using Boc.Assets.Application.ViewModels.Assets;
 using Boc.Assets.Domain.Commands.Assets;
 using Boc.Assets.Domain.Core.Bus;
-using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Repositories;
@@ -54,34 +53,44 @@ namespace Boc.Assets.Application.ServiceImplements
             return new PaginatedList<AssetReturnDto>(
                 _sieveOptions, model.Page, model.PageSize, count, pagination);
         }
-
-        public async Task<AssetReturnDto> RemoveAsync(Guid eventId)
+        /// <summary>
+        /// 删除资产交回申请
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<bool> RemoveAssetReturnAsync(RemoveAssetReturn model)
         {
-            var assetReturn = await _assetReturnRepository.GetByIdAsync(eventId);
-            if (assetReturn == null)
-            {
-                await _bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的事件参数有误，请联系管理员或重新发起"));
-                return null;
-            }
-            _assetReturnRepository.Remove(assetReturn);
-            return _mapper.Map<AssetReturnDto>(assetReturn);
+            var command = _mapper.Map<RemoveAssetReturnCommand>(model);
+            return await _bus.SendCommandAsync(command);
         }
-
-        public async Task RevokeAsync(Revoke model)
+        /// <summary>
+        /// 撤销资产交回申请
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task RevokeAssetReturnAsync(RevokeAssetReturn model)
         {
             var command = _mapper.Map<RevokeAssetReturnCommand>(model);
             await _bus.SendCommandAsync(command);
         }
-
-        public async Task HandleAsync(HandleAssetReturn model)
+        /// <summary>
+        /// 处理资产交回申请
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task HandleAssetReturnAsync(HandleAssetReturn model)
         {
             var command = _mapper.Map<HandleAssetReturnCommand>(model);
             await _bus.SendCommandAsync(command);
         }
-
-        public async Task AssetReturnAsync(ReturnAsset model)
+        /// <summary>
+        /// 创建资产交回申请
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task CreateAssetReturnAsync(ReturnAsset model)
         {
-            var command = _mapper.Map<ReturnAssetCommand>(model);
+            var command = _mapper.Map<CreateAssetReturnCommand>(model);
             await _bus.SendCommandAsync(command);
         }
     }

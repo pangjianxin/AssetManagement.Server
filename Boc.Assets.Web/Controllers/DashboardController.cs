@@ -37,12 +37,8 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Read_Secondary)]
         public async Task<IActionResult> SecondaryAdminAssetCategories()
         {
-            var categoriesByThirdLevel = await _assetService.CategoriesByThirdLevelAsync(it => it.Organization.Org2 == _user.Org2
-                                                                                               && it.AssetCategory.ManagementLineId ==
-                                                                                               _user.ManagementLineId);
-            var categoriesByStatus = await _assetService.CategoriesByStatusAsync(it => it.Organization.Org2 == _user.Org2
-                                                                                       && it.AssetCategory.ManagementLineId ==
-                                                                                       _user.ManagementLineId);
+            var categoriesByThirdLevel = await _assetService.CategoriesByThirdLevelAsync(it => it.OrganizationBelongedId == _user.OrgId);
+            var categoriesByStatus = await _assetService.CategoriesByStatusAsync(it => it.OrganizationBelongedId == _user.OrgId);
             return AppResponse(new { categoriesByStatus, categoriesByThirdLevel });
         }
 
@@ -50,22 +46,20 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Read_Current)]
         public async Task<IActionResult> CurrentCategories()
         {
-            var categories = await _assetService.CategoriesByThirdLevelAsync(it => it.OrganizationId == _user.OrgId);
+            var categories = await _assetService.CategoriesByThirdLevelAsync(it => it.StoredOrgIdentifier == _user.OrgIdentifier);
             return AppResponse(categories, null);
         }
 
         [HttpGet("secondaryadmin/assets/pagination")]
         [Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Read_Secondary)]
-        public async Task<IActionResult> SecondaryAssetsPaginationAsync(SieveModel model, Guid? categoryId = null, string status = null)
+        public async Task<IActionResult> SecondaryAssetsPaginationAsync(SieveModel model, Guid categoryId, string status = null)
         {
-            Expression<Func<Asset, bool>>
-                expression = it => it.AssetCategory.ManagementLineId == _user.ManagementLineId;
-            if (categoryId != null)
+            Expression<Func<Asset, bool>> expression = it => it.OrganizationBelongedId == _user.OrgId;
+            if (categoryId != Guid.Empty)
             {
                 expression = it =>
-                             it.AssetCategoryId == categoryId.Value
-                             && it.AssetCategory.ManagementLineId == _user.ManagementLineId
-                             && it.Organization.Org2 == _user.Org2;
+                    it.AssetCategoryId == categoryId
+                    && it.OrganizationBelongedId == _user.OrgId;
 
             }
 
@@ -75,9 +69,8 @@ namespace Boc.Assets.Web.Controllers
                 if (parseResult)
                 {
                     expression = it => it.AssetStatus == assetStatus
-                                       && it.AssetCategory.ManagementLineId == _user.ManagementLineId
-                                       && it.Organization.Org2 == _user.Org2
-                                       && it.AssetCategoryId == categoryId.Value;
+                                       && it.OrganizationBelongedId == _user.OrgId
+                                       && it.AssetCategoryId == categoryId;
                 }
             }
             var pagination = await _assetService.PaginationAsync(model, expression);
@@ -88,10 +81,10 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Read_Current)]
         public async Task<IActionResult> CurrentAssetPagination(SieveModel model, Guid? categoryId = null)
         {
-            Expression<Func<Asset, bool>> expression = it => it.OrganizationId == _user.OrgId;
+            Expression<Func<Asset, bool>> expression = it => it.StoredOrgIdentifier == _user.OrgIdentifier;
             if (categoryId != null)
             {
-                expression = it => it.OrganizationId == _user.OrgId && it.AssetCategoryId == categoryId.Value;
+                expression = it => it.StoredOrgIdentifier == _user.OrgIdentifier && it.AssetCategoryId == categoryId.Value;
             }
             var pagination = await _assetService.PaginationAsync(model, expression);
             XPaginationHeader(pagination);
@@ -99,7 +92,7 @@ namespace Boc.Assets.Web.Controllers
         }
         [HttpGet("secondaryadmin/assetdeploy/pagination")]
         [Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Read_Secondary)]
-        public async Task<IActionResult> SeondaryAdminAssetDeployPaginationAsync(SieveModel model)
+        public async Task<IActionResult> SecondaryAdminAssetDeployPaginationAsync(SieveModel model)
         {
             var pagination = await _assetDeployService.PaginationAsync(model, it => it.AuthorizeOrgInfo.OrgId == _user.OrgId);
             XPaginationHeader(pagination);

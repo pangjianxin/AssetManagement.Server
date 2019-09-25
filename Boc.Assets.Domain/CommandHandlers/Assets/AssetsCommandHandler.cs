@@ -2,7 +2,7 @@
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Events;
+using Boc.Assets.Domain.Events.Assets;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
 using MediatR;
@@ -19,31 +19,34 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
     {
         private readonly IAssetRepository _assetRepository;
         private readonly IAssetCategoryRepository _assetCategoryRepository;
-        private readonly IOrganizationRepository _orgRepository;
+        private readonly IUser _user;
 
         public AssetsCommandHandler(IUnitOfWork unitOfWork,
             IBus bus,
             INotificationHandler<DomainNotification> notifications,
             IAssetRepository assetRepository,
             IAssetCategoryRepository assetCategoryRepository,
-            IOrganizationRepository orgRepository) : base(unitOfWork, bus, notifications)
+            IUser user) : base(unitOfWork, bus, notifications)
         {
             _assetRepository = assetRepository;
             _assetCategoryRepository = assetCategoryRepository;
-            _orgRepository = orgRepository;
+            _user = user;
         }
 
         public async Task<bool> Handle(ModifyAssetLocationCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
             }
-            var asset = await _assetRepository.ModifyAssetLocation(request.AssetId, request.AssetLocation);
+
+            var asset = await _assetRepository.GetByIdAsync(request.AssetId);
+            var beforeChangedLocation = asset.AssetLocation;
+            var afterChangedLocation = asset.ModifyAssetLocation(request.AssetLocation);
             if (await CommitAsync())
             {
-                await _bus.RaiseEventAsync(new NonAuditEvent(request.Principal, NonAuditEventType.资产存放位置信息变更));
+                await Bus.RaiseEventAsync(new AssetLocationChangedEvent(_user.OrgId, beforeChangedLocation, afterChangedLocation));
                 return true;
             }
             return false;
@@ -51,7 +54,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
 
         public async Task<bool> Handle(StoreAssetWithOutFileCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -59,7 +62,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             var category = await _assetCategoryRepository.GetByIdAsync(request.AssetCategoryId);
             if (category == null)
             {
-                await _bus.RaiseEventAsync(new DomainNotification("系统错误", "未找到相关分类，请联系管理员"));
+                await Bus.RaiseEventAsync(new DomainNotification("系统错误", "未找到相关分类，请联系管理员"));
                 return false;
             }
 
@@ -67,13 +70,13 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
             var startCountParseResult = int.TryParse(request.StartTagNumber.Substring(10, 5), out var startCount);
             if (!startCountParseResult)
             {
-                await _bus.RaiseEventAsync(new DomainNotification("操作错误", "录入的起始标签号有误，请重新填写"));
+                await Bus.RaiseEventAsync(new DomainNotification("操作错误", "录入的起始标签号有误，请重新填写"));
                 return false;
             }
             var endCountParseResult = int.TryParse(request.EndTagNumber.Substring(10, 5), out var endCount);
             if (!endCountParseResult)
             {
-                await _bus.RaiseEventAsync(new DomainNotification("操作错误", "录入的结束标签号有误，请重新填写"));
+                await Bus.RaiseEventAsync(new DomainNotification("操作错误", "录入的结束标签号有误，请重新填写"));
                 return false;
             }
 
@@ -90,6 +93,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 tagNumber.Append(tagNumberSuffix);
                 var asset = new Asset
                 {
+                    AssetStatus = AssetStatus.在库,
                     Id = Guid.NewGuid(),
                     AssetLocation = request.AssetLocation,
                     AssetCategoryId = category.Id,
@@ -98,12 +102,13 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                     AssetDescription = request.AssetDescription,
                     AssetType = request.AssetType,
                     AssetTagNumber = tagNumber.ToString(),
-                    AssetStatus = AssetStatus.在库,
                     InStoreDateTime = DateTime.Now,
                     LastModifyDateTime = DateTime.Now,
-                    LastModifyComment = "资产入库",
+                    LatestDeployRecord = request.Message,
                     CreateDateTime = request.CreateDateTime,
-                    OrganizationId = request.Principal.OrgId
+                    OrganizationBelongedId = _user.OrgId,
+                    StoredOrgIdentifier = _user.OrgIdentifier,
+                    StoredOrgName = _user.OrgNam
                 };
                 await _assetRepository.AddAsync(asset);
             }

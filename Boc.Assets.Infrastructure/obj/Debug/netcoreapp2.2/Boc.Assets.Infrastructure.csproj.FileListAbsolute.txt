@@ -22,11 +22,9 @@ D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\bin\D
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\bin\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.dll
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\bin\Debug\netcoreapp2.2\Boc.Assets.Domain.dll
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Http.Abstractions.dll
-D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.SignalR.Core.dll
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\bin\Debug\netcoreapp2.2\Boc.Assets.Domain.pdb
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\bin\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.pdb
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Http.Abstractions.xml
-D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.SignalR.Core.xml
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\obj\Debug\netcoreapp2.2\Boc.Assets.Infrastructure.csprojAssemblyReference.cache
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\obj\Debug\netcoreapp2.2\Boc.Assets.Infrastructure.csproj.CoreCompileInputs.cache
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Infrastructure\obj\Debug\netcoreapp2.2\Boc.Assets.Infrastructure.AssemblyInfoInputs.cache

@@ -66,6 +66,10 @@ namespace Boc.Assets.Infrastructure.DataBase
         /// </summary>
         public DbSet<AssetStockTakingOrganization> AssetStockTakingOrganization { get; set; }
         /// <summary>
+        /// 机构管理资产分类的注册表
+        /// </summary>
+        public DbSet<CategoryOrgRegistration> CategoryOrgRegistrations { get; set; }
+        /// <summary>
         /// 角色对应的权限
         /// </summary>
         public DbSet<Permission> Permissions { get; set; }
@@ -82,7 +86,6 @@ namespace Boc.Assets.Infrastructure.DataBase
             builder.ApplyConfiguration(new OrganizationDbConfig());
             builder.ApplyConfiguration(new OrganizationRoleDbConfig());
             builder.ApplyConfiguration(new OrganizationSpaceDbConfig());
-            builder.ApplyConfiguration(new ManagementLineDbConfig());
             builder.ApplyConfiguration(new AssetStocktakingDbConfig());
             builder.ApplyConfiguration(new AssetStockTakingDetailConfig());
             builder.ApplyConfiguration(new AssetStockTakingOrganizationConfig());
@@ -90,6 +93,7 @@ namespace Boc.Assets.Infrastructure.DataBase
             builder.ApplyConfiguration(new AssetApplyDbConfig());
             builder.ApplyConfiguration(new AssetExchangeDbConfig());
             builder.ApplyConfiguration(new AssetReturnDbConfig());
+            builder.ApplyConfiguration(new CategoryOrgRegistrationDbConfig());
         }
     }
 }

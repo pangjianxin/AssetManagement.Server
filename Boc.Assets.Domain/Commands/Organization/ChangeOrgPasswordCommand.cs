@@ -1,17 +1,15 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Organization;
-using System.Threading.Tasks;
+﻿using Boc.Assets.Domain.Commands.Validations.Organization;
 
 namespace Boc.Assets.Domain.Commands.Organization
 {
     public class ChangeOrgPasswordCommand : OrganizationCommand
     {
 
-        public ChangeOrgPasswordCommand(IUser principal,
+        public ChangeOrgPasswordCommand(
             string orgIdentifier,
             string oldPassword,
             string newPassword,
-            string confirmPassword) : base(principal)
+            string confirmPassword)
         {
             OrgIdentifier = orgIdentifier;
             OldPassword = oldPassword;
@@ -22,9 +20,9 @@ namespace Boc.Assets.Domain.Commands.Organization
         public string NewPassword { get; set; }
         public string ConfirmPassword { get; set; }
 
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new ChangeOrgPasswordCommandValidator().ValidateAsync(this);
+            ValidationResult = new ChangeOrgPasswordCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

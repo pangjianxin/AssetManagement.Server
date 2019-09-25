@@ -1,20 +1,18 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Organization;
-using System.Threading.Tasks;
+﻿using Boc.Assets.Domain.Commands.Validations.Organization;
 
 namespace Boc.Assets.Domain.Commands.Organization
 {
     public class ChangeOrgShortNameCommand : OrganizationCommand
     {
         public string OrgShortNam { get; set; }
-        public ChangeOrgShortNameCommand(IUser principal, string orgIdentifier, string orgShortNam) : base(principal)
+        public ChangeOrgShortNameCommand(string orgIdentifier, string orgShortNam)
         {
             OrgIdentifier = orgIdentifier;
             OrgShortNam = orgShortNam;
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new ChangeOrgShortNameCommandValidator().ValidateAsync(this);
+            ValidationResult = new ChangeOrgShortNameCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

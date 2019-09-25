@@ -11,8 +11,14 @@ namespace Boc.Assets.Infrastructure.DbConfigurations.ApplicationDbContextConfig
             builder.HasKey(it => it.Id);
             //资产名称
             builder.Property(it => it.AssetName).HasMaxLength(100).IsRequired();
+            //资产索引
+            builder.Property(it => it.AssetId).IsRequired();
             //资产标签号
             builder.Property(it => it.AssetTagNumber).HasMaxLength(100);
+            //二级行标志
+            builder.Property(it => it.Org2).IsRequired().HasMaxLength(20);
+            //资产编号
+            builder.Property(it => it.AssetNo).HasMaxLength(50);
             //调出机构
             builder.OwnsOne(it => it.ExportOrgInfo, value =>
             {

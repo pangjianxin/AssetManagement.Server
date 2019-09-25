@@ -2,7 +2,7 @@
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Events;
+using Boc.Assets.Domain.Events.Organization;
 using Boc.Assets.Domain.Repositories;
 using MediatR;
 using System.Threading;
@@ -16,30 +16,35 @@ namespace Boc.Assets.Domain.CommandHandlers.Organization
         IRequestHandler<ResetOrgPasswordCommand, bool>
     {
         private readonly IOrganizationRepository _orgRepository;
+        private readonly IUser _user;
 
         public OrganizationCommandHandler(
             IUnitOfWork unitOfWork,
             IBus bus,
             INotificationHandler<DomainNotification> notifications,
-            IOrganizationRepository orgRepository) : base(unitOfWork, bus, notifications)
+            IOrganizationRepository orgRepository,
+            IUser user) : base(unitOfWork, bus, notifications)
         {
             _orgRepository = orgRepository;
+            _user = user;
         }
 
 
         public async Task<bool> Handle(ChangeOrgShortNameCommand command, CancellationToken cancellationToken)
         {
             //验证参数是否通过验证，如果没有，则写入DomainNotification中。
-            if (!await command.IsValid())
+            if (!command.IsValid())
             {
                 await NotifyValidationErrors(command);
                 return false;
             }
-            var org = await _orgRepository.ChangeOrgShortNameAsync(command.OrgIdentifier, command.OrgShortNam);
+            var org = await _orgRepository.GetByOrgIdentifierAsync(command.OrgIdentifier);
+            var beforeModifiedShortName = org.OrgShortNam;
+            var afterModifiedShortName = org.ChangeOrgShortName(command.OrgShortNam);
+            _orgRepository.Update(org);
             if (await CommitAsync())
             {
-                await _bus.RaiseEventAsync(
-                    new NonAuditEvent(command.Principal, NonAuditEventType.机构简称变更));
+                await Bus.RaiseEventAsync(new OrgShortNameChangedEvent(_user.OrgId, beforeModifiedShortName, afterModifiedShortName));
                 return true;
             }
             return false;
@@ -47,17 +52,17 @@ namespace Boc.Assets.Domain.CommandHandlers.Organization
 
         public async Task<bool> Handle(ChangeOrgPasswordCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
             }
-            var org =
-                await _orgRepository.ChangeOrgPassword(request.OrgIdentifier, request.OldPassword, request.NewPassword);
+            var org = await _orgRepository.GetByOrgIdentifierAsync(request.OrgIdentifier);
+            org.ChangeOrgPassword(request.NewPassword);
+            _orgRepository.Update(org);
             if (await CommitAsync())
             {
-                await _bus.RaiseEventAsync(
-                    new NonAuditEvent(request.Principal, NonAuditEventType.机构密码变更));
+                await Bus.RaiseEventAsync(new OrgPasswordChangedEvent(_user.OrgId, org.OrgNam, org.OrgIdentifier));
                 return true;
             }
             return false;
@@ -65,16 +70,17 @@ namespace Boc.Assets.Domain.CommandHandlers.Organization
 
         public async Task<bool> Handle(ResetOrgPasswordCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
             }
-            var org = await _orgRepository.ResetOrgPassword(request.OrgIdentifier);
+            var org = await _orgRepository.GetByOrgIdentifierAsync(request.OrgIdentifier);
+            org.ResetPassword();
+            _orgRepository.Update(org);
             if (await CommitAsync())
             {
-                await _bus.RaiseEventAsync(
-                    new NonAuditEvent(request.Principal, NonAuditEventType.机构密码重置));
+                await Bus.RaiseEventAsync(new OrgPasswordResetEvent(_user.OrgId, org.OrgNam, org.OrgIdentifier));
                 return false;
             }
             return true;

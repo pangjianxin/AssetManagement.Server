@@ -1,31 +1,30 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Maintainers;
+﻿using Boc.Assets.Domain.Commands.Validations.Maintainers;
 using System;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Domain.Commands.Maintainers
 {
     public class AddMaintainerCommand : MaintainerCommand
     {
         public AddMaintainerCommand(
-            IUser principal,
+            Guid organizationId,
+            string org2,
             Guid assetCategoryId,
             string companyName,
             string maintainerName,
             string telephone,
-            string officePhone = null) : base(principal)
+            string officePhone = null)
         {
+            OrganizationId = organizationId;
+            Org2 = org2;
             AssetCategoryId = assetCategoryId;
             CompanyName = companyName;
             MaintainerName = maintainerName;
             Telephone = telephone;
             OfficePhone = officePhone;
-            OrganizationId = principal.OrgId;
-            Org2 = principal.Org2;
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new AddMaintainerCommandValidator().ValidateAsync(this);
+            ValidationResult = new AddMaintainerCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

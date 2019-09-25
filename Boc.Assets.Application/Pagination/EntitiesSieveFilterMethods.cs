@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Application.Sieve.Services;
-using Boc.Assets.Domain.Events;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Models.AssetStockTakings;
@@ -40,15 +39,6 @@ namespace Boc.Assets.Application.Pagination
             return source.Where(it => it.SpaceName.Contains(values[0])
                                       || it.SpaceDescription.Contains(values[0]));
         }
-
-        public IQueryable<NonAuditEvent> NonAuditEventsFilter(IQueryable<NonAuditEvent> source, string op,
-            string[] values)
-        {
-            return source.Where(it => it.OrgIdentifier.Contains(values[0])
-                                      || it.OrgNam.Contains(values[0])
-                                      || it.Type.ToString().Contains(values[0]));
-        }
-
         public IQueryable<AssetApply> AssetApplyingEventsFilter(IQueryable<AssetApply> source,
             string op, string[] values)
         {

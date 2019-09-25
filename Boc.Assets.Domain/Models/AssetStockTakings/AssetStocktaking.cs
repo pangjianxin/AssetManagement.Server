@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace Boc.Assets.Domain.Models.AssetStockTakings
 {
+    /// <summary>
+    /// 描述资产盘点
+    /// </summary>
     public class AssetStockTaking : EntityBase
     {
         private readonly ILazyLoader _lazyLoader;
@@ -26,9 +29,6 @@ namespace Boc.Assets.Domain.Models.AssetStockTakings
             PublisherName = organization.OrgNam;
             PublisherIdentifier = organization.OrgIdentifier;
             PublisherOrg2 = organization.Org2;
-            ManagementLineId = organization.ManagementLine.Id;
-            ManagementLineName = organization.ManagementLine.ManagementLineName;
-            ManagementLineDescription = organization.ManagementLine.ManagementLineDescription;
             TaskName = taskName;
             TaskComment = taskComment;
             CreateDateTime = DateTime.Now;
@@ -51,18 +51,6 @@ namespace Boc.Assets.Domain.Models.AssetStockTakings
         /// 盘点任务发布人的二级机构号
         /// </summary>
         public string PublisherOrg2 { get; set; }
-        /// <summary>
-        /// 盘点任务归属条线外键
-        /// </summary>
-        public Guid ManagementLineId { get; set; }
-        /// <summary>
-        /// 盘点任务归属条线的名称
-        /// </summary>
-        public string ManagementLineName { get; set; }
-        /// <summary>
-        /// 盘点任务归属条线的描述
-        /// </summary>
-        public string ManagementLineDescription { get; set; }
         /// <summary>
         /// 盘点任务名称
         /// </summary>
@@ -87,7 +75,7 @@ namespace Boc.Assets.Domain.Models.AssetStockTakings
         #region methods
         public bool IsExpiry()
         {
-            return this.ExpiryDateTime <= DateTime.Now;
+            return ExpiryDateTime <= DateTime.Now;
         }
         /// <summary>
         /// 时间进度

@@ -28,16 +28,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
 
                     b.Property<DateTime>("ExpiryDateTime");
 
-                    b.Property<string>("ManagementLineDescription")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<Guid>("ManagementLineId");
-
-                    b.Property<string>("ManagementLineName")
-                        .IsRequired()
-                        .HasMaxLength(20);
-
                     b.Property<Guid>("PublisherId");
 
                     b.Property<string>("PublisherIdentifier")
@@ -155,19 +145,29 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
 
                     b.Property<DateTime?>("InStoreDateTime");
 
-                    b.Property<string>("LastModifyComment")
+                    b.Property<DateTime?>("LastModifyDateTime");
+
+                    b.Property<string>("LatestDeployRecord")
                         .HasMaxLength(100);
 
-                    b.Property<DateTime?>("LastModifyDateTime");
+                    b.Property<Guid?>("OrganizationBelongedId");
 
                     b.Property<Guid?>("OrganizationId");
 
                     b.Property<string>("SerialNumber")
                         .HasMaxLength(100);
 
+                    b.Property<string>("StoredOrgIdentifier")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("StoredOrgName")
+                        .HasMaxLength(50);
+
                     b.HasKey("Id");
 
                     b.HasIndex("AssetCategoryId");
+
+                    b.HasIndex("OrganizationBelongedId");
 
                     b.HasIndex("OrganizationId");
 
@@ -193,11 +193,7 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<Guid>("ManagementLineId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ManagementLineId");
 
                     b.ToTable("AssetCategories");
                 });
@@ -209,14 +205,22 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
 
                     b.Property<int>("AssetDeployCategory");
 
+                    b.Property<Guid>("AssetId");
+
                     b.Property<string>("AssetName")
                         .IsRequired()
                         .HasMaxLength(100);
+
+                    b.Property<string>("AssetNo");
 
                     b.Property<string>("AssetTagNumber")
                         .HasMaxLength(100);
 
                     b.Property<DateTime>("CreateDateTime");
+
+                    b.Property<string>("Org2")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.HasKey("Id");
 
@@ -231,6 +235,8 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                     b.Property<Guid>("AssetCategoryId");
 
                     b.Property<string>("AssetCategoryThirdLevel");
+
+                    b.Property<string>("LastModifiedContent");
 
                     b.Property<string>("Message");
 
@@ -286,6 +292,8 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<string>("LastModifiedContent");
+
                     b.Property<string>("Message");
 
                     b.Property<string>("Org2")
@@ -330,6 +338,8 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
 
                     b.Property<string>("AssetName");
 
+                    b.Property<string>("LastModifiedContent");
+
                     b.Property<string>("Message");
 
                     b.Property<string>("Org2")
@@ -363,6 +373,27 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                     b.HasKey("Id");
 
                     b.ToTable("AssetReturns");
+                });
+
+            modelBuilder.Entity("Boc.Assets.Domain.Models.Assets.CategoryOrgRegistration", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("AssetCategoryId");
+
+                    b.Property<string>("Org2")
+                        .HasMaxLength(20);
+
+                    b.Property<Guid>("OrganizationId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssetCategoryId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("CategoryOrgRegistrations");
                 });
 
             modelBuilder.Entity("Boc.Assets.Domain.Models.Assets.Maintainer", b =>
@@ -400,26 +431,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                     b.ToTable("Maintainers");
                 });
 
-            modelBuilder.Entity("Boc.Assets.Domain.Models.ManagementLines.ManagementLine", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreateDateTime");
-
-                    b.Property<string>("ManagementLineDescription")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("ManagementLineName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ManagementLine");
-                });
-
             modelBuilder.Entity("Boc.Assets.Domain.Models.Organizations.Employee", b =>
                 {
                     b.Property<Guid>("Id")
@@ -453,8 +464,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<Guid?>("ManagementLineId");
 
                     b.Property<string>("Org1")
                         .IsRequired()
@@ -501,8 +510,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                         .HasMaxLength(10);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ManagementLineId");
 
                     b.HasIndex("OrgIdentifier")
                         .IsUnique()
@@ -612,18 +619,14 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                         .HasForeignKey("AssetCategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Boc.Assets.Domain.Models.Organizations.Organization", "Organization")
-                        .WithMany("Assets")
-                        .HasForeignKey("OrganizationId")
+                    b.HasOne("Boc.Assets.Domain.Models.Organizations.Organization", "OrganizationBelonged")
+                        .WithMany("AssetsBelongs")
+                        .HasForeignKey("OrganizationBelongedId")
                         .OnDelete(DeleteBehavior.SetNull);
-                });
 
-            modelBuilder.Entity("Boc.Assets.Domain.Models.Assets.AssetCategory", b =>
-                {
-                    b.HasOne("Boc.Assets.Domain.Models.ManagementLines.ManagementLine", "ManagementLine")
-                        .WithMany("AssetCategories")
-                        .HasForeignKey("ManagementLineId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("Boc.Assets.Domain.Models.Organizations.Organization")
+                        .WithMany("AssetsStores")
+                        .HasForeignKey("OrganizationId");
                 });
 
             modelBuilder.Entity("Boc.Assets.Domain.Models.Assets.AssetDeploy", b =>
@@ -631,8 +634,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                     b.OwnsOne("Boc.Assets.Domain.Models.Assets.OrganizationInfo", "AuthorizeOrgInfo", b1 =>
                         {
                             b1.Property<Guid>("AssetDeployId");
-
-                            b1.Property<string>("Org2");
 
                             b1.Property<Guid>("OrgId");
 
@@ -658,8 +659,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                         {
                             b1.Property<Guid>("AssetDeployId");
 
-                            b1.Property<string>("Org2");
-
                             b1.Property<Guid>("OrgId");
 
                             b1.Property<string>("OrgIdentifier")
@@ -684,8 +683,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                         {
                             b1.Property<Guid>("AssetDeployId");
 
-                            b1.Property<string>("Org2");
-
                             b1.Property<Guid>("OrgId");
 
                             b1.Property<string>("OrgIdentifier")
@@ -707,6 +704,19 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
                         });
                 });
 
+            modelBuilder.Entity("Boc.Assets.Domain.Models.Assets.CategoryOrgRegistration", b =>
+                {
+                    b.HasOne("Boc.Assets.Domain.Models.Assets.AssetCategory", "AssetCategory")
+                        .WithMany("CategoryOrgRegistrations")
+                        .HasForeignKey("AssetCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Boc.Assets.Domain.Models.Organizations.Organization", "Organization")
+                        .WithMany("CategoryOrgRegistrations")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Boc.Assets.Domain.Models.Assets.Maintainer", b =>
                 {
                     b.HasOne("Boc.Assets.Domain.Models.Assets.AssetCategory", "AssetCategory")
@@ -717,11 +727,6 @@ namespace Boc.Assets.Infrastructure.migrations.applicationdbcontextconfig
 
             modelBuilder.Entity("Boc.Assets.Domain.Models.Organizations.Organization", b =>
                 {
-                    b.HasOne("Boc.Assets.Domain.Models.ManagementLines.ManagementLine", "ManagementLine")
-                        .WithMany("Organizations")
-                        .HasForeignKey("ManagementLineId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("Boc.Assets.Domain.Models.Organizations.OrganizationRole", "Role")
                         .WithMany("Organizations")
                         .HasForeignKey("RoleId")

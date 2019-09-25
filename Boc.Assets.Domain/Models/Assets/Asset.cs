@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Domain.Core.Models;
-using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Models.AssetStockTakings;
 using Boc.Assets.Domain.Models.Organizations;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -17,12 +16,17 @@ namespace Boc.Assets.Domain.Models.Assets
             _lazyLoader = lazyLoader;
         }
         private AssetCategory _assetCategory;
-        private Organization _organization;
+        private Organization _organizationBelonged;
         private ICollection<AssetStockTakingDetail> _assetStockTakingDetails;
+        /// <summary>
+        /// 资产分类外键
+        /// </summary>
         public Guid AssetCategoryId { get; set; }
-        public Guid? OrganizationId { get; set; }
-        #region properties
-        public string AssetLocation { get; set; }
+        /// <summary>
+        /// 资产责任中心外键
+        /// </summary>
+        public Guid? OrganizationBelongedId { get; set; }
+        #region Properties
         /// <summary>
         /// 资产名称
         /// </summary>
@@ -66,11 +70,23 @@ namespace Boc.Assets.Domain.Models.Assets
         /// <summary>
         /// 最后一次修改备注
         /// </summary>
-        public string LastModifyComment { get; set; }
+        public string LatestDeployRecord { get; set; }
         /// <summary>
         /// 生产日期
         /// </summary>
         public DateTime? CreateDateTime { get; set; }
+        /// <summary>
+        /// 资产存放的机构号
+        /// </summary>
+        public string StoredOrgIdentifier { get; set; }
+        /// <summary>
+        /// 资产存放的机构名称
+        /// </summary>
+        public string StoredOrgName { get; set; }
+        /// <summary>
+        /// 资产存放位置
+        /// </summary>
+        public string AssetLocation { get; set; }
         /// <summary>
         /// 固定资产分类
         /// </summary>
@@ -80,12 +96,12 @@ namespace Boc.Assets.Domain.Models.Assets
             set => _assetCategory = value;
         }
         /// <summary>
-        /// 资产存放机构
+        /// 资产管理机构
         /// </summary>
-        public Organization Organization
+        public Organization OrganizationBelonged
         {
-            get => _lazyLoader.Load(this, ref _organization);
-            set => _organization = value;
+            get => _lazyLoader.Load(this, ref _organizationBelonged);
+            set => _organizationBelonged = value;
         }
 
         public ICollection<AssetStockTakingDetail> AssetStockTakingDetails
@@ -96,130 +112,16 @@ namespace Boc.Assets.Domain.Models.Assets
         #endregion
 
         #region methods
-
-        public void ModifyAssetLocation(string assetLocation)
+        public string ModifyAssetLocation(string assetLocation)
         {
             AssetLocation = assetLocation;
             LastModifyDateTime = DateTime.Now;
-            LastModifyComment = "资产修改了存放位置";
+            return AssetLocation;
         }
 
-        public void ModifyAssetStatus(AssetStatus targetStatus)
+        public void StatusChanged(AssetStatus targetStatus)
         {
-            LastModifyDateTime = DateTime.Now;
-            LastModifyComment = $"资产状态由{AssetStatus.ToString()}变更为{targetStatus.ToString()}";
             AssetStatus = targetStatus;
-        }
-
-        public AssetDeploy HandleAssetReturn(AssetReturn @event)
-        {
-            LastModifyDateTime = DateTime.Now;
-            LastModifyComment = $"资产由{@event.RequestOrgIdentifier}交回至{@event.TargetOrgIdentifier}";
-            AssetStatus = AssetStatus.在库;
-            AssetLocation = @event.RequestOrgNam;
-            OrganizationId = @event.TargetOrgId;
-            return new AssetDeploy()
-            {
-                Id = Guid.NewGuid(),
-                AssetDeployCategory = AssetDeployCategory.资产交回,
-                CreateDateTime = DateTime.Now,
-                AssetTagNumber = AssetTagNumber,
-                AssetName = AssetName,
-                ExportOrgInfo = new OrganizationInfo()
-                {
-                    Org2 = @event.Org2,
-                    OrgId = @event.RequestOrgId,
-                    OrgIdentifier = @event.RequestOrgIdentifier,
-                    OrgNam = @event.RequestOrgNam
-                },
-                ImportOrgInfo = new OrganizationInfo()
-                {
-                    OrgId = @event.TargetOrgId,
-                    OrgIdentifier = @event.TargetOrgIdentifier,
-                    OrgNam = @event.TargetOrgNam
-                },
-                AuthorizeOrgInfo = new OrganizationInfo()
-                {
-                    OrgId = @event.TargetOrgId,
-                    OrgIdentifier = @event.TargetOrgIdentifier,
-                    OrgNam = @event.TargetOrgNam
-                }
-            };
-        }
-
-        public AssetDeploy HandleAssetApplying(AssetApply @event)
-        {
-            LastModifyDateTime = DateTime.Now;
-            LastModifyComment = $"资产由{@event.TargetOrgIdentifier}调至{@event.RequestOrgIdentifier}";
-            AssetStatus = AssetStatus.在用;
-            AssetLocation = @event.RequestOrgNam;
-            OrganizationId = @event.RequestOrgId;
-            return new AssetDeploy
-            {
-                Id = Guid.NewGuid(),
-                AssetDeployCategory = AssetDeployCategory.资产申请,
-                CreateDateTime = DateTime.Now,
-                AssetTagNumber = AssetTagNumber,
-                AssetName = AssetName,
-                ExportOrgInfo = new OrganizationInfo
-                {
-                    Org2 = @event.Org2,
-                    OrgId = @event.TargetOrgId,
-                    OrgIdentifier = @event.TargetOrgIdentifier,
-                    OrgNam = @event.TargetOrgNam
-                },
-                ImportOrgInfo = new OrganizationInfo
-                {
-                    Org2 = @event.Org2,
-                    OrgId = @event.RequestOrgId,
-                    OrgIdentifier = @event.RequestOrgIdentifier,
-                    OrgNam = @event.RequestOrgNam
-                },
-                AuthorizeOrgInfo = new OrganizationInfo
-                {
-                    Org2 = @event.Org2,
-                    OrgId = @event.TargetOrgId,
-                    OrgIdentifier = @event.TargetOrgIdentifier,
-                    OrgNam = @event.TargetOrgNam
-                }
-            };
-        }
-        public AssetDeploy HandleAssetExchanging(AssetExchange @event)
-        {
-            LastModifyDateTime = DateTime.Now;
-            LastModifyComment = $"资产由{@event.RequestOrgIdentifier}调配至{@event.ExchangeOrgIdentifier}";
-            AssetStatus = AssetStatus.在用;
-            AssetLocation = @event.ExchangeOrgNam;
-            OrganizationId = @event.ExchangeOrgId;
-            return new AssetDeploy()
-            {
-                Id = Guid.NewGuid(),
-                AssetDeployCategory = AssetDeployCategory.资产机构间调配,
-                CreateDateTime = DateTime.Now,
-                AssetTagNumber = AssetTagNumber,
-                AssetName = AssetName,
-                ExportOrgInfo = new OrganizationInfo
-                {
-                    Org2 = @event.Org2,
-                    OrgId = @event.RequestOrgId,
-                    OrgIdentifier = @event.RequestOrgIdentifier,
-                    OrgNam = @event.RequestOrgNam
-                },
-                ImportOrgInfo = new OrganizationInfo
-                {
-                    Org2 = @event.Org2,
-                    OrgId = @event.ExchangeOrgId,
-                    OrgIdentifier = @event.ExchangeOrgIdentifier,
-                    OrgNam = @event.ExchangeOrgNam
-                },
-                AuthorizeOrgInfo = new OrganizationInfo
-                {
-                    Org2 = @event.Org2,
-                    OrgId = @event.TargetOrgId,
-                    OrgIdentifier = @event.TargetOrgIdentifier,
-                    OrgNam = @event.TargetOrgNam
-                }
-            };
         }
         #endregion
     }

@@ -21,6 +21,7 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetStockTakings
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IAssetStockTakingOrganizationRepository _assetStockTakingOrganizationRepository;
         private readonly IAssetStockTakingDetailRepository _detailRepository;
+        private readonly IUser _user;
 
         public AssetStockTakingCommandHandler(IUnitOfWork unitOfWork,
             IBus bus,
@@ -28,25 +29,27 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetStockTakings
             IAssetStockTakingRepository assetStockTakingRepository,
             IOrganizationRepository organizationRepository,
             IAssetStockTakingOrganizationRepository assetStockTakingOrganizationRepository,
-            IAssetStockTakingDetailRepository detailRepository) : base(unitOfWork, bus, notifications)
+            IAssetStockTakingDetailRepository detailRepository,
+            IUser user) : base(unitOfWork, bus, notifications)
         {
             _assetStockTakingRepository = assetStockTakingRepository;
             _organizationRepository = organizationRepository;
             _assetStockTakingOrganizationRepository = assetStockTakingOrganizationRepository;
             _detailRepository = detailRepository;
+            _user = user;
         }
 
         public async Task<bool> Handle(CreateAssetStockTakingCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
             }
-            var publisher = await _organizationRepository.GetByIdAsync(request.Principal.OrgId);
+            var publisher = await _organizationRepository.GetByIdAsync(_user.OrgId);
             if (publisher == null)
             {
-                await _bus.RaiseEventAsync(new DomainNotification("参数错误", "PublisherId没有找到相应的数据"));
+                await Bus.RaiseEventAsync(new DomainNotification("参数错误", "PublisherId没有找到相应的数据"));
                 return false;
             }
 
@@ -66,7 +69,7 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetStockTakings
             }
 
             var assetStockTakingOrganizations = new List<AssetStockTakingOrganization>();
-            foreach (Models.Organizations.Organization targetOrganization in targetOrganizations)
+            foreach (var targetOrganization in targetOrganizations)
             {
                 assetStockTakingOrganizations.Add(new AssetStockTakingOrganization(targetOrganization.Id, assetStockTaking.Id));
             }
@@ -82,17 +85,17 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetStockTakings
 
         public async Task<bool> Handle(CreateAssetStockTakingDetailCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
             }
 
             var isExist = await _detailRepository.GetAll(it => it.AssetStockTakingOrganizationId == request.AssetStockTakingOrganizationId
-                                                               && it.AssetId == request.AssetId).AnyAsync();
+                                                               && it.AssetId == request.AssetId).AnyAsync(cancellationToken: cancellationToken);
             if (isExist)
             {
-                await _bus.RaiseEventAsync(new DomainNotification("重复", "同一资产多次盘点"));
+                await Bus.RaiseEventAsync(new DomainNotification("重复", "同一资产多次盘点"));
                 return false;
             }
             var detail = new AssetStockTakingDetail()

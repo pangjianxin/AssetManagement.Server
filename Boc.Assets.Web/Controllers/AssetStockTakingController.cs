@@ -123,7 +123,7 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.AssetStockTaking, Permissions.Actions.AssetStockTaking_Read_Current)]
         public async Task<IActionResult> AssetsWithOutStockTaking(SieveModel model, Guid assetStockTakingOrgId)
         {
-            Expression<Func<Asset, bool>> predicate = it => it.OrganizationId == _user.OrgId;
+            Expression<Func<Asset, bool>> predicate = it => it.StoredOrgIdentifier == _user.OrgIdentifier;
             PaginatedList<AssetDto> assetWithOutStockTaking = await _assetStockTakingService.AssetsWithOutStockTaking(model, assetStockTakingOrgId, predicate);
             XPaginationHeader(assetWithOutStockTaking);
             return AppResponse(assetWithOutStockTaking);

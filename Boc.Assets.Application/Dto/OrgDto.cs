@@ -19,6 +19,5 @@ namespace Boc.Assets.Application.Dto
         public string OrgNam3 { get; set; }
         public int Role { get; set; }
         public string RoleDescription { get; set; }
-        public Guid ManagementLineId { get; set; }
     }
 }

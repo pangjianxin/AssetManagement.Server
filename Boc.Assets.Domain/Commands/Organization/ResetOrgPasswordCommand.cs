@@ -1,18 +1,16 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Validations.Organization;
-using System.Threading.Tasks;
+﻿using Boc.Assets.Domain.Commands.Validations.Organization;
 
 namespace Boc.Assets.Domain.Commands.Organization
 {
     public class ResetOrgPasswordCommand : OrganizationCommand
     {
-        public ResetOrgPasswordCommand(IUser principal, string orgIdentifier) : base(principal)
+        public ResetOrgPasswordCommand(string orgIdentifier)
         {
             OrgIdentifier = orgIdentifier;
         }
-        public override async Task<bool> IsValid()
+        public override bool IsValid()
         {
-            ValidationResult = await new ResetOrgPasswordCommandValidator().ValidateAsync(this);
+            ValidationResult = new ResetOrgPasswordCommandValidator().Validate(this);
             return ValidationResult.IsValid;
         }
     }

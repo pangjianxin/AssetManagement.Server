@@ -1,6 +1,5 @@
 ﻿using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.Sieve.Services;
-using Boc.Assets.Domain.Events;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Models.AssetStockTakings;
@@ -13,21 +12,16 @@ namespace Boc.Assets.Application.Pagination
     public class PangSieveProcessor : SieveProcessor
 
     {
-        private readonly IOptions<SieveOptions> _options;
-        private readonly ISieveCustomSortMethods _customSortMethods;
-        private readonly ISieveCustomFilterMethods _customFilterMethods;
-        private readonly SievePropertyMapper mapper = new SievePropertyMapper();
+
+        private readonly SievePropertyMapper _mapper = new SievePropertyMapper();
 
         public PangSieveProcessor(IOptions<SieveOptions> options,
             ISieveCustomSortMethods customSortMethods,
             ISieveCustomFilterMethods customFilterMethods) : base(options, customSortMethods, customFilterMethods)
         {
-            mapper = MapProperties(mapper);
-            _options = options;
-            _customSortMethods = customSortMethods;
-            _customFilterMethods = customFilterMethods;
+            _mapper = MapProperties(_mapper);
         }
-        protected override SievePropertyMapper MapProperties(SievePropertyMapper mapper)
+        protected sealed override SievePropertyMapper MapProperties(SievePropertyMapper mapper)
         {
             //机构
             mapper.Property<Organization>(it => it.OrgIdentifier).CanSort();
@@ -42,10 +36,6 @@ namespace Boc.Assets.Application.Pagination
             //机构空间
             mapper.Property<OrganizationSpace>(it => it.Id).HasName("spaceId").CanSort();
             mapper.Property<OrganizationSpace>(it => it.SpaceName).CanSort();
-            //非审计类事件
-            mapper.Property<NonAuditEvent>(it => it.OrgIdentifier).CanSort();
-            mapper.Property<NonAuditEvent>(it => it.OrgNam).CanSort();
-            mapper.Property<NonAuditEvent>(it => it.Type).CanSort();
             //资产申请事件
             mapper.Property<AssetApply>(it => it.RequestOrgIdentifier).CanSort();
             mapper.Property<AssetApply>(it => it.TimeStamp).HasName("dateTimeFromNow").CanSort();

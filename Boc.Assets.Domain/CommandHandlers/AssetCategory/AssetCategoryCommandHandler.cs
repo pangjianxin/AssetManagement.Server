@@ -2,7 +2,7 @@
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Events;
+using Boc.Assets.Domain.Events.AssetCategory;
 using Boc.Assets.Domain.Repositories;
 using MediatR;
 using System.Threading;
@@ -15,30 +15,33 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetCategory
     {
         private readonly IAssetCategoryRepository _assetCategoryRepository;
         private readonly IOrganizationRepository _orgRepository;
+        private readonly IUser _user;
 
         public AssetCategoryCommandHandler(
             IUnitOfWork unitOfWork,
             IBus bus,
             INotificationHandler<DomainNotification> notifications,
             IAssetCategoryRepository assetCategoryRepository,
-            IOrganizationRepository orgRepository) : base(unitOfWork, bus, notifications)
+            IOrganizationRepository orgRepository,
+            IUser user) : base(unitOfWork, bus, notifications)
         {
             _assetCategoryRepository = assetCategoryRepository;
             _orgRepository = orgRepository;
+            _user = user;
         }
 
         public async Task<bool> Handle(ChangeMeteringUnitCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
             }
-
-            await _assetCategoryRepository.ChangeMeteringUnitAsync(request.AssetCategoryId, request.AssetMeteringUnit);
+            var category = await _assetCategoryRepository.GetByIdAsync(request.AssetCategoryId);
+            category.ChangeUnit(request.AssetMeteringUnit);
             if (await CommitAsync())
             {
-                await _bus.RaiseEventAsync(new NonAuditEvent(request.Principal, NonAuditEventType.资产分类计量单位变更));
+                await Bus.RaiseEventAsync(new CategoryMeteringUnitChangedEvent(_user.OrgId));
                 return true;
             }
             return false;

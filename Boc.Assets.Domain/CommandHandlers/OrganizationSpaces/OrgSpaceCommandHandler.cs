@@ -2,7 +2,7 @@
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Events;
+using Boc.Assets.Domain.Events.OrgSpace;
 using Boc.Assets.Domain.Repositories;
 using MediatR;
 using System.Threading;
@@ -15,18 +15,21 @@ namespace Boc.Assets.Domain.CommandHandlers.OrganizationSpaces
         IRequestHandler<ModifySpaceInfoCommand, bool>
     {
         private readonly IOrgSpaceRepository _orgSpaceRepository;
+        private readonly IUser _user;
 
         public OrgSpaceCommandHandler(IUnitOfWork unitOfWork,
             IBus bus,
             INotificationHandler<DomainNotification> notifications,
-            IOrgSpaceRepository orgSpaceRepository) : base(unitOfWork, bus, notifications)
+            IOrgSpaceRepository orgSpaceRepository,
+            IUser user) : base(unitOfWork, bus, notifications)
         {
             _orgSpaceRepository = orgSpaceRepository;
+            _user = user;
         }
 
         public async Task<bool> Handle(CreateSpaceCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -34,12 +37,12 @@ namespace Boc.Assets.Domain.CommandHandlers.OrganizationSpaces
 
             var space = await _orgSpaceRepository.CreateSpaceAsync(request.SpaceName,
                 request.SpaceDescription,
-                request.Principal.OrgId,
-                request.Principal.OrgIdentifier,
-                request.Principal.OrgNam);
+                _user.OrgId,
+                _user.OrgIdentifier,
+                _user.OrgNam);
             if (await CommitAsync())
             {
-                await _bus.RaiseEventAsync(new NonAuditEvent(request.Principal, NonAuditEventType.新增机构空间));
+                await Bus.RaiseEventAsync(new SpaceCreatedEvent(_user.OrgId, space.SpaceName));
                 return true;
             }
             return false;
@@ -47,7 +50,7 @@ namespace Boc.Assets.Domain.CommandHandlers.OrganizationSpaces
 
         public async Task<bool> Handle(ModifySpaceInfoCommand request, CancellationToken cancellationToken)
         {
-            if (!await request.IsValid())
+            if (!request.IsValid())
             {
                 await NotifyValidationErrors(request);
                 return false;
@@ -57,7 +60,7 @@ namespace Boc.Assets.Domain.CommandHandlers.OrganizationSpaces
                 request.SpaceDescription);
             if (await CommitAsync())
             {
-                await _bus.RaiseEventAsync(new NonAuditEvent(request.Principal, NonAuditEventType.机构空间名称或描述变更));
+                await Bus.RaiseEventAsync(new SpaceModifiedEvent(_user.OrgId, space.SpaceName));
                 return true;
             }
             return false;

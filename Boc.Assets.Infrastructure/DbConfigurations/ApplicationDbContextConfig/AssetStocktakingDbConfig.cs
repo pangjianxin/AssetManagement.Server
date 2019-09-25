@@ -12,8 +12,6 @@ namespace Boc.Assets.Infrastructure.DbConfigurations.ApplicationDbContextConfig
             builder.Property(it => it.PublisherName).IsRequired().HasMaxLength(50);
             builder.Property(it => it.PublisherIdentifier).IsRequired().HasMaxLength(20);
             builder.Property(it => it.PublisherOrg2).IsRequired().HasMaxLength(20);
-            builder.Property(it => it.ManagementLineName).IsRequired().HasMaxLength(20);
-            builder.Property(it => it.ManagementLineDescription).IsRequired().HasMaxLength(50);
             builder.Property(it => it.TaskName).IsRequired().HasMaxLength(50);
             builder.Property(it => it.TaskComment).IsRequired().HasMaxLength(50);
         }
