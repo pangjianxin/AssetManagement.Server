@@ -35,7 +35,8 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Current)]
         public async Task<IActionResult> PaginationCurrent(SieveModel model)
         {
-            var result = await _assetService.PaginationAsync(model, it => it.OrgInUseName == _user.OrgIdentifier);
+            Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
+            var result = await _assetService.PaginationAsync(model, currentAssetsPredicate);
             XPaginationHeader(result);
             return AppResponse(result);
         }
@@ -48,7 +49,8 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Current)]
         public async Task<IActionResult> CountByThirdLevelCurrent()
         {
-            var categories = await _assetService.CategoriesByThirdLevelAsync(it => it.OrgInUseName == _user.OrgIdentifier);
+            Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
+            var categories = await _assetService.CategoriesByThirdLevelAsync(currentAssetsPredicate);
             return AppResponse(categories);
         }
         /// <summary>
@@ -59,7 +61,8 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Current)]
         public async Task<IActionResult> CountByManagerOrgCurrent()
         {
-            var categories = await _assetService.CategoriesByManagerOrg(it => it.OrgInUseName == _user.OrgIdentifier);
+            Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
+            var categories = await _assetService.CategoriesByManagerOrg(currentAssetsPredicate);
             return AppResponse(categories);
         }
         /// <summary>

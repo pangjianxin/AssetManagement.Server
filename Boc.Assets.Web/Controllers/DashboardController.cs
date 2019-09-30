@@ -46,7 +46,8 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Read_Current)]
         public async Task<IActionResult> CurrentCategories()
         {
-            var categories = await _assetService.CategoriesByThirdLevelAsync(it => it.OrgInUseName == _user.OrgIdentifier);
+
+            var categories = await _assetService.CategoriesByThirdLevelAsync(it => it.OrganizationInUseId == _user.OrgId);
             return AppResponse(categories, null);
         }
 
@@ -77,11 +78,17 @@ namespace Boc.Assets.Web.Controllers
             XPaginationHeader(pagination);
             return AppResponse(pagination);
         }
+        /// <summary>
+        /// 查询当前机构下的资产分页
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
         [HttpGet("current/assets/pagination")]
         [Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Read_Current)]
         public async Task<IActionResult> CurrentAssetPagination(SieveModel model, Guid? categoryId = null)
         {
-            Expression<Func<Asset, bool>> expression = it => it.OrgInUseName == _user.OrgIdentifier;
+            Expression<Func<Asset, bool>> expression = it => it.OrganizationInUseId == _user.OrgId;
             if (categoryId != null)
             {
                 expression = it => it.OrgInUseName == _user.OrgIdentifier && it.AssetCategoryId == categoryId.Value;
@@ -90,6 +97,11 @@ namespace Boc.Assets.Web.Controllers
             XPaginationHeader(pagination);
             return AppResponse(pagination);
         }
+        /// <summary>
+        /// 查询该机构审批过的所有资产流转记录
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpGet("secondaryadmin/assetdeploy/pagination")]
         [Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Read_Secondary)]
         public async Task<IActionResult> SecondaryAdminAssetDeployPaginationAsync(SieveModel model)
@@ -98,7 +110,11 @@ namespace Boc.Assets.Web.Controllers
             XPaginationHeader(pagination);
             return AppResponse(pagination);
         }
-
+        /// <summary>
+        /// 下载报表
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpGet("secondaryadmin/assetdeploy/download")]
         [Permission(Permissions.Controllers.Dashboard, Permissions.Actions.Dashboard_Download_Secondary)]
         public async Task<IActionResult> SecondaryAdminDownloadAssetDeploy(DownloadAssetDeploy model)
