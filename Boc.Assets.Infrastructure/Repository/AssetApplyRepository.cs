@@ -1,4 +1,4 @@
-﻿using Boc.Assets.Domain.Models.Assets.Audit;
+﻿using Boc.Assets.Domain.Models.Applies;
 using Boc.Assets.Domain.Repositories;
 using Boc.Assets.Infrastructure.DataBase;
 

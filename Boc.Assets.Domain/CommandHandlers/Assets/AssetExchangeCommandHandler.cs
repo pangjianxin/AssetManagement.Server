@@ -6,6 +6,7 @@ using Boc.Assets.Domain.Events.Assets;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
 using Boc.Assets.Domain.Services;
+using Boc.Assets.Domain.ValueObjects;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -74,7 +75,10 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
             //如果备选资产符合调配规则那么继续
-            var assetExchange = await _assetDomainService.CreateAssetExchange(asset, _user, targetOrg, exchangeOrg, request.Message);
+            var principal = new OrganizationInfo(_user.OrgId, _user.OrgIdentifier, _user.OrgNam);
+            var targetOrgInfo = targetOrg.GetValueObject();
+            var exchangeOrgInfo = exchangeOrg.GetValueObject();
+            var assetExchange = await _assetDomainService.CreateAssetExchange(asset, principal, targetOrgInfo, exchangeOrgInfo, request.Message);
             if (await CommitAsync())
             {
                 //⑤生成一个资产申请调换的事件

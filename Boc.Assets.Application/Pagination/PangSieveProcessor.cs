@@ -1,8 +1,8 @@
 ﻿using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.Sieve.Services;
+using Boc.Assets.Domain.Models.Applies;
+using Boc.Assets.Domain.Models.AssetInventories;
 using Boc.Assets.Domain.Models.Assets;
-using Boc.Assets.Domain.Models.Assets.Audit;
-using Boc.Assets.Domain.Models.AssetStockTakings;
 using Boc.Assets.Domain.Models.Organizations;
 using Microsoft.Extensions.Options;
 
@@ -56,7 +56,7 @@ namespace Boc.Assets.Application.Pagination
             mapper.Property<AssetDeploy>(it => it.AssetDeployCategory).CanSort();
             mapper.Property<AssetDeploy>(it => it.AssetName).CanSort();
             //资产盘点参与机构
-            mapper.Property<AssetStockTakingOrganization>(it => it.Organization.OrgNam).HasName("orgNam").CanSort();
+            mapper.Property<AssetInventoryRegister>(it => it.Participation.OrgNam).HasName("orgNam").CanSort();
             //员工
             mapper.Property<Employee>(it => it.Identifier).CanSort();
             mapper.Property<Employee>(it => it.Name).CanSort();

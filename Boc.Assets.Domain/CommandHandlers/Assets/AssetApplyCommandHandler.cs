@@ -7,6 +7,7 @@ using Boc.Assets.Domain.Models;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
 using Boc.Assets.Domain.Services;
+using Boc.Assets.Domain.ValueObjects;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,22 +59,25 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 await NotifyValidationErrors(request);
                 return false;
             }
-
+            //首先找出对应的资产分类，然后判断一下
             var assetCategory = await _assetCategoryRepository.GetByIdAsync(request.AssetCategoryId);
             if (assetCategory == null)
             {
                 await Bus.RaiseEventAsync(new DomainNotification("系统错误", "传入的资产分类参数有误，请联系管理员"));
                 return false;
             }
+            //然后找出目标机构信息，然后判断一下
             var targetOrg = await _organizationRepository.GetByIdAsync(request.TargetOrgId);
             if (targetOrg == null)
             {
                 await Bus.RaiseEventAsync(new DomainNotification("系统错误", "查找目标机构信息为空，请联系管理员"));
                 return false;
             }
-
-            var assetApply = await _assetDomainService.CreateAssetApply(_user,
-                  targetOrg,
+            //然后传入资产的领域服务中。
+            var principal = new OrganizationInfo(_user.OrgId, _user.OrgIdentifier, _user.OrgNam);
+            var targetOrgInfo = targetOrg.GetValueObject();
+            var assetApply = await _assetDomainService.CreateAssetApply(principal,
+                targetOrgInfo,
                   assetCategory.Id,
                   assetCategory.AssetThirdLevelCategory,
                   request.Message);
@@ -110,7 +114,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
 
             if (asset.AssetStatus != AssetStatus.在库)
             {
-                await Bus.RaiseEventAsync(new DomainNotification("状态错误", "传入的资产状态不为在库，不能分配该资产"));
+                await Bus.RaiseEventAsync(new DomainNotification("状态错误", "该资产状态不为在库，不能分配该资产"));
                 return false;
             }
 
@@ -123,7 +127,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
 
             if (assetApply.Status != AuditEntityStatus.待处理)
             {
-                await Bus.RaiseEventAsync(new DomainNotification("状态错误", "事件状态不为待处理，不能处理该事件，请联系管理员"));
+                await Bus.RaiseEventAsync(new DomainNotification("状态错误", "该申请已经处理过，请核实后再进行提交"));
                 return false;
             }
             await _assetDomainService.HandleAssetApply(asset, assetApply, request.Message);

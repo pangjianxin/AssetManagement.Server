@@ -7,6 +7,7 @@ using Boc.Assets.Domain.Models;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
 using Boc.Assets.Domain.Services;
+using Boc.Assets.Domain.ValueObjects;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,7 +67,9 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
 
-            var assetReturn = await _assetDomainService.CreateAssetReturn(asset, _user, targetOrg, request.Message);
+            var principal = new OrganizationInfo(_user.OrgId, _user.OrgIdentifier, _user.OrgNam);
+            var targetOrgInfo = targetOrg.GetValueObject();
+            var assetReturn = await _assetDomainService.CreateAssetReturn(asset, principal, targetOrgInfo, request.Message);
             if (await CommitAsync())
             {
                 await Bus.RaiseEventAsync(new AssetReturnCreatedEvent(_user.OrgId, assetReturn, request.Message));

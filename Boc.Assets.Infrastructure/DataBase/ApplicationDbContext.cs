@@ -1,6 +1,6 @@
-﻿using Boc.Assets.Domain.Models.Assets;
-using Boc.Assets.Domain.Models.Assets.Audit;
-using Boc.Assets.Domain.Models.AssetStockTakings;
+﻿using Boc.Assets.Domain.Models.Applies;
+using Boc.Assets.Domain.Models.AssetInventories;
+using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Models.Organizations;
 using Boc.Assets.Infrastructure.DbConfigurations.ApplicationDbContextConfig;
 using Microsoft.EntityFrameworkCore;
@@ -56,19 +56,19 @@ namespace Boc.Assets.Infrastructure.DataBase
         /// <summary>
         /// 资产盘点任务表
         /// </summary>
-        public DbSet<AssetStockTaking> AssetStockTakings { get; set; }
+        public DbSet<AssetInventory> AssetInventories { get; set; }
         /// <summary>
         /// 资产盘点明细表
         /// </summary>
-        public DbSet<AssetStockTakingDetail> AssetStockTakingDetails { get; set; }
+        public DbSet<AssetInventoryDetail> AssetInventoryDetails { get; set; }
         /// <summary>
         /// 资产盘点任务机构登记表
         /// </summary>
-        public DbSet<AssetStockTakingOrganization> AssetStockTakingOrganization { get; set; }
+        public DbSet<AssetInventoryRegister> AssetInventoryRegisters { get; set; }
         /// <summary>
         /// 机构管理资产分类的注册表
         /// </summary>
-        public DbSet<CategoryOrgRegistration> CategoryOrgRegistrations { get; set; }
+        public DbSet<CategoryManageRegister> CategoryManageRegisters { get; set; }
         /// <summary>
         /// 角色对应的权限
         /// </summary>
@@ -76,24 +76,24 @@ namespace Boc.Assets.Infrastructure.DataBase
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> option) : base(option) { }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
             base.OnModelCreating(builder);
-            builder.ApplyConfiguration(new AssetCategoryDbConfig());
-            builder.ApplyConfiguration(new MaintainerDbConfig());
-            builder.ApplyConfiguration(new AssetDbConfig());
-            builder.ApplyConfiguration(new AssetDeployDbConfig());
-            builder.ApplyConfiguration(new EmployeeDbConfig());
-            builder.ApplyConfiguration(new OrganizationDbConfig());
-            builder.ApplyConfiguration(new OrganizationRoleDbConfig());
-            builder.ApplyConfiguration(new OrganizationSpaceDbConfig());
-            builder.ApplyConfiguration(new AssetStocktakingDbConfig());
-            builder.ApplyConfiguration(new AssetStockTakingDetailConfig());
-            builder.ApplyConfiguration(new AssetStockTakingOrganizationConfig());
-            builder.ApplyConfiguration(new PermissionDbConfig());
             builder.ApplyConfiguration(new AssetApplyDbConfig());
             builder.ApplyConfiguration(new AssetExchangeDbConfig());
             builder.ApplyConfiguration(new AssetReturnDbConfig());
-            builder.ApplyConfiguration(new CategoryOrgRegistrationDbConfig());
+            builder.ApplyConfiguration(new AssetInventoryDbConfig());
+            builder.ApplyConfiguration(new AssetInventoryDetailDbConfig());
+            builder.ApplyConfiguration(new AssetInventoryRegisterDbConfig());
+            builder.ApplyConfiguration(new AssetDbConfig());
+            builder.ApplyConfiguration(new AssetCategoryDbConfig());
+            builder.ApplyConfiguration(new AssetDeployDbConfig());
+            builder.ApplyConfiguration(new CategoryManageRegisterDbConfig());
+            builder.ApplyConfiguration(new MaintainerDbConfig());
+            builder.ApplyConfiguration(new EmployeeDbConfig());
+            builder.ApplyConfiguration(new OrganizationDbConfig());
+            builder.ApplyConfiguration(new OrganizationRoleDbConfig());
+            builder.ApplyConfiguration(new OrganizationSpaceDbConfig());                
+            builder.ApplyConfiguration(new PermissionDbConfig());
+           
         }
     }
 }

@@ -1,11 +1,17 @@
 ﻿using Boc.Assets.Domain.Core.Models;
-using Boc.Assets.Domain.Core.SharedKernel;
+using Boc.Assets.Domain.ValueObjects;
 using System;
 
 namespace Boc.Assets.Domain.Models.Assets
 {
+    /// <summary>
+    /// 资产流转记录
+    /// </summary>
     public class AssetDeploy : EntityBase
     {
+        /// <summary>
+        /// 资产流转记录类型
+        /// </summary>
         public AssetDeployCategory AssetDeployCategory { get; set; }
         /// <summary>
         /// 创建日期
@@ -27,10 +33,6 @@ namespace Boc.Assets.Domain.Models.Assets
         /// 资产编号
         /// </summary>
         public string AssetNo { get; set; }
-        /// <summary>
-        /// 二级机构号
-        /// </summary>
-        public string Org2 { get; set; }
         /// <summary>
         /// 资产输出机构
         /// </summary>
@@ -99,15 +101,8 @@ namespace Boc.Assets.Domain.Models.Assets
     }
     public enum AssetDeployCategory
     {
-        资产申请 = 0,
-        资产交回 = 1,
-        资产机构间调配 = 2
-    }
-
-    public class OrganizationInfo : ValueObject
-    {
-        public Guid OrgId { get; set; }
-        public string OrgIdentifier { get; set; }
-        public string OrgNam { get; set; }
+        资产申请 = 1,
+        资产交回 = 2,
+        资产机构间调配 = 3
     }
 }

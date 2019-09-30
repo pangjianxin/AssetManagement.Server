@@ -40,7 +40,7 @@ namespace Boc.Assets.Application.Dto
         /// <summary>
         /// 最后一次修改备注
         /// </summary>
-        public string LatestDeployRecord { get; set; }
+        public string LastDeployRecord { get; set; }
         /// <summary>
         /// 资产分类dto
         /// </summary>
@@ -48,15 +48,15 @@ namespace Boc.Assets.Application.Dto
         /// <summary>
         /// 资产所属机构外键
         /// </summary>
-        public Guid OrganizationBelongedId { get; set; }
+        public Guid OrgInChargeId { get; set; }
         /// <summary>
         /// 资产存放机构名称
         /// </summary>
-        public string StoredOrgName { get; set; }
+        public string OrgInUseName { get; set; }
         /// <summary>
         /// 资产存放机构号
         /// </summary>
-        public string StoredOrgIdentifier { get; set; }
+        public string OrgInUseIdentifier { get; set; }
         /// <summary>
         /// 资产位置
         /// </summary>

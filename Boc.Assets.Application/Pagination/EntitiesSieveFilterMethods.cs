@@ -1,10 +1,10 @@
 ﻿using Boc.Assets.Application.Sieve.Services;
 using Boc.Assets.Domain.Models.Assets;
-using Boc.Assets.Domain.Models.Assets.Audit;
-using Boc.Assets.Domain.Models.AssetStockTakings;
 using Boc.Assets.Domain.Models.Organizations;
 using System;
 using System.Linq;
+using Boc.Assets.Domain.Models.Applies;
+using Boc.Assets.Domain.Models.AssetInventories;
 
 namespace Boc.Assets.Application.Pagination
 {
@@ -75,11 +75,11 @@ namespace Boc.Assets.Application.Pagination
         {
             return source.Where(it => it.Name.Contains(values[0]) || it.Identifier == values[0]);
         }
-        public IQueryable<AssetStockTakingOrganization> StockTakingOrgFilter(
-            IQueryable<AssetStockTakingOrganization> source,
+        public IQueryable<AssetInventoryRegister> InventoryRegistersFilter(
+            IQueryable<AssetInventoryRegister> source,
             string op, string[] values)
         {
-            return source.Where(it => it.Organization.OrgNam.Contains(values[0]));
+            return source.Where(it => it.Participation.OrgNam.Contains(values[0]));
         }
     }
 }

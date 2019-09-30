@@ -1,7 +1,6 @@
-﻿using Boc.Assets.Domain.Core.SharedKernel;
+﻿using Boc.Assets.Domain.Models.Applies;
 using Boc.Assets.Domain.Models.Assets;
-using Boc.Assets.Domain.Models.Assets.Audit;
-using Boc.Assets.Domain.Models.Organizations;
+using Boc.Assets.Domain.ValueObjects;
 using System;
 using System.Threading.Tasks;
 
@@ -9,11 +8,11 @@ namespace Boc.Assets.Domain.Services
 {
     public interface IAssetDomainService
     {
-        Task<AssetApply> CreateAssetApply(IUser user, Organization targetOrg, Guid assetCategoryId, string thirdLevelCategory, string message);
+        Task<AssetApply> CreateAssetApply(OrganizationInfo principal, OrganizationInfo targetOrg, Guid assetCategoryId, string thirdLevelCategory, string message);
 
-        Task<AssetReturn> CreateAssetReturn(Asset asset, IUser user, Organization targetOrg, string message);
+        Task<AssetReturn> CreateAssetReturn(Asset asset, OrganizationInfo principal, OrganizationInfo targetOrg, string message);
 
-        Task<AssetExchange> CreateAssetExchange(Asset asset, IUser user, Organization targetOrg, Organization exchangeOrg, string message);
+        Task<AssetExchange> CreateAssetExchange(Asset asset, OrganizationInfo principal, OrganizationInfo targetOrg, OrganizationInfo exchangeOrg, string message);
 
         Task HandleAssetReturn(Asset asset, AssetReturn apply, string handleMessage);
 

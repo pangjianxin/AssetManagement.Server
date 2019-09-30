@@ -1,6 +1,6 @@
-﻿using Boc.Assets.Domain.Commands.Validations.AssetCategory;
-using Boc.Assets.Domain.Models.Assets;
+﻿using Boc.Assets.Domain.Models.Assets;
 using System;
+using Boc.Assets.Domain.Commands.Validations.AssetCategories;
 
 namespace Boc.Assets.Domain.Commands.AssetCategory
 {

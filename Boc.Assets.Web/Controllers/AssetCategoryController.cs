@@ -33,7 +33,7 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.AssetCategory, Permissions.Actions.AssetCategory_Read_Secondary)]
         public async Task<IActionResult> SecondaryPagination(SieveModel model)
         {
-            var result = await _assetCategoryService.PaginationAsync(model,it=>it.CategoryOrgRegistrations.Select(that=>that.OrganizationId).Contains(_user.OrgId));
+            var result = await _assetCategoryService.PaginationAsync(model,it=>it.CategoryManageRegisters.Select(that=>that.ManagerId).Contains(_user.OrgId));
             XPaginationHeader(result);
             return AppResponse(result);
         }

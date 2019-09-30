@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Boc.Assets.Application.Dto;
+using Boc.Assets.Domain.Models.Applies;
+using Boc.Assets.Domain.Models.AssetInventories;
 using Boc.Assets.Domain.Models.Assets;
-using Boc.Assets.Domain.Models.Assets.Audit;
-using Boc.Assets.Domain.Models.AssetStockTakings;
 using Boc.Assets.Domain.Models.Organizations;
 
 namespace Boc.Assets.Application.AutoMapper
@@ -58,21 +58,21 @@ namespace Boc.Assets.Application.AutoMapper
                     config => config.MapFrom(it => it.AuthorizeOrgInfo.OrgIdentifier))
                 .ForMember(it => it.AuthorizeOrgNam, config => config.MapFrom(it => it.AuthorizeOrgInfo.OrgNam));
             //资产盘点参与机构和DTO之间的映射
-            CreateMap<AssetStockTakingOrganization, AssetStockTakingOrgDto>()
-                .ForMember(it => it.OrgId, config => config.MapFrom(it => it.OrganizationId))
-                .ForMember(it => it.AssetStockTakingId, config => config.MapFrom(it => it.AssetStockTakingId))
-                .ForMember(it => it.OrgIdentifier, config => config.MapFrom(it => it.Organization.OrgIdentifier))
-                .ForMember(it => it.OrgNam, config => config.MapFrom(it => it.Organization.OrgNam))
-                .ForMember(it => it.Org2, config => config.MapFrom(it => it.Organization.Org2))
-                .ForMember(it => it.TaskName, config => config.MapFrom(it => it.AssetStockTaking.TaskName))
-                .ForMember(it => it.TaskComment, config => config.MapFrom(it => it.AssetStockTaking.TaskComment))
+            CreateMap<AssetInventoryRegister, AssetInventoryResgiterDto>()
+                .ForMember(it => it.OrgId, config => config.MapFrom(it => it.ParticipationId))
+                .ForMember(it => it.AssetInventoryId, config => config.MapFrom(it => it.AssetInventoryId))
+                .ForMember(it => it.OrgIdentifier, config => config.MapFrom(it => it.Participation.OrgIdentifier))
+                .ForMember(it => it.OrgNam, config => config.MapFrom(it => it.Participation.OrgNam))
+                .ForMember(it => it.Org2, config => config.MapFrom(it => it.Participation.Org2))
+                .ForMember(it => it.TaskName, config => config.MapFrom(it => it.AssetInventory.TaskName))
+                .ForMember(it => it.TaskComment, config => config.MapFrom(it => it.AssetInventory.TaskComment))
                 .ForMember(it => it.Progress, config => config.MapFrom(it => it.Progress()));
             //资产盘点任务和DTO之间的映射
-            CreateMap<AssetStockTaking, AssetStockTakingDto>().ForMember(it => it.TimeProgress, config => config.MapFrom(it => it.TimeProgress()));
+            CreateMap<AssetInventory, AssetInventoryDto>().ForMember(it => it.TimeProgress, config => config.MapFrom(it => it.TimeProgress()));
             // 员工实体和DTO之间的映射
             CreateMap<Employee, EmployeeDto>();
             //资产盘点详情和DTO之间的映射
-            CreateMap<AssetStockTakingDetail, AssetStockTakingDetailDto>()
+            CreateMap<AssetInventoryDetail, AssetInventoryDetailDto>()
                 .ForMember(it => it.AssetName, config => config.MapFrom(it => it.Asset.AssetName))
                 .ForMember(it => it.AssetDescription, config => config.MapFrom(it => it.Asset.AssetDescription))
                 .ForMember(it => it.AssetTagNumber, config => config.MapFrom(it => it.Asset.AssetTagNumber));

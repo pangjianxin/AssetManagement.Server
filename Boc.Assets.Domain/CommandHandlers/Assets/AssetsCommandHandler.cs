@@ -104,11 +104,11 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                     AssetTagNumber = tagNumber.ToString(),
                     InStoreDateTime = DateTime.Now,
                     LastModifyDateTime = DateTime.Now,
-                    LatestDeployRecord = request.Message,
+                    LastDeployRecord = request.Message,
                     CreateDateTime = request.CreateDateTime,
-                    OrganizationBelongedId = _user.OrgId,
-                    StoredOrgIdentifier = _user.OrgIdentifier,
-                    StoredOrgName = _user.OrgNam
+                    OrganizationInChargeId = _user.OrgId,
+                    OrgInUseIdentifier = _user.OrgIdentifier,
+                    OrgInUseName = _user.OrgNam
                 };
                 await _assetRepository.AddAsync(asset);
             }

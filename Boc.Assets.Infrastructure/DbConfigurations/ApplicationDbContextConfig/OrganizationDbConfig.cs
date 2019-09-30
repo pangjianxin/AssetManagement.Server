@@ -34,6 +34,7 @@ namespace Boc.Assets.Infrastructure.DbConfigurations.ApplicationDbContextConfig
             //配置外键关系--机构角色
             builder.HasOne(it => it.Role).WithMany(it => it.Organizations)
                 .HasForeignKey(it => it.RoleId);
+
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Boc.Assets.Domain.Core.Models;
-using Boc.Assets.Domain.Models.AssetStockTakings;
+using Boc.Assets.Domain.Models.AssetInventories;
 using Boc.Assets.Domain.Models.Organizations;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
@@ -16,16 +16,21 @@ namespace Boc.Assets.Domain.Models.Assets
             _lazyLoader = lazyLoader;
         }
         private AssetCategory _assetCategory;
-        private Organization _organizationBelonged;
-        private ICollection<AssetStockTakingDetail> _assetStockTakingDetails;
+        private Organization _organizationInCharge;
+        private Organization _organizationInUse;
+        private ICollection<AssetInventoryDetail> _assetInventoryDetails;
         /// <summary>
         /// 资产分类外键
         /// </summary>
-        public Guid AssetCategoryId { get; set; }
+        public Guid? AssetCategoryId { get; set; }
         /// <summary>
         /// 资产责任中心外键
         /// </summary>
-        public Guid? OrganizationBelongedId { get; set; }
+        public Guid? OrganizationInChargeId { get; set; }
+        /// <summary>
+        /// 资产在用机构外键
+        /// </summary>
+        public Guid? OrganizationInUseId { get; set; }
         #region Properties
         /// <summary>
         /// 资产名称
@@ -70,19 +75,19 @@ namespace Boc.Assets.Domain.Models.Assets
         /// <summary>
         /// 最后一次修改备注
         /// </summary>
-        public string LatestDeployRecord { get; set; }
+        public string LastDeployRecord { get; set; }
         /// <summary>
         /// 生产日期
         /// </summary>
         public DateTime? CreateDateTime { get; set; }
         /// <summary>
-        /// 资产存放的机构号
+        /// 资产存放(使用)的机构号
         /// </summary>
-        public string StoredOrgIdentifier { get; set; }
+        public string OrgInUseIdentifier { get; set; }
         /// <summary>
-        /// 资产存放的机构名称
+        /// 资产存放(使用)的机构名称
         /// </summary>
-        public string StoredOrgName { get; set; }
+        public string OrgInUseName { get; set; }
         /// <summary>
         /// 资产存放位置
         /// </summary>
@@ -98,16 +103,26 @@ namespace Boc.Assets.Domain.Models.Assets
         /// <summary>
         /// 资产管理机构
         /// </summary>
-        public Organization OrganizationBelonged
+        public Organization OrganizationInCharge
         {
-            get => _lazyLoader.Load(this, ref _organizationBelonged);
-            set => _organizationBelonged = value;
+            get => _lazyLoader.Load(this, ref _organizationInCharge);
+            set => _organizationInCharge = value;
         }
-
-        public ICollection<AssetStockTakingDetail> AssetStockTakingDetails
+        /// <summary>
+        /// 资产在用机构
+        /// </summary>
+        public Organization OrganizationInUse
         {
-            get => _lazyLoader.Load(this, ref _assetStockTakingDetails);
-            set => _assetStockTakingDetails = value;
+            get => _lazyLoader.Load(this, ref _organizationInUse);
+            set => _organizationInUse = value;
+        }
+        /// <summary>
+        /// 对应的资产盘点情况
+        /// </summary>
+        public ICollection<AssetInventoryDetail> AssetInventoryDetails
+        {
+            get => _lazyLoader.Load(this, ref _assetInventoryDetails);
+            set => _assetInventoryDetails = value;
         }
         #endregion
 

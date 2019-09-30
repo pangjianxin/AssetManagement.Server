@@ -129,9 +129,9 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetCategoryRepository, AssetCategoryRepository>();
             services.AddScoped<IOrgSpaceRepository, OrgSpaceRepository>();
             services.AddScoped<IAssetDeployRepository, AssetDeployRepository>();
-            services.AddScoped<IAssetStockTakingRepository, AssetStockTakingRepository>();
-            services.AddScoped<IAssetStockTakingOrganizationRepository, AssetStockTakingOrganizationRepository>();
-            services.AddScoped<IAssetStockTakingDetailRepository, AssetStockTakingDetailRepository>();
+            services.AddScoped<IAssetInventoryRepository, AssetInventoryRepository>();
+            services.AddScoped<IAssetInventoryRegisterRepository, AssetInventoryRegisterRepository>();
+            services.AddScoped<IAssetInventoryDetailRepository, AssetInventoryDetailRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IMaintainerRepository, MaintainerRepository>();
             services.AddScoped<IPermissionRepository, PermissionRepository>();
@@ -139,7 +139,7 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetApplyRepository, AssetApplyRepository>();
             services.AddScoped<IAssetReturnRepository, AssetReturnRepository>();
             services.AddScoped<IAssetExchangeRepository, AssetExchangeRepository>();
-            services.AddScoped<ICategoryOrgRegistrationRepository, CategoryOrgRegistrationRepository>();
+            services.AddScoped<ICategoryManageRegisterRepository, CategoryManageRegisterRepository>();
 
             //application services
             services.AddScoped<IOrganizationService, OrganizationService>();
@@ -147,7 +147,7 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetCategoryService, AssetCategoryService>();
             services.AddScoped<IOrgSpaceService, OrgSpaceService>();
             services.AddScoped<IAssetDeployService, AssetDeployService>();
-            services.AddScoped<IAssetStockTakingService, AssetStockTakingService>();
+            services.AddScoped<IAssetInventoryService, AssetInventoryService>();
             services.AddScoped<IEmployeeService, EmployService>();
             services.AddScoped<IMaintainerService, MaintainerService>();
             services.AddScoped<IPermissionService, PermissionService>();
@@ -155,7 +155,7 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetReturnService, AssetReturnService>();
             services.AddScoped<IAssetExchangeService, AssetExchangeService>();
             services.AddScoped<IOrganizationRoleService, OrganizationRoleService>();
-            services.AddScoped<ICategoryOrgRegistrationService, CategoryOrgRegistrationService>();
+            services.AddScoped<ICategoryManageResgisterService, CategoryManageResgisterService>();
 
         }
         private static void AddJwtAuthentication(IServiceCollection services, IConfiguration config)

@@ -5,9 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\ApplicationDbContextConfig\20190321015020_InitProduction.cs" />
-    <Compile Remove="Migrations\ApplicationDbContextConfig\20190411091525_DeleteMaintainers.cs" />
-    <Compile Remove="Migrations\ApplicationDbContextConfig\20190828075958_rmove_managementline.cs" />
+    <Compile Remove="Migrations\App\20190929031334_InitDb.cs" />
+    <Compile Remove="Migrations\App\20190929032335_InitDb.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,8 +32,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\ApplicationDbContextConfig\" />
-    <Folder Include="Migrations\EventStoreDbContextConfig\" />
+    <Folder Include="Migrations\App\" />
+    <Folder Include="Migrations\Events\" />
   </ItemGroup>
 
 </Project>

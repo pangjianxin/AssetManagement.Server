@@ -1,6 +1,6 @@
 ﻿using Boc.Assets.Domain.Core.Events;
-using Boc.Assets.Domain.Models.Assets.Audit;
 using System;
+using Boc.Assets.Domain.Models.Applies;
 
 namespace Boc.Assets.Domain.Events.Assets
 {

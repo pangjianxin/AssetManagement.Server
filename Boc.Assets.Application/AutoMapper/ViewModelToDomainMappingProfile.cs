@@ -1,21 +1,21 @@
 ﻿using AutoMapper;
 using Boc.Assets.Application.ViewModels.AssetCategory;
+using Boc.Assets.Application.ViewModels.AssetInventories;
 using Boc.Assets.Application.ViewModels.Assets;
-using Boc.Assets.Application.ViewModels.AssetStockTakings;
 using Boc.Assets.Application.ViewModels.Employee;
 using Boc.Assets.Application.ViewModels.Maintainers;
 using Boc.Assets.Application.ViewModels.Organization;
 using Boc.Assets.Application.ViewModels.OrganizationSpace;
 using Boc.Assets.Application.ViewModels.Permission;
 using Boc.Assets.Domain.Commands.AssetCategory;
+using Boc.Assets.Domain.Commands.AssetInventory;
 using Boc.Assets.Domain.Commands.Assets;
-using Boc.Assets.Domain.Commands.AssetStockTaking;
 using Boc.Assets.Domain.Commands.Employee;
 using Boc.Assets.Domain.Commands.Maintainers;
 using Boc.Assets.Domain.Commands.Organization;
 using Boc.Assets.Domain.Commands.OrganizationSpace;
 using Boc.Assets.Domain.Commands.Permissions;
-using Boc.Assets.Domain.Models.AssetStockTakings;
+using Boc.Assets.Domain.Models.AssetInventories;
 
 namespace Boc.Assets.Application.AutoMapper
 {
@@ -58,19 +58,19 @@ namespace Boc.Assets.Application.AutoMapper
                 .ConstructUsing(c => new RevokeAssetExchangeCommand(c.EventId, c.Message));
             CreateMap<StoreAsset, StoreAssetWithOutFileCommand>()
                 .ConstructUsing(c => new StoreAssetWithOutFileCommand(c.AssetName, c.Brand, c.AssetDescription, c.AssetType, c.AssetLocation, c.AssetCategoryId, c.CreateDateTime, c.StartTagNumber, c.EndTagNumber));
-            CreateMap<CreateAssetStockTaking, CreateAssetStockTakingCommand>()
+            CreateMap<CreateAssetInventory, CreateAssetInventoryCommand>()
                 .ConstructUsing(c =>
-                    new CreateAssetStockTakingCommand(c.TaskName, c.TaskComment, c.ExpiryDateTime, c.ExcludedOrganizations));
+                    new CreateAssetInventoryCommand(c.TaskName, c.TaskComment, c.ExpiryDateTime, c.ExcludedOrganizations));
             CreateMap<AddEmployee, AddEmployeeCommand>()
                 .ConstructUsing(c => new AddEmployeeCommand(c.Name, c.Identifier, c.Org2, c.Telephone, c.OfficePhone));
-            CreateMap<CreateAssetStockTakingDetail, CreateAssetStockTakingDetailCommand>()
-                .ConstructUsing(c => new CreateAssetStockTakingDetailCommand(c.AssetId,
-                    c.AssetStockTakingOrganizationId,
+            CreateMap<CreateAssetInventoryDetail, CreateAssetInventoryDetailCommand>()
+                .ConstructUsing(c => new CreateAssetInventoryDetailCommand(c.AssetId,
+                    c.AssetInventoryRegisterId,
                     c.ResponsibilityIdentity,
                     c.ResponsibilityName,
                     c.ResponsibilityOrg2,
-                    c.AssetStockTakingLocation,
-                    (StockTakingStatus)c.StockTakingStatus,
+                    c.AssetInventoryLocation,
+                    (InventoryStatus)c.InventoryStatus,
                     c.Message));
             CreateMap<AddMaintainer, AddMaintainerCommand>()
                 .ConstructUsing(c => new AddMaintainerCommand(c.OrganizationId, c.Org2, c.AssetCategoryId, c.CompanyName,

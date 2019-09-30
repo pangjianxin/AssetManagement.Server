@@ -9,13 +9,13 @@ using Boc.Assets.Application.ViewModels.Assets;
 using Boc.Assets.Domain.Commands.Assets;
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Models.Assets.Audit;
 using Boc.Assets.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Boc.Assets.Domain.Models.Applies;
 
 namespace Boc.Assets.Application.ServiceImplements
 {

@@ -24,21 +24,21 @@ namespace Boc.Assets.Application.ServiceImplements
     {
         private readonly IMapper _mapper;
         private readonly IAssetRepository _assetRepository;
-        private readonly IAssetStockTakingDetailRepository _assetStockTakingDetailRepository;
+        private readonly IAssetInventoryDetailRepository _assetInventoryDetailRepository;
         private readonly IBus _bus;
         private readonly ISieveProcessor _sieveProcessor;
         private readonly SieveOptions _sieveOptions;
 
         public AssetService(IMapper mapper,
             IAssetRepository assetRepository,
-            IAssetStockTakingDetailRepository assetStockTakingDetailRepository,
+            IAssetInventoryDetailRepository assetStockTakingDetailRepository,
             IBus bus,
             ISieveProcessor sieveProcessor,
             IOptions<SieveOptions> options)
         {
             _mapper = mapper;
             _assetRepository = assetRepository;
-            _assetStockTakingDetailRepository = assetStockTakingDetailRepository;
+            _assetInventoryDetailRepository = assetStockTakingDetailRepository;
             _bus = bus;
             _sieveProcessor = sieveProcessor;
             _sieveOptions = options.Value;
@@ -48,7 +48,7 @@ namespace Boc.Assets.Application.ServiceImplements
         public async Task<IEnumerable<dynamic>> CategoriesByManagerOrg(Expression<Func<Asset, bool>> predicate)
         {
             var result = from asset in _assetRepository.GetAll(predicate)
-                         group asset by asset.OrganizationBelonged.OrgIdentifier
+                         group asset by asset.OrganizationInCharge.OrgIdentifier
                 into final
                          select new { name = final.Key, value = final.Count() };
             return await result.ToListAsync();

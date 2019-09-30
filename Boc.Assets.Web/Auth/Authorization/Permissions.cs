@@ -9,7 +9,7 @@
             public const string AssetCategory = "资产类别";
             public const string AssetExchange = "资产机构间调配申请";
             public const string AssetReturn = "资产交回";
-            public const string AssetStockTaking = "资产盘点";
+            public const string AssetInventory = "资产盘点";
             public const string Dashboard = "仪表板";
             public const string Employe = "员工";
             public const string Maintainer = "资产维修供应商";
@@ -55,12 +55,12 @@
             public const string AssetReturn_Modify_Secondary = "二级行更新";
 
             /*资产盘点的操作权限*/
-            public const string AssetStockTaking_Read_Current = "本机构读取";
-            public const string AssetStockTaking_Create_Currrent = "本机构盘点资产";
-            public const string AssetStockTaking_Create_Secondary = "二级行创建盘点任务";
-            public const string AssetStockTaking_Delete_Current = "本机构删除";
-            public const string AssetStockTaking_Read_Secondary = "二级行读取";
-            public const string AssetStockTaking_Modify_Secondary = "二级行更新";
+            public const string AssetInventory_Read_Current = "本机构读取";
+            public const string AssetInventory_Create_Current = "本机构盘点资产";
+            public const string AssetInventory_Create_Secondary = "二级行创建盘点任务";
+            public const string AssetInventory_Delete_Current = "本机构删除";
+            public const string AssetInventory_Read_Secondary = "二级行读取";
+            public const string AssetInventory_Modify_Secondary = "二级行更新";
 
             /*仪表板的操作权限*/
             public const string Dashboard_Read_Current = "本机构读取";

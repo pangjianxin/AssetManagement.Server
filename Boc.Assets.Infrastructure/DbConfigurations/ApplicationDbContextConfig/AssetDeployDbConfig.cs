@@ -16,7 +16,7 @@ namespace Boc.Assets.Infrastructure.DbConfigurations.ApplicationDbContextConfig
             //资产标签号
             builder.Property(it => it.AssetTagNumber).HasMaxLength(100);
             //二级行标志
-            builder.Property(it => it.Org2).IsRequired().HasMaxLength(20);
+            //builder.Property(it => it.Org2).IsRequired().HasMaxLength(20);
             //资产编号
             builder.Property(it => it.AssetNo).HasMaxLength(50);
             //调出机构

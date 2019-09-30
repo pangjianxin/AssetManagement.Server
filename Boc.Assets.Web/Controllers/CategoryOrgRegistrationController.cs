@@ -11,11 +11,11 @@ namespace Boc.Assets.Web.Controllers
     [Route("api/categoryOrgRegistration")]
     public class CategoryOrgRegistrationController : ApiController
     {
-        private readonly ICategoryOrgRegistrationService _categoryOrgRegistrationService;
+        private readonly ICategoryManageResgisterService _categoryOrgRegistrationService;
 
         public CategoryOrgRegistrationController(INotificationHandler<DomainNotification> notifications,
             IUser user,
-            ICategoryOrgRegistrationService categoryOrgRegistrationService)
+            ICategoryManageResgisterService categoryOrgRegistrationService)
             : base(notifications, user)
         {
             _categoryOrgRegistrationService = categoryOrgRegistrationService;
