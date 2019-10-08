@@ -6,7 +6,6 @@ using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Web.Auth.Authorization;
 using MediatR;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq.Expressions;
@@ -19,18 +18,15 @@ namespace Boc.Assets.Web.Controllers
     {
         private readonly IAssetService _assetService;
         private readonly IAssetDeployService _assetDeployService;
-        private readonly IHostingEnvironment _hostingEnvironment;
         private const string XlsxContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         public DashboardController(INotificationHandler<DomainNotification> notifications,
             IAssetService assetService,
             IAssetDeployService assetDeployService,
-            IUser user,
-            IHostingEnvironment hostingEnvironment)
+            IUser user)
             : base(notifications, user)
         {
             _assetService = assetService;
             _assetDeployService = assetDeployService;
-            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet("secondaryadmin/assets/categories")]

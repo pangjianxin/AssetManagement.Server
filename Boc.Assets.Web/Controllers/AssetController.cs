@@ -33,7 +33,7 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [HttpGet("current")]
         [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Current)]
-        public async Task<IActionResult> PaginationCurrent(SieveModel model)
+        public async Task<IActionResult> CurrentPagination(SieveModel model)
         {
             Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
             var result = await _assetService.PaginationAsync(model, currentAssetsPredicate);
@@ -92,6 +92,23 @@ namespace Boc.Assets.Web.Controllers
         public async Task<IActionResult> PaginationSecondary(SieveModel model)
         {
             var result = await _assetService.PaginationAsync(model, it => it.OrganizationInChargeId == _user.OrgId);
+            XPaginationHeader(result);
+            return AppResponse(result);
+        }
+        /// <summary>
+        /// 获取某个机构下的所有资产，
+        /// 二级权限
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="orgInUseId"></param>
+        /// <returns></returns>
+        [HttpGet("secondary/orgInUse")]
+        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Secondary)]
+        public async Task<IActionResult> CurrentPaginationByManager(SieveModel model, Guid orgInUseId)
+        {
+            Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInChargeId == _user.OrgId
+                                                                         && it.OrganizationInUseId == orgInUseId;
+            var result = await _assetService.PaginationAsync(model, currentAssetsPredicate);
             XPaginationHeader(result);
             return AppResponse(result);
         }

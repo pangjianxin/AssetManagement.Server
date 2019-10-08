@@ -18,6 +18,7 @@ namespace Boc.Assets.Web.Auth.Authorization
 
         public void OnProvidersExecuting(ApplicationModelProviderContext context)
         {
+
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context));
@@ -41,7 +42,6 @@ namespace Boc.Assets.Web.Auth.Authorization
                     }
                 }
             }
-
             foreach (var item in attributeData)
             {
                 ResourceData.AddResource(item.Controller, item.Action);
