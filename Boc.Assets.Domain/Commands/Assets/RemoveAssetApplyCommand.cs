@@ -3,11 +3,11 @@ using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
-    public class RemoveAssetApplyCommand : AssetCommand
+    public class RemoveAssetApplyCommand : ApplyCommand
     {
         public RemoveAssetApplyCommand(Guid eventId)
         {
-            EventId = eventId;
+            ApplyId = eventId;
         }
 
         public override bool IsValid()

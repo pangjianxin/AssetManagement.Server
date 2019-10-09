@@ -1,15 +1,9 @@
-﻿using System;
-using Boc.Assets.Domain.Commands.Assets;
-using FluentValidation;
+﻿using Boc.Assets.Domain.Commands.Assets;
 
 namespace Boc.Assets.Domain.Commands.Validations.Assets
 {
-    public class CreateAssetReturnCommandValidator : AssetCommandValidator<CreateAssetReturnCommand>
+    public class CreateAssetReturnCommandValidator : ApplyCommandValidator<CreateAssetReturnCommand>
     {
-        private void ValidateTargetOrgId()
-        {
-            RuleFor(it => it.TargetOrgId).NotEqual(Guid.Empty).WithMessage("目标机构Id不能为空");
-        }
         public CreateAssetReturnCommandValidator()
         {
             ValidateTargetOrgId();

@@ -48,17 +48,6 @@ namespace Boc.Assets.Domain.Commands.Validations.Assets
         {
             RuleFor(it => it.AssetLocation).NotNull().NotEmpty().WithMessage("资产位置不能为空");
         }
-
-        protected void ValidateEventId()
-        {
-            RuleFor(it => it.EventId).NotEqual(Guid.Empty).WithMessage("事件Id不能为空");
-        }
-
-        protected void ValidateMessage()
-        {
-            RuleFor(it => it.Message).NotNull().NotEmpty().WithMessage("消息不能为空");
-        }
-
         protected void ValidateCreateDateTime()
         {
             RuleFor(it => it.CreateDateTime).NotEqual(DateTime.Today).NotEmpty().NotNull().WithMessage("生产日期错误");

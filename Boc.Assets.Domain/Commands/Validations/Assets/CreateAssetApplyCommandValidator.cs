@@ -4,11 +4,11 @@ using System;
 
 namespace Boc.Assets.Domain.Commands.Validations.Assets
 {
-    public class CreateAssetApplyCommandValidator : AssetCommandValidator<CreateAssetApplyCommand>
+    public class CreateAssetApplyCommandValidator : ApplyCommandValidator<CreateAssetApplyCommand>
     {
-        private void ValidateTargetOrgId()
+        private void ValidateAssetCategoryId()
         {
-            RuleFor(it => it.TargetOrgId).NotEqual(Guid.Empty).WithMessage("目标机构序号不能为空");
+            RuleFor(it => it.AssetCategoryId).NotEqual(Guid.Empty).WithMessage("资产分类Id不能为空");
         }
         public CreateAssetApplyCommandValidator()
         {

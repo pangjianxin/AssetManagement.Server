@@ -3,12 +3,12 @@ using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
-    public class HandleAssetApplyCommand : AssetCommand
+    public class HandleAssetApplyCommand : ApplyCommand
     {
 
         public HandleAssetApplyCommand(Guid eventId, Guid assetId)
         {
-            EventId = eventId;
+            ApplyId = eventId;
             AssetId = assetId;
         }
         public override bool IsValid()

@@ -3,7 +3,7 @@ using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
-    public class CreateAssetExchangeCommand : AssetCommand
+    public class CreateAssetExchangeCommand : ApplyCommand
     {
         public CreateAssetExchangeCommand(
             Guid targetOrgId,
@@ -16,8 +16,6 @@ namespace Boc.Assets.Domain.Commands.Assets
             AssetId = assetId;
             Message = message;
         }
-        public Guid ExchangeOrgId { get; set; }
-        public Guid TargetOrgId { get; set; }
         public override bool IsValid()
         {
             ValidationResult = new CreateAssetExchangeCommandValidator().Validate(this);

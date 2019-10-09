@@ -98,7 +98,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
             //查看事件是否存在
-            var assetExchange = await _assetExchangeRepository.GetByIdAsync(request.EventId);
+            var assetExchange = await _assetExchangeRepository.GetByIdAsync(request.ApplyId);
             if (assetExchange == null)
             {
                 await Bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的事件参数有误，请联系管理员"));
@@ -130,7 +130,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
             //查看事件是否存在
-            var assetExchange = await _assetExchangeRepository.GetByIdAsync(request.EventId);
+            var assetExchange = await _assetExchangeRepository.GetByIdAsync(request.ApplyId);
             if (assetExchange == null)
             {
                 await Bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的事件参数有误，没有找到对应的事件，请联系管理员"));
@@ -155,7 +155,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
             //查看事件是否存在
-            var assetExchange = await _assetExchangeRepository.GetByIdAsync(request.EventId);
+            var assetExchange = await _assetExchangeRepository.GetByIdAsync(request.ApplyId);
             if (assetExchange == null)
             {
                 await Bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的事件参数有误，没有找到对应的事件，请联系管理员"));

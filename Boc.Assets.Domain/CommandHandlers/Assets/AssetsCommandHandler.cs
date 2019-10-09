@@ -7,6 +7,7 @@ using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -79,7 +80,8 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 await Bus.RaiseEventAsync(new DomainNotification("操作错误", "录入的结束标签号有误，请重新填写"));
                 return false;
             }
-
+            //临时存放入库资产的列表
+            var tempInventoryList = new List<Asset>();
             for (var operationCount = startCount; operationCount <= endCount; operationCount++)
             {
                 var tagNumber = new StringBuilder();
@@ -110,8 +112,9 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                     OrgInUseIdentifier = _user.OrgIdentifier,
                     OrgInUseName = _user.OrgNam
                 };
-                await _assetRepository.AddAsync(asset);
+                tempInventoryList.Add(asset);
             }
+            await _assetRepository.AddRangeAsync(tempInventoryList);
 
             if (await CommitAsync())
             {

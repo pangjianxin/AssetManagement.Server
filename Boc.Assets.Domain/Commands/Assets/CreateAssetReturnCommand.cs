@@ -3,9 +3,8 @@ using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
-    public class CreateAssetReturnCommand : AssetCommand
+    public class CreateAssetReturnCommand : ApplyCommand
     {
-        public Guid TargetOrgId { get; set; }
 
         public CreateAssetReturnCommand(Guid targetOrgId, Guid assetId, string message)
         {

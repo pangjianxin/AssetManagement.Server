@@ -64,8 +64,8 @@ namespace Boc.Assets.Domain.Models.AssetInventories
     /// </summary>
     public enum InventoryStatus
     {
-        账面与实物相符 = 0,
-        账面与实物不符 = 1,
-        盘亏 = 2,
+        账面与实物相符 = 1,
+        账面与实物不符 = 2,
+        盘亏 = 3,
     }
 }

@@ -21,6 +21,7 @@ namespace Boc.Assets.Domain.Commands.Assets
         }
         public string StartTagNumber { get; set; }
         public string EndTagNumber { get; set; }
+        public string Message { get; set; }
         public override bool IsValid()
         {
             ValidationResult = new StoreAssetWithOutFileCommandValidator().Validate(this);

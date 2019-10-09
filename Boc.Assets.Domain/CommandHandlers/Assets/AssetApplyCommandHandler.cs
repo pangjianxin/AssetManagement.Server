@@ -118,7 +118,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 return false;
             }
 
-            var assetApply = await _assetApplyRepository.GetByIdAsync(request.EventId);
+            var assetApply = await _assetApplyRepository.GetByIdAsync(request.ApplyId);
             if (assetApply == null)
             {
                 await Bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的事件参数有误，请联系管理员"));
@@ -156,7 +156,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 await NotifyValidationErrors(request);
                 return false;
             }
-            var assetApply = await _assetApplyRepository.GetByIdAsync(request.EventId);
+            var assetApply = await _assetApplyRepository.GetByIdAsync(request.ApplyId);
             if (assetApply == null)
             {
                 await Bus.RaiseEventAsync(new DomainNotification("参数错误", "传入的事件参数有误，没有找到对应的事件，请联系管理员"));
@@ -181,7 +181,7 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                 await Bus.RaiseEventAsync(new DomainNotification("客户端错误", "模型有效性验证未通过"));
                 return false;
             }
-            var assetApply = await _assetApplyRepository.GetByIdAsync(request.EventId);
+            var assetApply = await _assetApplyRepository.GetByIdAsync(request.ApplyId);
             if (assetApply == null)
             {
                 await Bus.RaiseEventAsync(new DomainNotification("系统错误", "为找到指定的事件进行处理，请联系管理员"));

@@ -7,8 +7,6 @@ using Boc.Assets.Web.Auth.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Boc.Assets.Web.Controllers
 {

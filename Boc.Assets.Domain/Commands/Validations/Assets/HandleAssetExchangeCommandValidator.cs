@@ -2,12 +2,11 @@
 
 namespace Boc.Assets.Domain.Commands.Validations.Assets
 {
-    public class HandleAssetExchangeCommandValidator : AssetCommandValidator<HandleAssetExchangeCommand>
+    public class HandleAssetExchangeCommandValidator : ApplyCommandValidator<HandleAssetExchangeCommand>
     {
-
         public HandleAssetExchangeCommandValidator()
         {
-            ValidateEventId();
+            ValidateApplyId();
         }
     }
 }

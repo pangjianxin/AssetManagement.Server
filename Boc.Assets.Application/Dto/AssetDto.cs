@@ -48,11 +48,15 @@ namespace Boc.Assets.Application.Dto
         /// <summary>
         /// 资产所属机构外键
         /// </summary>
-        public Guid OrgInChargeId { get; set; }
+        public Guid OrganizationInChargeId { get; set; }
         /// <summary>
         /// 资产存放机构名称
         /// </summary>
         public string OrgInUseName { get; set; }
+        /// <summary>
+        /// 在用机构Id
+        /// </summary>
+        public Guid OrganizationInUseId { get; set; }
         /// <summary>
         /// 资产存放机构号
         /// </summary>

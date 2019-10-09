@@ -2,11 +2,11 @@
 
 namespace Boc.Assets.Domain.Commands.Validations.Assets
 {
-    public class RemoveAssetReturnCommandValidator : AssetCommandValidator<RemoveAssetReturnCommand>
+    public class RemoveAssetReturnCommandValidator : ApplyCommandValidator<RemoveAssetReturnCommand>
     {
         public RemoveAssetReturnCommandValidator()
         {
-            ValidateEventId();
+            ValidateApplyId();
         }
     }
 }

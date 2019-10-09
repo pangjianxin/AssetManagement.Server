@@ -25,7 +25,7 @@ namespace Boc.Assets.Domain.Commands.AssetInventory
             ResponsibilityName = name;
             ResponsibilityOrg2 = org2;
             AssetInventoryLocation = location;
-            StockTakingStatus = status;
+            InventoryStatus = status;
             Message = message;
         }
         public Guid AssetId { get; set; }
@@ -34,7 +34,7 @@ namespace Boc.Assets.Domain.Commands.AssetInventory
         public string ResponsibilityName { get; set; }
         public string ResponsibilityOrg2 { get; set; }
         public string AssetInventoryLocation { get; set; }
-        public InventoryStatus StockTakingStatus { get; set; }
+        public InventoryStatus InventoryStatus { get; set; }
         public string Message { get; set; }
         public override bool IsValid()
         {

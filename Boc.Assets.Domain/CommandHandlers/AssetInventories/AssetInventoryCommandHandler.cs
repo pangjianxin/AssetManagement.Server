@@ -106,7 +106,7 @@ namespace Boc.Assets.Domain.CommandHandlers.AssetInventories
                 ResponsibilityIdentity = request.ResponsibilityIdentity,
                 ResponsibilityName = request.ResponsibilityName,
                 ResponsibilityOrg2 = request.ResponsibilityOrg2,
-                InventoryStatus = request.StockTakingStatus
+                InventoryStatus = request.InventoryStatus
             };
             await _assetInventoryDetailRepository.AddAsync(detail);
             if (!await CommitAsync())

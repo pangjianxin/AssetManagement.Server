@@ -3,11 +3,11 @@ using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
-    public class RevokeAssetExchangeCommand : AssetCommand
+    public class RevokeAssetExchangeCommand : ApplyCommand
     {
         public RevokeAssetExchangeCommand(Guid eventId, string message)
         {
-            EventId = eventId;
+            ApplyId = eventId;
             Message = message;
         }
         public override bool IsValid()

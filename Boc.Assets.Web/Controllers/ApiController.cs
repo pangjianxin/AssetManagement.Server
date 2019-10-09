@@ -13,7 +13,7 @@ namespace Boc.Assets.Web.Controllers
 {
     public abstract class ApiController : ControllerBase
     {
-        protected readonly DomainNotificationHandler Notifications;
+        protected DomainNotificationHandler Notifications { get; }
         protected readonly IUser _user;
         protected ApiController(INotificationHandler<DomainNotification> notifications, IUser user)
         {

@@ -3,10 +3,9 @@ using System;
 
 namespace Boc.Assets.Domain.Commands.Assets
 {
-    public class CreateAssetApplyCommand : AssetCommand
+    public class CreateAssetApplyCommand : ApplyCommand
     {
-        public Guid TargetOrgId { get; set; }
-
+        public Guid AssetCategoryId { get; }
         public CreateAssetApplyCommand(Guid targetOrgId, Guid assetCategoryId, string message)
         {
             AssetCategoryId = assetCategoryId;

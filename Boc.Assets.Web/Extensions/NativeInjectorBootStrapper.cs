@@ -1,7 +1,6 @@
 ﻿
 using AutoMapper;
 using Boc.Assets.Application.AutoMapper;
-using Boc.Assets.Application.FluentValidations.AssetCategory;
 using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceImplements;
 using Boc.Assets.Application.ServiceInterfaces;
@@ -24,7 +23,6 @@ using Boc.Assets.Infrastructure.Repository.EventSourcing;
 using Boc.Assets.Infrastructure.UnitOfWork;
 using Boc.Assets.Web.Auth.Authentication;
 using Boc.Assets.Web.Auth.Authorization;
-using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -52,8 +50,7 @@ namespace Boc.Assets.Web.Extensions
             services.AddMvc(action =>
             {
                 action.Filters.Add<ModelStateActionFilter>();
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddFluentValidation(t => t.RegisterValidatorsFromAssembly(typeof(ChangeMeteringUnitValidator).Assembly));
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             //注入ApplicationModelProvider,用于获取controller的相关信息
             services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, ControllerPermissionApplicationModelProvider>());

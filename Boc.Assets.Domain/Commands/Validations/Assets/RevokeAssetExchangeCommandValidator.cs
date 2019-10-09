@@ -2,11 +2,11 @@
 
 namespace Boc.Assets.Domain.Commands.Validations.Assets
 {
-    public class RevokeAssetExchangeCommandValidator:AssetCommandValidator<RevokeAssetExchangeCommand>
+    public class RevokeAssetExchangeCommandValidator:ApplyCommandValidator<RevokeAssetExchangeCommand>
     {
         public RevokeAssetExchangeCommandValidator()
         {
-            ValidateEventId();
+            ValidateApplyId();
             ValidateMessage();
         }
     }
