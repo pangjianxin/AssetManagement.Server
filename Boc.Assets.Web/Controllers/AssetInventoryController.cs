@@ -5,6 +5,7 @@ using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.ViewModels.AssetInventories;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
+using Boc.Assets.Domain.Models.AssetInventories;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Web.Auth.Authorization;
 using MediatR;
@@ -12,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Boc.Assets.Domain.Models.AssetInventories;
 
 namespace Boc.Assets.Web.Controllers
 {
@@ -123,7 +123,7 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.AssetInventory, Permissions.Actions.AssetInventory_Read_Current)]
         public async Task<IActionResult> AssetWithOutInventory(SieveModel model, Guid assetStockTakingOrgId)
         {
-            Expression<Func<Asset, bool>> predicate = it => it.OrgInUseName == _user.OrgIdentifier;
+            Expression<Func<Asset, bool>> predicate = it => it.OrganizationInUseId == _user.OrgId;
             PaginatedList<AssetDto> assetWithOutStockTaking = await _assetInventoryService.AssetsWithOutInventoriesAsync(model, assetStockTakingOrgId, predicate);
             XPaginationHeader(assetWithOutStockTaking);
             return AppResponse(assetWithOutStockTaking);

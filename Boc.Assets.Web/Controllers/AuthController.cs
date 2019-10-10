@@ -2,9 +2,9 @@
 using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.ViewModels.Login;
 using Boc.Assets.Application.ViewModels.Organization;
+using Boc.Assets.Domain.Authentication;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Web.Auth.Authentication;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,11 +37,7 @@ namespace Boc.Assets.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] Login model)
         {
-            if (!await _organizationService.CheckLoginCredentialAsync(model))
-            {
-                return AppResponse();
-            }
-            var accessToken = await _jwtFactory.CreateTokenAsync(model.OrgIdentifier);
+            var accessToken = await _organizationService.LoginAsync(model);
             return AppResponse(new
             {
                 access_token = accessToken
@@ -56,8 +52,8 @@ namespace Boc.Assets.Web.Controllers
         [Authorize]
         public async Task<IActionResult> ChangeOrgShortName([FromBody]ChangeOrgShortName model)
         {
-            await _organizationService.ChangeOrgShortNameAsync(model);
-            return AppResponse(null, "操作成功");
+            var token = await _organizationService.ChangeOrgShortNameAsync(model);
+            return AppResponse(new { access_token = token }, "操作成功");
         }
         /// <summary>
         /// 获取账户
@@ -109,8 +105,8 @@ namespace Boc.Assets.Web.Controllers
         [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] ChangeOrgPassword model)
         {
-            await _organizationService.ChangeOrgPassword(model);
-            return AppResponse(null, "修改密码成功");
+            var token = await _organizationService.ChangeOrgPassword(model);
+            return AppResponse(new { access_token = token }, "修改密码成功");
         }
         /// <summary>
         /// 获取某个二级行下面的所有机构
@@ -124,6 +120,13 @@ namespace Boc.Assets.Web.Controllers
             var result = await _organizationService.PaginationAsync(model, it => it.Org2 == _user.Org2);
             XPaginationHeader(result);
             return AppResponse(result, "成功");
+        }
+        [HttpGet("pushHash")]
+        [AllowAnonymous]
+        public async Task<IActionResult> PushHash()
+        {
+            await _organizationService.PushHash();
+            return AppResponse(null, "操作成功");
         }
     }
 }

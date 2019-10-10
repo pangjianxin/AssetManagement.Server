@@ -16,12 +16,10 @@ using Boc.Assets.Domain.Repositories;
 using Boc.Assets.Domain.Services;
 using Boc.Assets.Infrastructure.Bus;
 using Boc.Assets.Infrastructure.DataBase;
-using Boc.Assets.Infrastructure.DomainServices;
 using Boc.Assets.Infrastructure.Identity;
 using Boc.Assets.Infrastructure.Repository;
 using Boc.Assets.Infrastructure.Repository.EventSourcing;
 using Boc.Assets.Infrastructure.UnitOfWork;
-using Boc.Assets.Web.Auth.Authentication;
 using Boc.Assets.Web.Auth.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -38,6 +36,8 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Boc.Assets.Domain.Authentication;
+using Boc.Assets.Domain.Models.Organizations;
 
 namespace Boc.Assets.Web.Extensions
 {
@@ -51,7 +51,8 @@ namespace Boc.Assets.Web.Extensions
             {
                 action.Filters.Add<ModelStateActionFilter>();
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            //密码hash
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
             //注入ApplicationModelProvider,用于获取controller的相关信息
             services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, ControllerPermissionApplicationModelProvider>());
             //添加授权handler
