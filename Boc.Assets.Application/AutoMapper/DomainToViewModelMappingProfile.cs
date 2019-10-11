@@ -75,7 +75,8 @@ namespace Boc.Assets.Application.AutoMapper
             CreateMap<AssetInventoryDetail, AssetInventoryDetailDto>()
                 .ForMember(it => it.AssetName, config => config.MapFrom(it => it.Asset.AssetName))
                 .ForMember(it => it.AssetDescription, config => config.MapFrom(it => it.Asset.AssetDescription))
-                .ForMember(it => it.AssetTagNumber, config => config.MapFrom(it => it.Asset.AssetTagNumber));
+                .ForMember(it => it.AssetTagNumber, config => config.MapFrom(it => it.Asset.AssetTagNumber))
+                .ForMember(it => it.InventoryStatus, config => config.MapFrom(it => it.InventoryStatus.ToString()));
             //服务类和DTO之间的映射
             CreateMap<Maintainer, MaintainerDto>()
                 .ForMember(it => it.CategoryFirstLevel,

@@ -4,7 +4,16 @@ using System;
 
 namespace Boc.Assets.Domain.Core.Commands
 {
-    public abstract class Command : Message
+    /// <inheritdoc />
+    /// <summary>
+    /// 默认情况下Command返回一个布尔值
+    /// </summary>
+    public abstract class Command : Command<bool> { }
+    /// <summary>
+    /// Command
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    public abstract class Command<TResult> : Message<TResult>
     {
         protected Command()
         {

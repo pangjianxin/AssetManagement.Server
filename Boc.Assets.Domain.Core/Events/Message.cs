@@ -3,7 +3,8 @@ using System;
 
 namespace Boc.Assets.Domain.Core.Events
 {
-    public class Message : IRequest<bool>
+    public abstract class Message : Message<bool> { }
+    public abstract class Message<TResult> : IRequest<TResult>
     {
         public string MessageType { get; protected set; }
         public Guid AggregateId { get; protected set; }

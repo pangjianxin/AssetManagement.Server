@@ -29,7 +29,7 @@ namespace Boc.Assets.Infrastructure.Bus
             await _mediator.Publish(@event);
         }
 
-        public async Task<bool> SendCommandAsync<TCommand>(TCommand command) where TCommand : Command
+        public async Task<TResult> SendCommandAsync<TResult>(Command<TResult> command)
         {
             var result = await _mediator.Send(command);
             return result;

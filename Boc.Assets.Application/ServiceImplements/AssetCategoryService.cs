@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Boc.Assets.Application.Dto;
 using Boc.Assets.Application.Pagination;
@@ -12,11 +8,14 @@ using Boc.Assets.Application.Sieve.Services;
 using Boc.Assets.Application.ViewModels.AssetCategory;
 using Boc.Assets.Domain.Commands.AssetCategory;
 using Boc.Assets.Domain.Core.Bus;
-using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Boc.Assets.Application.ServiceImplements
 {

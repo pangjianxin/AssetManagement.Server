@@ -41,5 +41,9 @@ namespace Boc.Assets.Application.Dto
         /// 资产标签号
         /// </summary>
         public string AssetTagNumber { get; set; }
+        /// <summary>
+        /// 资产盘点状态
+        /// </summary>
+        public string InventoryStatus { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using Boc.Assets.Application.ViewModels.Login;
 using Boc.Assets.Application.ViewModels.Organization;
 using Boc.Assets.Domain.Commands.Organization;
 using Boc.Assets.Domain.Core.Bus;
-using Boc.Assets.Domain.Core.Notifications;
+using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Organizations;
 using Boc.Assets.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +28,8 @@ namespace Boc.Assets.Application.ServiceImplements
         private readonly IOrganizationRepository _orgRepository;
         private readonly IBus _bus;
         private readonly ISieveProcessor _sieveProcessor;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly SieveOptions _sieveOptions;
 
         public OrganizationService(
@@ -35,40 +37,47 @@ namespace Boc.Assets.Application.ServiceImplements
             IOrganizationRepository orgRepository,
             IBus bus,
             ISieveProcessor sievingProcessor,
-            IOptions<SieveOptions> sieveOptions)
+            IOptions<SieveOptions> sieveOptions,
+            IPasswordHasher passwordHasher,
+            IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _orgRepository = orgRepository;
             _bus = bus;
             _sieveProcessor = sievingProcessor;
+            _passwordHasher = passwordHasher;
+            _unitOfWork = unitOfWork;
             _sieveOptions = sieveOptions.Value;
         }
-        public async Task ChangeOrgShortNameAsync(ChangeOrgShortName model)
+        public async Task<string> ChangeOrgShortNameAsync(ChangeOrgShortName model)
         {
             var command = _mapper.Map<ChangeOrgShortNameCommand>(model);
-            await _bus.SendCommandAsync(command);
+            return await _bus.SendCommandAsync(command);
         }
-
-        public async Task<OrgDto> GetByOrgIdentifierAsync(string orgIdentifier)
+        public async Task<string> ChangeOrgPassword(ChangeOrgPassword model)
         {
-            var orgDto = _mapper.Map<OrgDto>(await _orgRepository.GetByOrgIdentifierAsync(orgIdentifier));
-            return orgDto;
+            var command = _mapper.Map<ChangeOrgPasswordCommand>(model);
+            return await _bus.SendCommandAsync(command);
         }
-
-        public async Task<bool> CheckLoginCredentialAsync(Login model)
+        /// <summary>
+        /// 用户重置密码用例
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<bool> ResetOrgPassword(ResetOrgPassword model)
         {
-            var org = await _orgRepository.GetByOrgIdentifierAsync(model.OrgIdentifier);
-            if (org == null)
-            {
-                await _bus.RaiseEventAsync(new DomainNotification("登录", "用户名不存在"));
-                return false;
-            }
-            if (org.Password != model.Password)
-            {
-                await _bus.RaiseEventAsync(new DomainNotification("登录", "密码不正确"));
-                return false;
-            }
-            return true;
+            var command = _mapper.Map<ResetOrgPasswordCommand>(model);
+            return await _bus.SendCommandAsync(command);
+        }
+        /// <summary>
+        /// 用户登录用例
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<string> LoginAsync(Login model)
+        {
+            var command = _mapper.Map<LoginCommand>(model);
+            return await _bus.SendCommandAsync(command);
         }
         public async Task<OrgDto> GetByIdAsync(Guid id)
         {
@@ -84,18 +93,6 @@ namespace Boc.Assets.Application.ServiceImplements
             var data = await result.ToListAsync();
             return new PaginatedList<OrgDto>(_sieveOptions, model.Page, model.PageSize, count, data);
         }
-        public async Task ResetOrgPassword(ResetOrgPassword model)
-        {
-            var command = _mapper.Map<ResetOrgPasswordCommand>(model);
-            await _bus.SendCommandAsync(command);
-        }
-
-        public async Task ChangeOrgPassword(ChangeOrgPassword model)
-        {
-            var command = _mapper.Map<ChangeOrgPasswordCommand>(model);
-            await _bus.SendCommandAsync(command);
-        }
-
         public async Task<IEnumerable<OrgDto>> GetTwentyAsync(string searchInput, string org2)
         {
             var source = _orgRepository.GetAll(it => it.Org2 == org2 && it.OrgNam.Contains(searchInput))
@@ -103,6 +100,20 @@ namespace Boc.Assets.Application.ServiceImplements
                 .ProjectTo<OrgDto>(_mapper.ConfigurationProvider);
             var result = await source.ToListAsync();
             return result;
+        }
+
+        public async Task PushHash()
+        {
+            var orgs = await _orgRepository.GetAllListAsync();
+            foreach (var item in orgs)
+            {
+                var salt = Guid.NewGuid().ToByteArray();
+                var hash = _passwordHasher.Hash("000000", salt);
+                item.Hash = hash;
+                item.Salt = salt;
+                _orgRepository.Update(item);
+            }
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

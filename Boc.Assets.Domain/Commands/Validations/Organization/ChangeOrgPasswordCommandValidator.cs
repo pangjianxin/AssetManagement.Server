@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Boc.Assets.Domain.Commands.Validations.Organization
 {
-    public class ChangeOrgPasswordCommandValidator : OrganizationCommandValidator<ChangeOrgPasswordCommand>
+    public class ChangeOrgPasswordCommandValidator : AbstractValidator<ChangeOrgPasswordCommand>
     {
         private void ValidateOldPassword()
         {
@@ -12,12 +12,20 @@ namespace Boc.Assets.Domain.Commands.Validations.Organization
 
         private void ValidateNewPassword()
         {
-            RuleFor(it => it.NewPassword).NotNull().WithMessage("新密码不能为空");
+            RuleFor(it => it.NewPassword).NotNull()
+                .WithMessage("新密码不能为空");
         }
 
         private void ValidateConfirmPassword()
         {
-            RuleFor(it => it.ConfirmPassword).Equal(it => it.NewPassword).WithMessage("确认密码和新密码不一致，请重新输入");
+            RuleFor(it => it.ConfirmPassword).Equal(it => it.NewPassword)
+                .WithMessage("确认密码和新密码不一致，请重新输入");
+        }
+
+        private void ValidateOrgIdentifier()
+        {
+            RuleFor(it => it.OrgIdentifier).Must(it => !string.IsNullOrEmpty(it))
+                .WithMessage("机构号不能为空");
         }
         public ChangeOrgPasswordCommandValidator()
         {

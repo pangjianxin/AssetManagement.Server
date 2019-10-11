@@ -1,10 +1,12 @@
 ﻿using Boc.Assets.Domain.Commands.Validations.Organization;
+using Boc.Assets.Domain.Core.Commands;
 
 namespace Boc.Assets.Domain.Commands.Organization
 {
-    public class ChangeOrgShortNameCommand : OrganizationCommand
+    public class ChangeOrgShortNameCommand : Command<string>
     {
-        public string OrgShortNam { get; set; }
+        public string OrgShortNam { get; }
+        public string OrgIdentifier { get; }
         public ChangeOrgShortNameCommand(string orgIdentifier, string orgShortNam)
         {
             OrgIdentifier = orgIdentifier;

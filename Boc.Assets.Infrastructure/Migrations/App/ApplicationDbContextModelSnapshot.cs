@@ -449,6 +449,8 @@ namespace Boc.Assets.Infrastructure.Migrations.app
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<byte[]>("Hash");
+
                     b.Property<string>("Org1")
                         .IsRequired()
                         .HasMaxLength(10);
@@ -483,9 +485,9 @@ namespace Boc.Assets.Infrastructure.Migrations.app
                         .IsRequired()
                         .HasMaxLength(100);
 
-                    b.Property<string>("Password");
-
                     b.Property<Guid>("RoleId");
+
+                    b.Property<byte[]>("Salt");
 
                     b.Property<int>("Status");
 

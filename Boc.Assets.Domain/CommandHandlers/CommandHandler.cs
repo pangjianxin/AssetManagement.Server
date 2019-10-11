@@ -22,7 +22,7 @@ namespace Boc.Assets.Domain.CommandHandlers
             Bus = bus;
             Notifications = (DomainNotificationHandler)notifications;
         }
-        protected virtual async Task NotifyValidationErrors(Command command)
+        protected virtual async Task NotifyValidationErrors<TResult>(Command<TResult> command)
         {
             foreach (var error in command.ValidationResult.Errors)
             {

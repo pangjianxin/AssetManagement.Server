@@ -6,7 +6,7 @@ namespace Boc.Assets.Domain.Core.Bus
 {
     public interface IBus
     {
-        Task<bool> SendCommandAsync<TCommand>(TCommand command) where TCommand : Command;
+        Task<TResult> SendCommandAsync<TResult>(Command<TResult> command);
         Task RaiseEventAsync<TEvent>(TEvent @event) where TEvent : Event;
     }
 }
