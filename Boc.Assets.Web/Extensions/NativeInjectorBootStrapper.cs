@@ -6,12 +6,14 @@ using Boc.Assets.Application.ServiceImplements;
 using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.Sieve.Services;
+using Boc.Assets.Domain.Authentication;
 using Boc.Assets.Domain.CommandHandlers.Organization;
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.Repositories;
 using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.EventsHandler.SignalR;
+using Boc.Assets.Domain.Models.Organizations;
 using Boc.Assets.Domain.Repositories;
 using Boc.Assets.Domain.Services;
 using Boc.Assets.Infrastructure.Bus;
@@ -36,8 +38,6 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using Boc.Assets.Domain.Authentication;
-using Boc.Assets.Domain.Models.Organizations;
 
 namespace Boc.Assets.Web.Extensions
 {
@@ -82,7 +82,9 @@ namespace Boc.Assets.Web.Extensions
             {
                 option.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200", "http://21.33.129.180:4201");
+                    policy.WithOrigins("http://localhost:4200",
+                                       "http://21.33.129.180:4201",
+                                       "http://localhost:4201");
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
                     //policy.AllowAnyOrigin();
@@ -210,7 +212,7 @@ namespace Boc.Assets.Web.Extensions
                                 context.Token = accessToken;
                             }
                             return Task.CompletedTask;
-                        }
+                        },
                     };
                 });
         }

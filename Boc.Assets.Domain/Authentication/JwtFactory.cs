@@ -20,11 +20,11 @@ namespace Boc.Assets.Domain.Authentication
         {
             var claims = new[]
             {
-                new Claim("orgId", org.Id.ToString()),
-                new Claim("jti", await _jwtOptions.JtiGenerator()),
-                new Claim("iat",
+                new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
+                new Claim(JwtRegisteredClaimNames.Iat,
                     new DateTimeOffset(_jwtOptions.IssuedAt).ToUnixTimeSeconds().ToString(),
                     ClaimValueTypes.Integer64),
+                new Claim("orgId", org.Id.ToString()),
                 new Claim("orgRole",$"{(int)org.Role.Role}",ClaimValueTypes.Integer),
                 new Claim("roleId",org.RoleId.ToString()),
                 new Claim("orgName",org.OrgNam),
@@ -34,7 +34,7 @@ namespace Boc.Assets.Domain.Authentication
             };
             var securityToken = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
-                audience: _jwtOptions.Audience,
+                audience: _jwtOptions.Audience,//audience表示接收方，是要接收方来验证是否有效的一个字段
                 claims: claims,
                 notBefore: _jwtOptions.NotBefore,
                 expires: _jwtOptions.Expiration,

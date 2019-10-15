@@ -1,6 +1,7 @@
 ﻿using Boc.Assets.Application.Dto;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Boc.Assets.Web.Extensions
 {
@@ -16,7 +17,8 @@ namespace Boc.Assets.Web.Extensions
         public static bool CheckPermission(this IMemoryCache cache, string roleId, string controller, string action)
         {
             var exist = cache.TryGetValue<List<PermissionDto>>("permissions", out var list);
-            return exist && list.Exists(it => it.RoleId == roleId && it.ControllerName == controller && it.ActionName == action);
+            var shitList = cache.Get<List<PermissionDto>>("permissions");
+            return exist && list.Any(it => it.RoleId == roleId && it.ControllerName == controller && it.ActionName == action);
         }
     }
 }
