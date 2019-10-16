@@ -1,12 +1,12 @@
-﻿using System.Linq;
-using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Application.Sieve.Models;
+﻿using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Application.ViewModels.AssetCategory;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Web.Auth.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Sieve.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers
@@ -33,7 +33,7 @@ namespace Boc.Assets.Web.Controllers
         [Permission(Permissions.Controllers.AssetCategory, Permissions.Actions.AssetCategory_Read_Secondary)]
         public async Task<IActionResult> SecondaryPagination(SieveModel model)
         {
-            var result = await _assetCategoryService.PaginationAsync(model,it=>it.CategoryManageRegisters.Select(that=>that.ManagerId).Contains(_user.OrgId));
+            var result = await _assetCategoryService.PaginationAsync(model, it => it.CategoryManageRegisters.Select(that => that.ManagerId).Contains(_user.OrgId));
             XPaginationHeader(result);
             return AppResponse(result);
         }

@@ -1,13 +1,13 @@
 ﻿using Boc.Assets.Application.Dto;
 using Boc.Assets.Application.Pagination;
-using Boc.Assets.Application.Sieve.Models;
+using Boc.Assets.Application.ViewModels.AssetInventories;
+using Boc.Assets.Domain.Models.AssetInventories;
 using Boc.Assets.Domain.Models.Assets;
+using Sieve.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Boc.Assets.Application.ViewModels.AssetInventories;
-using Boc.Assets.Domain.Models.AssetInventories;
 
 namespace Boc.Assets.Application.ServiceInterfaces
 {

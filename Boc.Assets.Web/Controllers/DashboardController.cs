@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.ViewModels.AssetDeploy;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Sieve.Models;
 
 namespace Boc.Assets.Web.Controllers
 {

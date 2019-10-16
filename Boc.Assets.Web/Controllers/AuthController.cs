@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.ViewModels.Login;
 using Boc.Assets.Application.ViewModels.Organization;
 using Boc.Assets.Domain.Authentication;
@@ -8,6 +7,7 @@ using Boc.Assets.Domain.Core.SharedKernel;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sieve.Models;
 using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers

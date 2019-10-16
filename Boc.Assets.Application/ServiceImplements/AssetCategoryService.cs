@@ -3,8 +3,6 @@ using AutoMapper.QueryableExtensions;
 using Boc.Assets.Application.Dto;
 using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Application.Sieve.Models;
-using Boc.Assets.Application.Sieve.Services;
 using Boc.Assets.Application.ViewModels.AssetCategory;
 using Boc.Assets.Domain.Commands.AssetCategory;
 using Boc.Assets.Domain.Core.Bus;
@@ -16,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Sieve.Models;
+using Sieve.Services;
 
 namespace Boc.Assets.Application.ServiceImplements
 {

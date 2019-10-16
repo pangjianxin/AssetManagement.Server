@@ -4,8 +4,6 @@ using Boc.Assets.Application.AutoMapper;
 using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceImplements;
 using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Application.Sieve.Models;
-using Boc.Assets.Application.Sieve.Services;
 using Boc.Assets.Domain.Authentication;
 using Boc.Assets.Domain.CommandHandlers.Organization;
 using Boc.Assets.Domain.Core.Bus;
@@ -24,6 +22,7 @@ using Boc.Assets.Infrastructure.Repository.EventSourcing;
 using Boc.Assets.Infrastructure.UnitOfWork;
 using Boc.Assets.Web.Auth.Authorization;
 using MediatR;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -35,6 +34,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
+using Sieve.Models;
+using Sieve.Services;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,8 @@ namespace Boc.Assets.Web.Extensions
             {
                 action.Filters.Add<ModelStateActionFilter>();
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //OData
+            services.AddOData();
             //密码hash
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
             //注入ApplicationModelProvider,用于获取controller的相关信息
@@ -72,11 +75,7 @@ namespace Boc.Assets.Web.Extensions
             //application UnitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             //AutoMapper
-            services.AddAutoMapper(config =>
-            {
-                config.AddProfile(new DomainToViewModelMappingProfile());
-                config.AddProfile(new ViewModelToDomainMappingProfile());
-            });
+            services.AddAutoMapper(typeof(DomainToViewModelMappingProfile).Assembly);
             //配置跨域规则
             services.AddCors(option =>
             {
@@ -103,9 +102,9 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IUser, ApplicationUserAccessor>();
             //pagination 
             services.Configure<SieveOptions>(configuration.GetSection("Sieve"));
-            services.AddScoped<ISieveCustomFilterMethods, EntitiesSieveFilterMethods>();
-            services.AddScoped<ISieveCustomSortMethods, EntitiesSieveSortMethods>();
-            services.AddScoped<ISieveProcessor, PangSieveProcessor>();
+            services.AddScoped<ISieveCustomFilterMethods, CustomSieveFilterMethods>();
+            services.AddScoped<ISieveCustomSortMethods, CustomSieveSortMethods>();
+            services.AddScoped<ISieveProcessor, CustomSieveProcessor>();
             //domain service
             services.AddScoped<IAssetDomainService, AssetDomainService>();
             //Mediator

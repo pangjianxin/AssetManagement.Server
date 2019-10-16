@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Boc.Assets.Application.Dto;
 using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Application.Sieve.Models;
-using Boc.Assets.Application.Sieve.Services;
 using Boc.Assets.Application.ViewModels.AssetDeploy;
 using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Assets;
@@ -17,6 +14,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
+using Sieve.Models;
+using Sieve.Services;
 
 namespace Boc.Assets.Application.ServiceImplements
 {

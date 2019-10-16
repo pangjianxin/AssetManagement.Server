@@ -1,7 +1,7 @@
 ﻿using Boc.Assets.Application.Dto;
 using Boc.Assets.Application.Pagination;
-using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.ViewModels.OrganizationSpace;
+using Sieve.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

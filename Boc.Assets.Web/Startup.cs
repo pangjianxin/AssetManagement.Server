@@ -1,5 +1,6 @@
 ﻿using Boc.Assets.Domain.EventsHandler.SignalR;
 using Boc.Assets.Web.Extensions;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +36,11 @@ namespace Boc.Assets.Web
             {
                 route.MapHub<ChatHub>("/chat");
             });
-            app.UseMvc();
+            app.UseMvc(routeBuilder =>
+            {
+                routeBuilder.EnableDependencyInjection();
+                routeBuilder.Expand().Select().OrderBy().Filter().Count();
+            });
 
         }
     }

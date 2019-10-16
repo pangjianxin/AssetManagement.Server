@@ -1,9 +1,9 @@
 ﻿using Boc.Assets.Application.Dto;
 using Boc.Assets.Application.Pagination;
-using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.ViewModels.Login;
 using Boc.Assets.Application.ViewModels.Organization;
 using Boc.Assets.Domain.Models.Organizations;
+using Sieve.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

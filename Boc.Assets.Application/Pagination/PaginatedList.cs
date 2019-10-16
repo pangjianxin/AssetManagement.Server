@@ -1,5 +1,4 @@
-﻿
-using Boc.Assets.Application.Sieve.Models;
+﻿using Sieve.Models;
 using System;
 using System.Collections.Generic;
 

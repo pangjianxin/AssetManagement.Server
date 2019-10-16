@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Application.Sieve.Models;
 using Boc.Assets.Application.ViewModels.Assets;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
@@ -7,6 +6,7 @@ using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Web.Auth.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Sieve.Models;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -33,7 +33,7 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [HttpGet("current")]
         [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Current)]
-        public async Task<IActionResult> CurrentPagination(SieveModel model)
+        public async Task<IActionResult> GetAssetsInCurrent(SieveModel model)
         {
             Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
             var result = await _assetService.PaginationAsync(model, currentAssetsPredicate);
