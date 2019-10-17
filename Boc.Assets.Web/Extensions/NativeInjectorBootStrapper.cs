@@ -1,7 +1,6 @@
 ﻿
 using AutoMapper;
 using Boc.Assets.Application.AutoMapper;
-using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceImplements;
 using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Domain.Authentication;
@@ -34,8 +33,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
-using Sieve.Models;
-using Sieve.Services;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -100,11 +97,6 @@ namespace Boc.Assets.Web.Extensions
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //application user(organization)
             services.AddScoped<IUser, ApplicationUserAccessor>();
-            //pagination 
-            services.Configure<SieveOptions>(configuration.GetSection("Sieve"));
-            services.AddScoped<ISieveCustomFilterMethods, CustomSieveFilterMethods>();
-            services.AddScoped<ISieveCustomSortMethods, CustomSieveSortMethods>();
-            services.AddScoped<ISieveProcessor, CustomSieveProcessor>();
             //domain service
             services.AddScoped<IAssetDomainService, AssetDomainService>();
             //Mediator
@@ -214,6 +206,18 @@ namespace Boc.Assets.Web.Extensions
                         },
                     };
                 });
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy("user", policy =>
+                {
+                    policy.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+                    policy.RequireRole();
+                });
+                option.AddPolicy("manage", policy =>
+                    {
+                        policy.AuthenticationSchemes = new[] {JwtBearerDefaults.AuthenticationScheme};
+                    });
+            });
         }
     }
 }

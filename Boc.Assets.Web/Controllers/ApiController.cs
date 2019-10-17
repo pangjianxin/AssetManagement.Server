@@ -1,10 +1,8 @@
-﻿using Boc.Assets.Application.Pagination;
-using Boc.Assets.Application.ViewModels;
+﻿using Boc.Assets.Application.ViewModels;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +20,7 @@ namespace Boc.Assets.Web.Controllers
         }
         protected bool IsValidOperation()
         {
-            return !(Notifications.HasNotifications());
+            return !Notifications.HasNotifications();
         }
         protected IActionResult AppResponse(object data = null, string message = null)
         {
@@ -38,16 +36,16 @@ namespace Boc.Assets.Web.Controllers
             }
             return BadRequest(new ActionHandleResult(false, finalMessage.ToString(), data));
         }
-        protected void XPaginationHeader<T>(PaginatedList<T> pagination) where T : class
-        {
-            var paginationHeader = new
-            {
-                pagination.PageSize,
-                pagination.PageIndex,
-                pagination.TotalItemsCount,
-                pagination.PageCount,
-            };
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeader));
-        }
+        //protected void XPaginationHeader<T>(PaginatedList<T> pagination) where T : class
+        //{
+        //    var paginationHeader = new
+        //    {
+        //        pagination.PageSize,
+        //        pagination.PageIndex,
+        //        pagination.TotalItemsCount,
+        //        pagination.PageCount,
+        //    };
+        //    Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeader));
+        //}
     }
 }
