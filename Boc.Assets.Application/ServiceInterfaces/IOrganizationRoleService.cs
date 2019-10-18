@@ -1,11 +1,11 @@
 ﻿using Boc.Assets.Application.Dto;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace Boc.Assets.Application.ServiceInterfaces
 {
     public interface IOrganizationRoleService : IApplicationService
     {
-        Task<IEnumerable<OrganizationRoleDto>> GetAll(int role);
+        IQueryable<OrganizationRoleDto> Get(int role);
+        IQueryable<OrganizationRoleDto> Get();
     }
 }

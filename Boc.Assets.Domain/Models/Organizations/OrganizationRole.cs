@@ -21,12 +21,6 @@ namespace Boc.Assets.Domain.Models.Organizations
             get => _lazyLoader.Load(this, ref _organizations);
             set => _organizations = value;
         }
-        private ICollection<Permission> _permissions;
-        public ICollection<Permission> Permissions
-        {
-            get => _lazyLoader.Load(this, ref _permissions);
-            set => _permissions = value;
-        }
         public override string ToString()
         {
             return Role.ToString();

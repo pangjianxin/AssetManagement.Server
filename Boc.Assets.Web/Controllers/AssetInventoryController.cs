@@ -1,117 +1,59 @@
 ﻿using Boc.Assets.Application.Dto;
-using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Application.ViewModels.AssetInventories;
-using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.AssetInventories;
 using Boc.Assets.Domain.Models.Assets;
-using Boc.Assets.Web.Auth.Authorization;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Sieve.Models;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authorization;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers
 {
-    [Route("api/assetStockTaking")]
-    public class AssetInventoryController : ApiController
+    public class AssetInventoryController : ODataController
     {
         private readonly IAssetInventoryService _assetInventoryService;
         private readonly IOrganizationService _orgService;
         private readonly IAssetService _assetService;
+        private readonly IUser _user;
 
-        public AssetInventoryController(INotificationHandler<DomainNotification> notifications,
+        public AssetInventoryController(
             IUser user,
-            IAssetInventoryService assetStockTakingService,
+            IAssetInventoryService assetInventoryService,
             IOrganizationService orgService,
             IAssetService assetService)
-            : base(notifications, user)
         {
-            _assetInventoryService = assetStockTakingService;
+            _user = user;
+            _assetInventoryService = assetInventoryService;
             _orgService = orgService;
             _assetService = assetService;
         }
         /// <summary>
-        /// 创建资产盘点任务
-        /// 二级权限
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost("secondary/create")]
-        [Permission(Permissions.Controllers.AssetInventory, Permissions.Actions.AssetInventory_Create_Secondary)]
-        public async Task<IActionResult> Create([FromBody]CreateAssetInventory model)
-        {
-            await _assetInventoryService.CreateAssetInventoryAsync(model);
-            return AppResponse(null, "操作成功");
-        }
-        /// <summary>
-        /// 二级资产盘点任务列表，获取二级行辖属所有分页数据
+        /// 二级资产盘点任务列表
         /// 普通权限
         /// </summary>
         /// <param name="year"></param>
         /// <returns></returns>
-        [HttpGet("secondary/list")]
-        [Permission(Permissions.Controllers.AssetInventory, Permissions.Actions.AssetInventory_Read_Secondary)]
-        public async Task<IActionResult> SecondaryList(int year)
+        [EnableQuery]
+        [Authorize(Policy = "manage")]
+        public IQueryable<AssetInventoryDto> GetManageInventories(int year)
         {
-            Expression<Func<AssetInventory, bool>> predicate = it => it.PublisherOrg2 == _user.Org2 && it.CreateDateTime.Year == year;
-            var listResult = await _assetInventoryService.AssetInventoriesAsync(year, predicate);
-            return AppResponse(listResult, null);
-        }
-
-        [HttpGet("secondary/assetstocktakingorgs")]
-        [Permission(Permissions.Controllers.AssetInventory, Permissions.Actions.AssetInventory_Read_Secondary)]
-        public async Task<IActionResult> StockTakingOrgPagination(SieveModel model, Guid assetStockTakingId)
-        {
-            var paginatedList =
-                await _assetInventoryService.AssetInventoriesPaginationAsync(model, assetStockTakingId);
-            XPaginationHeader(paginatedList);
-            return AppResponse(paginatedList, null);
-        }
-
-        [HttpGet("current/assetstocktakingorgs")]
-        [Permission(Permissions.Controllers.AssetInventory, Permissions.Actions.AssetInventory_Read_Current)]
-        public async Task<IActionResult> CurrentStockTakingOrgsList(int year)
-        {
-            Expression<Func<AssetInventoryRegister, bool>> predicate = it =>
-                it.AssetInventory.CreateDateTime.Year == year
-                && it.ParticipationId == _user.OrgId;
-            var list = await _assetInventoryService.AssetInventoriesByYearAsync(year, predicate);
-            return AppResponse(list, null);
+            Expression<Func<AssetInventory, bool>> predicate = it => it.PublisherId == _user.OrgId && it.CreateDateTime.Year == year;
+            return _assetInventoryService.GetInventories(predicate);
         }
         /// <summary>
-        /// 查询某个二级行下面是否有资产盘点任务
-        /// 为减轻服务器压力
+        /// 根据指定的盘点任务索引找到所有的参与机构
         /// </summary>
-        /// <param name="year"></param>
+        /// <param name="inventoryId"></param>
         /// <returns></returns>
-        [HttpGet("secondary/anystocktaking")]
-        [Permission(Permissions.Controllers.AssetInventory, Permissions.Actions.AssetInventory_Read_Secondary)]
-        public async Task<IActionResult> AnyStockTakingAsync(int year)
+        [EnableQuery]
+        [Authorize(Policy = "manage")]
+        public IQueryable<AssetInventoryResgiterDto> GetManageInventoryRegisters(Guid inventoryId)
         {
-            Expression<Func<AssetInventory, bool>> predicate = it =>
-                it.PublisherOrg2 == _user.Org2 && it.CreateDateTime.Year == year;
-            var any = await _assetInventoryService.AnyAssetInventoryAsync(year, predicate);
-            return AppResponse(any);
-        }
-        /// <summary>
-        /// 查询某个机构是否参与了资产盘点
-        /// 为了减轻服务器压力
-        /// </summary>
-        /// <param name="year"></param>
-        /// <returns></returns>
-        [HttpGet("current/anystocktakingorgs")]
-        [Permission(Permissions.Controllers.AssetInventory, Permissions.Actions.AssetInventory_Read_Current)]
-        public async Task<IActionResult> AnyStocktakingOrgsAsync(int year)
-        {
-            Expression<Func<AssetInventoryRegister, bool>> predicate = it =>
-                it.AssetInventory.CreateDateTime.Year == year
-                && it.ParticipationId == _user.OrgId;
-            var any = await _assetInventoryService.AnyAssetInventoryRegistersAsync(year, predicate);
-            return AppResponse(any);
+            Expression<Func<AssetInventoryRegister, bool>> predicate = it => it.AssetInventoryId == inventoryId;
+            return _assetInventoryService.GetInventoryRegisters(predicate);
+
         }
         /// <summary>
         /// 查询未盘点资产
@@ -119,32 +61,28 @@ namespace Boc.Assets.Web.Controllers
         /// <param name="model"></param>
         /// <param name="assetStockTakingOrgId"></param>
         /// <returns></returns>
-        [HttpGet("current/assetswithoutstocktaking")]
-        [Permission(Permissions.Controllers.AssetInventory, Permissions.Actions.AssetInventory_Read_Current)]
-        public async Task<IActionResult> AssetWithOutInventory(SieveModel model, Guid assetStockTakingOrgId)
+        [EnableQuery]
+        [Authorize(Policy = "user")]
+        public IQueryable<AssetDto> GetAssetsWithoutInventory(Guid assetInventoryRegisterId)
         {
-            Expression<Func<Asset, bool>> predicate = it => it.OrganizationInUseId == _user.OrgId;
-            PaginatedList<AssetDto> assetWithOutStockTaking = await _assetInventoryService.AssetsWithOutInventoriesAsync(model, assetStockTakingOrgId, predicate);
-            XPaginationHeader(assetWithOutStockTaking);
-            return AppResponse(assetWithOutStockTaking);
-        }
 
-        [HttpPost("current/createdetail")]
-        [Permission(Permissions.Controllers.AssetInventory, Permissions.Actions.AssetInventory_Create_Current)]
-        public async Task<IActionResult> CreateDetail([FromBody] CreateAssetInventoryDetail model)
-        {
-            await _assetInventoryService.CreatAssetInventoryDetailAsync(model);
-            return AppResponse(null, "操作成功");
+            Expression<Func<Asset, bool>> predicate = it => it.OrganizationInUseId == _user.OrgId
+                                                            && !it.AssetInventoryDetails.Any(that => that.AssetInventoryRegisterId == assetInventoryRegisterId && that.AssetId == it.Id);
+            var queryable = _assetInventoryService.GetAssetsWithOutInventory(predicate);
+            return queryable;
         }
-
-        [HttpGet("current/assetstocktakingdetails")]
-        [Permission(Permissions.Controllers.AssetInventory, Permissions.Actions.AssetInventory_Read_Current)]
-        public async Task<IActionResult> StockTakingDetails(SieveModel model, Guid assetStockTakingOrgId)
+        /// <summary>
+        /// 查询某一次资产盘点任务的已盘点清单
+        /// </summary>
+        /// <param name="assetInventoryRegisterId"></param>
+        /// <returns></returns>
+        [EnableQuery]
+        [Authorize(Policy = "user")]
+        public IQueryable<AssetInventoryDetailDto> GetUserDetails(Guid assetInventoryRegisterId)
         {
-            var pagination =
-                await _assetInventoryService.AssetInventoryDetailPaginationAsync(model, assetStockTakingOrgId);
-            XPaginationHeader(pagination);
-            return AppResponse(pagination, null);
+            Expression<Func<AssetInventoryDetail, bool>> predicate = it =>
+                it.AssetInventoryRegisterId == assetInventoryRegisterId;
+            return _assetInventoryService.GetInventoryDetails(predicate);
         }
     }
 }

@@ -7,7 +7,6 @@ using Boc.Assets.Application.ViewModels.Login;
 using Boc.Assets.Application.ViewModels.Maintainers;
 using Boc.Assets.Application.ViewModels.Organization;
 using Boc.Assets.Application.ViewModels.OrganizationSpace;
-using Boc.Assets.Application.ViewModels.Permission;
 using Boc.Assets.Domain.Commands.AssetCategory;
 using Boc.Assets.Domain.Commands.AssetInventory;
 using Boc.Assets.Domain.Commands.Assets;
@@ -15,7 +14,6 @@ using Boc.Assets.Domain.Commands.Employee;
 using Boc.Assets.Domain.Commands.Maintainers;
 using Boc.Assets.Domain.Commands.Organization;
 using Boc.Assets.Domain.Commands.OrganizationSpace;
-using Boc.Assets.Domain.Commands.Permissions;
 using Boc.Assets.Domain.Models.AssetInventories;
 
 namespace Boc.Assets.Application.AutoMapper
@@ -112,8 +110,6 @@ namespace Boc.Assets.Application.AutoMapper
             //删除资产调配申请
             CreateMap<RemoveAssetExchange, RemoveAssetExchangeCommand>()
                 .ConstructUsing(c => new RemoveAssetExchangeCommand(c.EventId));
-            //修改权限
-            CreateMap<ModifyPermission, ModifyPermissionCommand>();
 
 
         }

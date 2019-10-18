@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Boc.Assets.Application.Dto;
-using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Application.ViewModels.Login;
 using Boc.Assets.Application.ViewModels.Organization;
@@ -11,9 +10,6 @@ using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Organizations;
 using Boc.Assets.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Sieve.Models;
-using Sieve.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,27 +23,21 @@ namespace Boc.Assets.Application.ServiceImplements
         private readonly IMapper _mapper;
         private readonly IOrganizationRepository _orgRepository;
         private readonly IBus _bus;
-        private readonly ISieveProcessor _sieveProcessor;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly SieveOptions _sieveOptions;
 
         public OrganizationService(
             IMapper mapper,
             IOrganizationRepository orgRepository,
             IBus bus,
-            ISieveProcessor sievingProcessor,
-            IOptions<SieveOptions> sieveOptions,
             IPasswordHasher passwordHasher,
             IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _orgRepository = orgRepository;
             _bus = bus;
-            _sieveProcessor = sievingProcessor;
             _passwordHasher = passwordHasher;
             _unitOfWork = unitOfWork;
-            _sieveOptions = sieveOptions.Value;
         }
         public async Task<string> ChangeOrgShortNameAsync(ChangeOrgShortName model)
         {
@@ -79,21 +69,12 @@ namespace Boc.Assets.Application.ServiceImplements
             var command = _mapper.Map<LoginCommand>(model);
             return await _bus.SendCommandAsync(command);
         }
-        public async Task<OrgDto> GetByIdAsync(Guid id)
+        public async Task<OrgDto> Get(Guid id)
         {
             var org = await _orgRepository.GetByIdAsync(id);
             return _mapper.Map<OrgDto>(org);
         }
-        public async Task<PaginatedList<OrgDto>> PaginationAsync(SieveModel model, Expression<Func<Organization, bool>> predicate = null)
-        {
-            var entities = _orgRepository.GetAll(predicate);
-            entities = _sieveProcessor.Apply(model, entities, applyPagination: false);
-            var count = entities.Count();
-            var result = _sieveProcessor.Apply(model, entities).ProjectTo<OrgDto>(_mapper.ConfigurationProvider);
-            var data = await result.ToListAsync();
-            return new PaginatedList<OrgDto>(_sieveOptions, model.Page, model.PageSize, count, data);
-        }
-        public async Task<IEnumerable<OrgDto>> GetTwentyAsync(string searchInput, string org2)
+        public async Task<IEnumerable<OrgDto>> Get(string searchInput, string org2)
         {
             var source = _orgRepository.GetAll(it => it.Org2 == org2 && it.OrgNam.Contains(searchInput))
                 .OrderByDescending(it => it.Id).Take(20)
@@ -114,6 +95,11 @@ namespace Boc.Assets.Application.ServiceImplements
                 _orgRepository.Update(item);
             }
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public IQueryable<OrgDto> Get(Expression<Func<Organization, bool>> predicate = null)
+        {
+            return _mapper.ProjectTo<OrgDto>(_orgRepository.GetAll(predicate));
         }
     }
 }

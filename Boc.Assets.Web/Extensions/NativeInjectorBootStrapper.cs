@@ -26,12 +26,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
@@ -39,22 +37,26 @@ using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Extensions
 {
-    public class NativeInjectorBootstrapper
+    public static class NativeInjectorBootstrapper
     {
-        public static void RegisterServices(IServiceCollection services, IConfiguration configuration)
+        public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
             #region immutability
             //mvc
             services.AddMvc(action =>
             {
                 action.Filters.Add<ModelStateActionFilter>();
+                // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
+                // Because conflicts with ODataRouting as of this version could improve performance though
+                action.EnableEndpointRouting = false;
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             //OData
             services.AddOData();
+            services.AddODataQueryFilter();
             //密码hash
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
             //注入ApplicationModelProvider,用于获取controller的相关信息
-            services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, ControllerPermissionApplicationModelProvider>());
+            // services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, ControllerPermissionApplicationModelProvider>());
             //添加授权handler
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
             //ef core dbContext 
@@ -91,6 +93,22 @@ namespace Boc.Assets.Web.Extensions
             });
             //jwt authentication
             AddJwtAuthentication(services, configuration);
+            //授权
+            services.AddSingleton<IAuthorizationHandler, RoleRequirementHandler>();
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy("user", policy =>
+                {
+                    policy.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+                    policy.Requirements.Add(new RoleRequirement(1));
+
+                });
+                option.AddPolicy("manage", policy =>
+                {
+                    policy.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+                    policy.Requirements.Add(new RoleRequirement(2));
+                });
+            });
             //添加缓存
             services.AddMemoryCache();
             //HttpContext accessor
@@ -125,7 +143,6 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetInventoryDetailRepository, AssetInventoryDetailRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IMaintainerRepository, MaintainerRepository>();
-            services.AddScoped<IPermissionRepository, PermissionRepository>();
             services.AddScoped<IOrgRoleRepository, OrgRoleRepository>();
             services.AddScoped<IAssetApplyRepository, AssetApplyRepository>();
             services.AddScoped<IAssetReturnRepository, AssetReturnRepository>();
@@ -141,7 +158,6 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetInventoryService, AssetInventoryService>();
             services.AddScoped<IEmployeeService, EmployService>();
             services.AddScoped<IMaintainerService, MaintainerService>();
-            services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<IAssetApplyService, AssetApplyService>();
             services.AddScoped<IAssetReturnService, AssetReturnService>();
             services.AddScoped<IAssetExchangeService, AssetExchangeService>();
@@ -206,18 +222,6 @@ namespace Boc.Assets.Web.Extensions
                         },
                     };
                 });
-            services.AddAuthorization(option =>
-            {
-                option.AddPolicy("user", policy =>
-                {
-                    policy.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
-                    policy.RequireRole();
-                });
-                option.AddPolicy("manage", policy =>
-                    {
-                        policy.AuthenticationSchemes = new[] {JwtBearerDefaults.AuthenticationScheme};
-                    });
-            });
         }
     }
 }

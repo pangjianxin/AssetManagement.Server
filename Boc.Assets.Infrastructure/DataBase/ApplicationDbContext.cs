@@ -69,10 +69,6 @@ namespace Boc.Assets.Infrastructure.DataBase
         /// 机构管理资产分类的注册表
         /// </summary>
         public DbSet<CategoryManageRegister> CategoryManageRegisters { get; set; }
-        /// <summary>
-        /// 角色对应的权限
-        /// </summary>
-        public DbSet<Permission> Permissions { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> option) : base(option) { }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -91,9 +87,8 @@ namespace Boc.Assets.Infrastructure.DataBase
             builder.ApplyConfiguration(new EmployeeDbConfig());
             builder.ApplyConfiguration(new OrganizationDbConfig());
             builder.ApplyConfiguration(new OrganizationRoleDbConfig());
-            builder.ApplyConfiguration(new OrganizationSpaceDbConfig());                
-            builder.ApplyConfiguration(new PermissionDbConfig());
-           
+            builder.ApplyConfiguration(new OrganizationSpaceDbConfig());
+
         }
     }
 }

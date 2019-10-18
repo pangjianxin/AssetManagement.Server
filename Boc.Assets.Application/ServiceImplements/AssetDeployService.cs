@@ -1,44 +1,33 @@
 ﻿using AutoMapper;
 using Boc.Assets.Application.Dto;
-using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Application.ViewModels.AssetDeploy;
 using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
-using Sieve.Models;
-using Sieve.Services;
 
 namespace Boc.Assets.Application.ServiceImplements
 {
     public class AssetDeployService : IAssetDeployService
     {
         private readonly IMapper _mapper;
-        private readonly ISieveProcessor _sieveProcessor;
         private readonly IAssetDeployRepository _assetDeployRepository;
         private readonly IUser _user;
-        private readonly SieveOptions _sieveOptions;
 
         public AssetDeployService(IMapper mapper,
-            ISieveProcessor sieveProcessor,
-            IOptions<SieveOptions> options,
             IAssetDeployRepository assetDeployRepository,
             IUser user)
         {
             _mapper = mapper;
-            _sieveProcessor = sieveProcessor;
             _assetDeployRepository = assetDeployRepository;
             _user = user;
-            _sieveOptions = options.Value;
         }
 
         public async Task<ExcelPackage> DownloadAssetDeploy(DownloadAssetDeploy model)
@@ -60,13 +49,10 @@ namespace Boc.Assets.Application.ServiceImplements
             return CreateAssetDeployExcelPackage(dtos);
 
         }
-        public async Task<PaginatedList<AssetDeployDto>> PaginationAsync(SieveModel model, Expression<Func<AssetDeploy, bool>> predicate)
+
+        public IQueryable<AssetDeployDto> Get(Expression<Func<AssetDeploy, bool>> predicate = null)
         {
-            var deploys = _assetDeployRepository.GetAll(predicate);
-            var count = await _sieveProcessor.Apply(model, deploys, applyPagination: false).CountAsync();
-            var result = _sieveProcessor.Apply(model, deploys).ProjectTo<AssetDeployDto>(_mapper.ConfigurationProvider);
-            var pagination = await result.ToListAsync();
-            return new PaginatedList<AssetDeployDto>(_sieveOptions, model.Page, model.PageSize, count, pagination);
+            return _mapper.ProjectTo<AssetDeployDto>(_assetDeployRepository.GetAll(predicate));
         }
 
         private ExcelPackage CreateAssetDeployExcelPackage(IEnumerable<AssetDeployDto> assetDeploys)

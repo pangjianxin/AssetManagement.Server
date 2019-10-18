@@ -1,52 +1,44 @@
-﻿using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Application.ViewModels.Employee;
-using Boc.Assets.Domain.Core.Notifications;
+﻿using Boc.Assets.Application.Dto;
+using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Web.Auth.Authorization;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Sieve.Models;
-using System.Threading.Tasks;
+using Boc.Assets.Domain.Models.Organizations;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Boc.Assets.Web.Controllers
 {
-    [Route("api/employee")]
-    public class EmployeeController : ApiController
+    public class EmployeeController : ODataController
     {
         private readonly IEmployeeService _employeeService;
+        private readonly IUser _user;
 
-        public EmployeeController(INotificationHandler<DomainNotification> notifications,
+        public EmployeeController(
             IUser user,
             IEmployeeService employeeService)
-            : base(notifications, user)
+
         {
             _employeeService = employeeService;
+            _user = user;
         }
 
-        [HttpGet("current/employeesbyname")]
-        [Permission(Permissions.Controllers.Employe, Permissions.Actions.Employe_Read)]
-        public async Task<IActionResult> Get(string name)
+        [EnableQuery]
+        [Authorize(Policy = "user")]
+        public IQueryable<EmployeeDto> Get(string search)
         {
-            var dtoList = await _employeeService.GetEmployeesByName(name);
-            return AppResponse(dtoList, null);
+            Expression<Func<Employee, bool>> predicate = it =>
+                it.Identifier.Contains(search) || it.Name.Contains(search);
+            return _employeeService.Get(predicate);
         }
-
-        [HttpPost("current/add")]
-        [Permission(Permissions.Controllers.Employe, Permissions.Actions.Employe_Create)]
-        public async Task<IActionResult> Add([FromBody]AddEmployee model)
+        [EnableQuery]
+        [Authorize(Policy = "user")]
+        public IQueryable<EmployeeDto> Get()
         {
-            await _employeeService.AddEmployee(model);
-            return AppResponse(null, "操作成功");
-        }
+            Expression<Func<Employee, bool>> predicate = it => it.Org2 == _user.Org2;
+            return _employeeService.Get(predicate);
 
-        [HttpGet("current/pagination")]
-        [Permission(Permissions.Controllers.Employe, Permissions.Actions.Employe_Read)]
-        public async Task<IActionResult> Pagination(SieveModel model)
-        {
-            var pagination = await _employeeService.Pagination(model);
-            XPaginationHeader(pagination);
-            return AppResponse(pagination, null);
         }
     }
 }

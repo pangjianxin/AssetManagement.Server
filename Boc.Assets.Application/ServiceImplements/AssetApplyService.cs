@@ -1,18 +1,13 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Boc.Assets.Application.Dto;
-using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Application.ViewModels.Assets;
 using Boc.Assets.Domain.Commands.Assets;
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Models.Applies;
 using Boc.Assets.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Sieve.Models;
-using Sieve.Services;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -23,36 +18,23 @@ namespace Boc.Assets.Application.ServiceImplements
         private readonly IAssetApplyRepository _assetApplyRepository;
         private readonly IMapper _mapper;
         private readonly IBus _bus;
-        private readonly ISieveProcessor _sieveProcessor;
-        private readonly SieveOptions _sieveOptions;
 
         public AssetApplyService(IAssetApplyRepository assetApplyRepository,
             IMapper mapper,
-            IBus bus,
-            ISieveProcessor sieveProcessor,
-            IOptions<SieveOptions> options)
+            IBus bus)
         {
             _assetApplyRepository = assetApplyRepository;
             _mapper = mapper;
             _bus = bus;
-            _sieveProcessor = sieveProcessor;
-            _sieveOptions = options.Value;
         }
         /// <summary>
-        /// 获取分页数据
+        /// OData数据接口
         /// </summary>
-        /// <param name="model"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public async Task<PaginatedList<AssetApplyDto>> PaginationAsync(SieveModel model, Expression<Func<AssetApply, bool>> predicate = null)
+        public IQueryable<AssetApplyDto> Get(Expression<Func<AssetApply, bool>> predicate = null)
         {
-            var entities = _assetApplyRepository.GetAll(predicate);
-            var count = await _sieveProcessor.Apply(model, entities, applyPagination: false).CountAsync();
-            var result = _sieveProcessor.Apply(model, entities)
-                    .ProjectTo<AssetApplyDto>(_mapper.ConfigurationProvider);
-            var pagination = await result.ToListAsync();
-            return new PaginatedList<AssetApplyDto>(
-                _sieveOptions, model.Page, model.PageSize, count, pagination);
+            return _mapper.ProjectTo<AssetApplyDto>(_assetApplyRepository.GetAll(predicate));
         }
         /// <summary>
         /// 删除资产申请

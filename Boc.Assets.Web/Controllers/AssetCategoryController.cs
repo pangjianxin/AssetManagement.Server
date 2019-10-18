@@ -1,26 +1,24 @@
-﻿using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Application.ViewModels.AssetCategory;
-using Boc.Assets.Domain.Core.Notifications;
+﻿using Boc.Assets.Application.Dto;
+using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Web.Auth.Authorization;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Sieve.Models;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers
 {
-    [Route("api/assetCategory")]
-    public class AssetCategoryController : ApiController
+    public class AssetCategoryController : ODataController
     {
         private readonly IAssetCategoryService _assetCategoryService;
+        private readonly IUser _user;
 
-        public AssetCategoryController(INotificationHandler<DomainNotification> notifications,
-            IUser user,
-            IAssetCategoryService assetCategoryService) : base(notifications, user)
+        public AssetCategoryController(
+            IAssetCategoryService assetCategoryService,
+            IUser user)
         {
             _assetCategoryService = assetCategoryService;
+            _user = user;
         }
         /// <summary>
         /// 资产分类分页
@@ -29,13 +27,11 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpGet("secondary/pagination")]
-        [Permission(Permissions.Controllers.AssetCategory, Permissions.Actions.AssetCategory_Read_Secondary)]
-        public async Task<IActionResult> SecondaryPagination(SieveModel model)
+        [EnableQuery]
+        [Authorize(Policy = "manage")]
+        public IQueryable<AssetCategoryDto> GetManage()
         {
-            var result = await _assetCategoryService.PaginationAsync(model, it => it.CategoryManageRegisters.Select(that => that.ManagerId).Contains(_user.OrgId));
-            XPaginationHeader(result);
-            return AppResponse(result);
+            return _assetCategoryService.Get(it => it.CategoryManageRegisters.Select(that => that.ManagerId).Contains(_user.OrgId));
         }
         /// <summary>
         /// 资产分类分页数据
@@ -44,38 +40,23 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpGet("current/pagination")]
-        [Permission(Permissions.Controllers.AssetCategory, Permissions.Actions.AssetCategory_Read_Current)]
-        public async Task<IActionResult> CurrentPaginationAsync(SieveModel model)
+        [EnableQuery]
+        [Authorize(Policy = "user")]
+        public IQueryable<AssetCategoryDto> GetCurrent()
         {
-            var result = await _assetCategoryService.PaginationAsync(model);
-            XPaginationHeader(result);
-            return AppResponse(result);
+            return _assetCategoryService.Get();
+
         }
         /// <summary>
         /// 资产分类计量单位
         /// 当前机构权限
         /// </summary>
         /// <returns></returns>
-        [HttpGet("current/units")]
-        [Permission(Permissions.Controllers.AssetCategory, Permissions.Actions.AssetCategory_Read_Current)]
-        public IActionResult GetMeteringUnits()
+        [EnableQuery]
+        [Authorize(Policy = "user")]
+        public IEnumerable<dynamic> GetMeteringUnits()
         {
-            var dic = _assetCategoryService.GetMeteringUnits();
-            return AppResponse(dic);
-        }
-        /// <summary>
-        /// 修改资产分类计量单位
-        /// 二级权限
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPut("secondary/changeMeteringUnit")]
-        [Permission(Permissions.Controllers.AssetCategory, Permissions.Actions.AssetCategory_Modify_Secondary)]
-        public async Task<IActionResult> ChangeMeteringUnit([FromBody]ChangeMeteringUnit model)
-        {
-            await _assetCategoryService.ChangeMeteringUnit(model);
-            return AppResponse(null, "修改成功");
+            return _assetCategoryService.GetMeteringUnits();
         }
 
     }

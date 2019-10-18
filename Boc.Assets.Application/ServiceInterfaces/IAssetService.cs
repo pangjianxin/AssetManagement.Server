@@ -1,10 +1,9 @@
 ﻿using Boc.Assets.Application.Dto;
-using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ViewModels.Assets;
 using Boc.Assets.Domain.Models.Assets;
-using Sieve.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -18,7 +17,7 @@ namespace Boc.Assets.Application.ServiceInterfaces
         /// <param name="model"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        Task<PaginatedList<AssetDto>> PaginationAsync(SieveModel model, Expression<Func<Asset, bool>> predicate);
+        IQueryable<AssetDto> Get(Expression<Func<Asset, bool>> predicate = null);
         /// <summary>
         /// 根据三级分类来汇总资产数量
         /// </summary>

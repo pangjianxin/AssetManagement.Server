@@ -1,28 +1,28 @@
-﻿using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Application.ViewModels.Assets;
-using Boc.Assets.Domain.Core.Notifications;
+﻿using Boc.Assets.Application.Dto;
+using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Assets;
-using Boc.Assets.Web.Auth.Authorization;
-using MediatR;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Sieve.Models;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers
 {
-    [Route("api/assets")]
-    public class AssetController : ApiController
+    public class AssetController : ODataController
     {
         private readonly IAssetService _assetService;
+        private readonly IUser _user;
 
-        public AssetController(INotificationHandler<DomainNotification> notifications,
+        public AssetController(
             IUser user,
-            IAssetService assetService) : base(notifications, user)
+            IAssetService assetService)
         {
             _assetService = assetService;
+            _user = user;
         }
         #region 普通用户资源
         /// <summary>
@@ -31,54 +31,36 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpGet("current")]
-        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Current)]
-        public async Task<IActionResult> GetAssetsInCurrent(SieveModel model)
+        [EnableQuery]
+        [Authorize(Policy = "user")]
+        public IQueryable<AssetDto> GetRurrent()
         {
-            Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
-            var result = await _assetService.PaginationAsync(model, currentAssetsPredicate);
-            XPaginationHeader(result);
-            return AppResponse(result);
+            Expression<Func<Asset, bool>> predicate = it => it.OrganizationInUseId == _user.OrgId;
+            return _assetService.Get(predicate);
         }
         /// <summary>
         /// 当前机构按三级分类的汇总数据
         /// 当前机构权限
         /// </summary>
         /// <returns></returns>
-        [HttpGet("current/categories/thirdLevel")]
-        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Current)]
-        public async Task<IActionResult> CountByThirdLevelCurrent()
-        {
-            Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
-            var categories = await _assetService.CategoriesByThirdLevelAsync(currentAssetsPredicate);
-            return AppResponse(categories);
-        }
+        //[EnableQuery]
+        //[Authorize(Policy = "user")]
+        //public async Task<IActionResult> CountByThirdLevelCurrent()
+        //{
+        //    Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
+        //    var categories = await _assetService.CategoriesByThirdLevelAsync(currentAssetsPredicate);
+        //}
         /// <summary>
         /// 当前机构按条线的汇总数量
         /// </summary>
         /// <returns></returns>
-        [HttpGet("current/categories/managerOrg")]
-        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Current)]
-        public async Task<IActionResult> CountByManagerOrgCurrent()
-        {
-            Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
-            var categories = await _assetService.CategoriesByManagerOrg(currentAssetsPredicate);
-            return AppResponse(categories);
-        }
-        /// <summary>
-        /// 修改资产位置
-        /// 当前机构权限
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPut("current/modifyLocation")]
-        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Modify_Current)]
-        public async Task<IActionResult> ModifyLocation([FromBody]ModifyAssetLocation model)
-        {
-            await _assetService.ModifyAssetLocationAsync(model);
-            return AppResponse(null, "操作成功");
-        }
-
+        //[EnableQuery]
+        //[Authorize(Policy = "user")]
+        //public async Task<IActionResult> CountByManagerOrgCurrent()
+        //{
+        //    Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
+        //    var categories = await _assetService.CategoriesByManagerOrg(currentAssetsPredicate);
+        //}
         #endregion
         #region 管理员资源
         /// <summary>
@@ -87,13 +69,11 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpGet("secondary/pagination")]
-        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Secondary)]
-        public async Task<IActionResult> PaginationSecondary(SieveModel model)
+        [EnableQuery]
+        [Authorize(Policy = "manage")]
+        public IQueryable<AssetDto> GetManage()
         {
-            var result = await _assetService.PaginationAsync(model, it => it.OrganizationInChargeId == _user.OrgId);
-            XPaginationHeader(result);
-            return AppResponse(result);
+            return _assetService.Get(it => it.OrganizationInChargeId == _user.OrgId);
         }
         /// <summary>
         /// 获取某个机构下的所有资产，
@@ -102,15 +82,13 @@ namespace Boc.Assets.Web.Controllers
         /// <param name="model"></param>
         /// <param name="orgInUseId"></param>
         /// <returns></returns>
-        [HttpGet("secondary/orgInUse")]
-        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Secondary)]
-        public async Task<IActionResult> CurrentPaginationByManager(SieveModel model, Guid orgInUseId)
+        [EnableQuery]
+        [Authorize(Policy = "manage")]
+        public IQueryable<AssetDto> GetCurrent(Guid orgInUseId)
         {
-            Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInChargeId == _user.OrgId
+            Expression<Func<Asset, bool>> predicate = it => it.OrganizationInChargeId == _user.OrgId
                                                                          && it.OrganizationInUseId == orgInUseId;
-            var result = await _assetService.PaginationAsync(model, currentAssetsPredicate);
-            XPaginationHeader(result);
-            return AppResponse(result);
+            return _assetService.Get(predicate);
         }
         /// <summary>
         /// 按三级分类的分页数据
@@ -119,17 +97,15 @@ namespace Boc.Assets.Web.Controllers
         /// <param name="model"></param>
         /// <param name="categoryId"></param>
         /// <returns></returns>
-        [HttpGet("secondary/pagination/thirdLevel")]
-        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Secondary)]
-        public async Task<IActionResult> PaginationByThirdLevelSecondary(SieveModel model, Guid categoryId)
+        [EnableQuery]
+        [Authorize(Policy = "manage")]
+        public IQueryable<AssetDto> GetManageByCategory(Guid categoryId)
         {
 
             Expression<Func<Asset, bool>> predicate = it => it.OrganizationInChargeId == _user.OrgId
                                                             && it.AssetCategoryId == categoryId
                                                             && it.AssetStatus == AssetStatus.在库;
-            var result = await _assetService.PaginationAsync(model, predicate);
-            XPaginationHeader(result);
-            return AppResponse(result);
+            return _assetService.Get(predicate);
         }
         /// <summary>
         /// 按三级分类索引的汇总数据
@@ -137,12 +113,13 @@ namespace Boc.Assets.Web.Controllers
         /// 这个放到AssetCategoryController里面会更好，以后改
         /// </summary>
         /// <returns></returns>
-        [HttpGet("secondary/categories/thirdLevel")]
-        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Secondary)]
+        [EnableQuery]
+        [Authorize(Policy = "manage")]
         public async Task<IActionResult> CategoriesByThirdLevelSecondary()
         {
-            var result = await _assetService.CategoriesByThirdLevelAsync(it => it.OrganizationInChargeId == _user.OrgId);
-            return AppResponse(result);
+            Expression<Func<Asset, bool>> predicate = it => it.OrganizationInChargeId == _user.OrgId;
+            var result = await _assetService.CategoriesByThirdLevelAsync(predicate);
+            return Ok(result);
         }
         /// <summary>
         /// 按资产状态汇总数据
@@ -150,26 +127,13 @@ namespace Boc.Assets.Web.Controllers
         /// 这个放到AssetCategoryController里面会更好，以后改
         /// </summary>
         /// <returns></returns>
-        [HttpGet("secondary/categories/status")]
-        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Read_Secondary)]
-        public async Task<IActionResult> CategoriesByStatusSecondary()
-        {
-            var result = await _assetService.CategoriesByStatusAsync(it => it.OrganizationInChargeId == _user.OrgId);
-            return AppResponse(result);
-        }
-        /// <summary>
-        /// 资产入库（无文件）
-        /// 二级权限
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost("secondary/storage")]
-        [Permission(Permissions.Controllers.Asset, Permissions.Actions.Asset_Create_Current)]
-        public async Task<IActionResult> StorageWithOutFile([FromBody]StoreAsset model)
-        {
-            await _assetService.StorageWithOutFile(model);
-            return AppResponse(null, "入库成功");
-        }
+        //[EnableQuery]
+        //[Authorize(Policy = "manage")]
+        //public async Task<IActionResult> CategoriesByStatusSecondary()
+        //{
+        //    var result = await _assetService.CategoriesByStatusAsync(it => it.OrganizationInChargeId == _user.OrgId);
+        //    return AppResponse(result);
+        //}
         #endregion
     }
 }

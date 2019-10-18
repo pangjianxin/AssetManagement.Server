@@ -85,8 +85,6 @@ namespace Boc.Assets.Application.AutoMapper
                     config => config.MapFrom(it => it.AssetCategory.AssetSecondLevelCategory))
                 .ForMember(it => it.CategoryThirdLevel,
                     config => config.MapFrom(it => it.AssetCategory.AssetThirdLevelCategory));
-            //权限和权限DTO
-            CreateMap<Permission, PermissionDto>();
         }
     }
 }

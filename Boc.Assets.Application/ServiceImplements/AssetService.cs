@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Boc.Assets.Application.Dto;
-using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Application.ViewModels.Assets;
 using Boc.Assets.Domain.Commands.Assets;
@@ -9,9 +7,6 @@ using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Sieve.Models;
-using Sieve.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,22 +21,16 @@ namespace Boc.Assets.Application.ServiceImplements
         private readonly IAssetRepository _assetRepository;
         private readonly IAssetInventoryDetailRepository _assetInventoryDetailRepository;
         private readonly IBus _bus;
-        private readonly ISieveProcessor _sieveProcessor;
-        private readonly SieveOptions _sieveOptions;
 
         public AssetService(IMapper mapper,
             IAssetRepository assetRepository,
             IAssetInventoryDetailRepository assetStockTakingDetailRepository,
-            IBus bus,
-            ISieveProcessor sieveProcessor,
-            IOptions<SieveOptions> options)
+            IBus bus)
         {
             _mapper = mapper;
             _assetRepository = assetRepository;
             _assetInventoryDetailRepository = assetStockTakingDetailRepository;
             _bus = bus;
-            _sieveProcessor = sieveProcessor;
-            _sieveOptions = options.Value;
         }
         #region update
 
@@ -87,14 +76,12 @@ namespace Boc.Assets.Application.ServiceImplements
                          select new { name = m.Key.ToString(), value = m.Count() };
             return await result.ToListAsync();
         }
-        public async Task<PaginatedList<AssetDto>> PaginationAsync(SieveModel model, Expression<Func<Asset, bool>> predicate)
+
+        public IQueryable<AssetDto> Get(Expression<Func<Asset, bool>> predicate = null)
         {
-            var entities = _assetRepository.GetAll(predicate);
-            var count = await _sieveProcessor.Apply(model, entities, applyPagination: false).CountAsync();
-            var result = _sieveProcessor.Apply(model, entities).ProjectTo<AssetDto>(_mapper.ConfigurationProvider);
-            var pagination = await result.ToListAsync();
-            return new PaginatedList<AssetDto>(_sieveOptions, model.Page, model.PageSize, count, pagination);
+            return _mapper.ProjectTo<AssetDto>(_assetRepository.GetAll(predicate));
         }
+
         #endregion
     }
 }

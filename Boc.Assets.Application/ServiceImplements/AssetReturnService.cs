@@ -1,19 +1,13 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Boc.Assets.Application.Dto;
-using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Application.ViewModels.Assets;
 using Boc.Assets.Domain.Commands.Assets;
 using Boc.Assets.Domain.Core.Bus;
-using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Applies;
 using Boc.Assets.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Sieve.Models;
-using Sieve.Services;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -24,34 +18,14 @@ namespace Boc.Assets.Application.ServiceImplements
         private readonly IAssetReturnRepository _assetReturnRepository;
         private readonly IMapper _mapper;
         private readonly IBus _bus;
-        private readonly ISieveProcessor _sieveProcessor;
-        private readonly IUser _user;
-        private readonly SieveOptions _sieveOptions;
         public AssetReturnService(
             IAssetReturnRepository assetReturnRepository,
             IMapper mapper,
-            IBus bus,
-            ISieveProcessor sieveProcessor,
-            IUser user,
-            IOptions<SieveOptions> options)
+            IBus bus)
         {
             _assetReturnRepository = assetReturnRepository;
             _mapper = mapper;
             _bus = bus;
-            _sieveProcessor = sieveProcessor;
-            _user = user;
-            _sieveOptions = options.Value;
-        }
-
-        public async Task<PaginatedList<AssetReturnDto>> PaginationAsync(SieveModel model, Expression<Func<AssetReturn, bool>> predicate)
-        {
-            var entities = _assetReturnRepository.GetAll(predicate);
-            var count = await _sieveProcessor.Apply(model, entities, applyPagination: false).CountAsync();
-            var result = _sieveProcessor.Apply(model, entities)
-                .ProjectTo<AssetReturnDto>(_mapper.ConfigurationProvider);
-            var pagination = await result.ToListAsync();
-            return new PaginatedList<AssetReturnDto>(
-                _sieveOptions, model.Page, model.PageSize, count, pagination);
         }
         /// <summary>
         /// 删除资产交回申请
@@ -92,6 +66,11 @@ namespace Boc.Assets.Application.ServiceImplements
         {
             var command = _mapper.Map<CreateAssetReturnCommand>(model);
             await _bus.SendCommandAsync(command);
+        }
+
+        public IQueryable<AssetReturnDto> Get(Expression<Func<AssetReturn, bool>> predicate = null)
+        {
+            return _mapper.ProjectTo<AssetReturnDto>(_assetReturnRepository.GetAll(predicate));
         }
     }
 }

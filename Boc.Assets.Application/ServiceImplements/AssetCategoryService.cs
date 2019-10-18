@@ -1,21 +1,16 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Boc.Assets.Application.Dto;
-using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Application.ViewModels.AssetCategory;
 using Boc.Assets.Domain.Commands.AssetCategory;
 using Boc.Assets.Domain.Core.Bus;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Sieve.Models;
-using Sieve.Services;
 
 namespace Boc.Assets.Application.ServiceImplements
 {
@@ -24,26 +19,25 @@ namespace Boc.Assets.Application.ServiceImplements
         private readonly IAssetCategoryRepository _assetCategoryRepository;
         private readonly IMapper _mapper;
         private readonly IBus _bus;
-        private readonly ISieveProcessor _sieveProcessor;
-        private readonly SieveOptions _sieveOptions;
 
         public AssetCategoryService(IAssetCategoryRepository assetCategoryRepository,
             IMapper mapper,
-            IBus bus,
-            ISieveProcessor sieveProcessor,
-            IOptions<SieveOptions> sieveOptions)
+            IBus bus)
         {
             _assetCategoryRepository = assetCategoryRepository;
             _mapper = mapper;
             _bus = bus;
-            _sieveProcessor = sieveProcessor;
-            _sieveOptions = sieveOptions.Value;
         }
 
         public async Task ChangeMeteringUnit(ChangeMeteringUnit model)
         {
             var command = _mapper.Map<ChangeMeteringUnitCommand>(model);
             await _bus.SendCommandAsync(command);
+        }
+
+        public IQueryable<AssetCategoryDto> Get(Expression<Func<AssetCategory, bool>> predicate = null)
+        {
+            return _mapper.ProjectTo<AssetCategoryDto>(_assetCategoryRepository.GetAll(predicate));
         }
 
         public IEnumerable<dynamic> GetMeteringUnits()
@@ -54,17 +48,6 @@ namespace Boc.Assets.Application.ServiceImplements
                 dic.Add(new { name = item.ToString(), value = (int)item });
             }
             return dic;
-        }
-
-        public async Task<PaginatedList<AssetCategoryDto>> PaginationAsync(SieveModel model, Expression<Func<AssetCategory, bool>> predicate = null)
-        {
-            var entities = _assetCategoryRepository.GetAll(predicate);
-            var count = await _sieveProcessor.Apply(model, entities, applyPagination: false).CountAsync();
-            var result = _sieveProcessor.Apply(model, entities)
-                .ProjectTo<AssetCategoryDto>(_mapper.ConfigurationProvider);
-            var pagination = await result.ToListAsync();
-            return new PaginatedList<AssetCategoryDto>(
-                _sieveOptions, model.Page, model.PageSize, count, pagination);
         }
     }
 }

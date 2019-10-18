@@ -1,16 +1,16 @@
 ﻿using Boc.Assets.Application.Dto;
-using Boc.Assets.Application.Pagination;
 using Boc.Assets.Application.ViewModels.Employee;
-using Sieve.Models;
-using System.Collections.Generic;
+using Boc.Assets.Domain.Models.Organizations;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Boc.Assets.Application.ServiceInterfaces
 {
     public interface IEmployeeService : IApplicationService
     {
-        Task<List<EmployeeDto>> GetEmployeesByName(string name);
         Task AddEmployee(AddEmployee model);
-        Task<PaginatedList<EmployeeDto>> Pagination(SieveModel model);
+        IQueryable<EmployeeDto> Get(Expression<Func<Employee, bool>> predicate = null);
     }
 }
