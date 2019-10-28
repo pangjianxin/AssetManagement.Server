@@ -2,7 +2,6 @@
 using Boc.Assets.Domain.Models.AssetInventories;
 using Boc.Assets.Domain.Models.Assets;
 using Boc.Assets.Domain.ValueObjects;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 
@@ -10,16 +9,8 @@ namespace Boc.Assets.Domain.Models.Organizations
 {
     public class Organization : EntityBase
     {
-        private readonly ILazyLoader _lazyLoader;
-        private ICollection<OrganizationSpace> _organizationSpaces;
-        private ICollection<Asset> _assetsInCharge;
-        private ICollection<Asset> _assetsInUse;
-        private ICollection<AssetInventoryRegister> _assetInventoryRegisters;
-        private ICollection<CategoryManageRegister> _categoryManageRegisters;
-        private OrganizationRole _role;
-        public Organization(ILazyLoader lazyLoader = null)
+        public Organization()
         {
-            _lazyLoader = lazyLoader;
         }
         /// <summary>
         /// 角色(外键)
@@ -85,51 +76,27 @@ namespace Boc.Assets.Domain.Models.Organizations
         /// <summary>
         /// 当前机构的角色
         /// </summary>
-        public OrganizationRole Role
-        {
-            get => _lazyLoader.Load(this, ref _role);
-            set => _role = value;
-        }
+        public virtual OrganizationRole Role { get; set; }
         /// <summary>
         /// 机构的空间(一对多)
         /// </summary>
-        public ICollection<OrganizationSpace> OrganizationSpaces
-        {
-            get => _lazyLoader.Load(this, ref _organizationSpaces);
-            set => _organizationSpaces = value;
-        }
+        public virtual ICollection<OrganizationSpace> OrganizationSpaces { get; set; }
         /// <summary>
         /// 机构名下存放的资产(一对多)
         /// </summary>
-        public ICollection<Asset> AssetsInCharge
-        {
-            get => _lazyLoader.Load(this, ref _assetsInCharge);
-            set => _assetsInCharge = value;
-        }
+        public virtual ICollection<Asset> AssetsInCharge { get; set; }
         /// <summary>
         /// 机构负责的资产(一对多)
         /// </summary>
-        public ICollection<Asset> AssetsInUse
-        {
-            get => _lazyLoader.Load(this, ref _assetsInUse);
-            set => _assetsInUse = value;
-        }
+        public virtual ICollection<Asset> AssetsInUse { get; set; }
         /// <summary>
         /// 固定资产盘点参与机构(一对多)
         /// </summary>
-        public ICollection<AssetInventoryRegister> AssetInventoryRegisters
-        {
-            get => _lazyLoader.Load(this, ref _assetInventoryRegisters);
-            set => _assetInventoryRegisters = value;
-        }
+        public virtual ICollection<AssetInventoryRegister> AssetInventoryRegisters { get; set; }
         /// <summary>
         /// 机构管理的资产分类的注册表(一对多)
         /// </summary>
-        public ICollection<CategoryManageRegister> CategoryManageRegisters
-        {
-            get => _lazyLoader.Load(this, ref _categoryManageRegisters);
-            set => _categoryManageRegisters = value;
-        }
+        public virtual ICollection<CategoryManageRegister> CategoryManageRegisters { get; set; }
         #region methods
         /// <summary>
         /// 获取机构的值对象

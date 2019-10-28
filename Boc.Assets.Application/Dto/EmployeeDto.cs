@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Boc.Assets.Application.Dto
 {
     public class EmployeeDto
     {
+        [Key]
         public Guid Id { get; set; }
         /// <summary>
         /// 员工姓名

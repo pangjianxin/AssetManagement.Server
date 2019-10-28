@@ -1,26 +1,17 @@
 ﻿using Boc.Assets.Domain.Core.Models;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Collections.Generic;
 
 namespace Boc.Assets.Domain.Models.Organizations
 {
     public class OrganizationRole : EntityBase
     {
-        private readonly ILazyLoader _lazyLoader;
-
-        public OrganizationRole(ILazyLoader lazyLoader)
+        public OrganizationRole()
         {
-            _lazyLoader = lazyLoader;
         }
         public Role Role { get; set; }
         public string Description { get; set; }
-        private ICollection<Organization> _organizations;
 
-        public ICollection<Organization> Organizations
-        {
-            get => _lazyLoader.Load(this, ref _organizations);
-            set => _organizations = value;
-        }
+        public virtual ICollection<Organization> Organizations { get; set; }
         public override string ToString()
         {
             return Role.ToString();

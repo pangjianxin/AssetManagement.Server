@@ -1,5 +1,4 @@
 ﻿using Boc.Assets.Domain.Core.Models;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Collections.Generic;
 
 namespace Boc.Assets.Domain.Models.Assets
@@ -10,38 +9,21 @@ namespace Boc.Assets.Domain.Models.Assets
     /// </summary>
     public class AssetCategory : EntityBase
     {
-        private readonly ILazyLoader _lazyLoader;
-        private ICollection<Asset> _assets;
-        private ICollection<Maintainer> _maintainers;
-        private ICollection<CategoryManageRegister> _categoryManageRegisters;
-        public AssetCategory(ILazyLoader lazyLoader)
+        public AssetCategory()
         {
-            _lazyLoader = lazyLoader;
         }
         /// <summary>
         /// 该条类别下的所有资产
         /// </summary>
-        public ICollection<Asset> Assets
-        {
-            get => _lazyLoader.Load(this, ref _assets);
-            set => _assets = value;
-        }
+        public virtual ICollection<Asset> Assets { get; set; }
         /// <summary>
         /// 该条类别下的所有维修信息
         /// </summary>
-        public ICollection<Maintainer> Maintainers
-        {
-            get => _lazyLoader.Load(this, ref _maintainers);
-            set => _maintainers = value;
-        }
+        public virtual ICollection<Maintainer> Maintainers { get; set; }
         /// <summary>
         /// 该条资产类别下的所有登记的管理机构
         /// </summary>
-        public ICollection<CategoryManageRegister> CategoryManageRegisters
-        {
-            get => _lazyLoader.Load(this, ref _categoryManageRegisters);
-            set => _categoryManageRegisters = value;
-        }
+        public virtual ICollection<CategoryManageRegister> CategoryManageRegisters { get; set; }
         /// <summary>
         /// 资产大类
         /// </summary>

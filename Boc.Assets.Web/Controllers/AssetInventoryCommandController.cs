@@ -34,13 +34,5 @@ namespace Boc.Assets.Web.Controllers
             await _assetInventoryService.CreateAssetInventoryAsync(model);
             return AppResponse(null, "操作成功");
         }
-
-        [HttpPost("user/createdetail")]
-        [Authorize(Policy = "user")]
-        public async Task<IActionResult> Post([FromBody] CreateAssetInventoryDetail model)
-        {
-            await _assetInventoryService.CreatAssetInventoryDetailAsync(model);
-            return AppResponse(null, "操作成功");
-        }
     }
 }

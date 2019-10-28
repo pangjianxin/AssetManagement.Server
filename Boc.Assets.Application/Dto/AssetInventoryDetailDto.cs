@@ -1,9 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Boc.Assets.Application.Dto
 {
     public class AssetInventoryDetailDto
     {
+        [Key]
+        public Guid Id { get; set; }
         /// <summary>
         /// 资产盘点机构登记表外键
         /// </summary>

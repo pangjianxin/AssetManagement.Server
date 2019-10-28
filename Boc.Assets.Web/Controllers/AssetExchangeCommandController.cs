@@ -3,6 +3,7 @@ using Boc.Assets.Application.ViewModels.Assets;
 using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -27,7 +28,8 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost("exchange")]
+        [HttpPost]
+        [Authorize(Policy = "user")]
         public async Task<IActionResult> Post([FromBody] ExchangeAsset model)
         {
             await _assetExchangeService.CreateAssetExchangeAsync(model);
@@ -38,7 +40,8 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPut("secondary/handle")]
+        [HttpPut("handle")]
+        [Authorize(Policy = "manage")]
         public async Task<IActionResult> Put([FromBody] HandleAssetExchange model)
         {
             await _assetExchangeService.HandleAssetExchangeAsync(model);
@@ -51,6 +54,7 @@ namespace Boc.Assets.Web.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("revoke")]
+        [Authorize(Policy = "manage")]
         public async Task<IActionResult> Put([FromBody]RevokeAssetExchange model)
         {
             await _assetExchangeService.RevokeAssetExchangeAsync(model);
@@ -63,7 +67,8 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpDelete("remove")]
+        [HttpDelete]
+        [Authorize(Policy = "user")]
         public async Task<IActionResult> Delete(RemoveAssetExchange model)
         {
             var @event = await _assetExchangeService.RemoveAssetExchangeAsync(model);

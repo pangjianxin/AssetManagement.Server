@@ -17,25 +17,7 @@ namespace Boc.Assets.Application.ServiceInterfaces
         /// <param name="model"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        IQueryable<AssetDto> Get(Expression<Func<Asset, bool>> predicate = null);
-        /// <summary>
-        /// 根据三级分类来汇总资产数量
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        Task<IEnumerable<dynamic>> CategoriesByThirdLevelAsync(Expression<Func<Asset, bool>> predicate);
-        /// <summary>
-        /// 根据资产状态汇总资产数量
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        Task<IEnumerable<dynamic>> CategoriesByStatusAsync(Expression<Func<Asset, bool>> predicate);
-        /// <summary>
-        /// 根据管理机构汇总资产数量
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        Task<IEnumerable<dynamic>> CategoriesByManagerOrg(Expression<Func<Asset, bool>> predicate);
+        IQueryable<AssetDto> Get(Expression<Func<Asset, bool>> predicate = null);          
         /// <summary>
         /// 修改资产存放位置
         /// </summary>

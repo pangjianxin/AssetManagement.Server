@@ -23,15 +23,6 @@ namespace Boc.Assets.Web.Controllers
             _employeeService = employeeService;
             _user = user;
         }
-
-        [EnableQuery]
-        [Authorize(Policy = "user")]
-        public IQueryable<EmployeeDto> Get(string search)
-        {
-            Expression<Func<Employee, bool>> predicate = it =>
-                it.Identifier.Contains(search) || it.Name.Contains(search);
-            return _employeeService.Get(predicate);
-        }
         [EnableQuery]
         [Authorize(Policy = "user")]
         public IQueryable<EmployeeDto> Get()

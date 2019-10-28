@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Web
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var host = CreateWebHostBuilder(args).Build();
             host.Run();

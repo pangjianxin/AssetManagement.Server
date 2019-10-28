@@ -1,6 +1,7 @@
 ﻿using Boc.Assets.Domain.Models.Applies;
 using Boc.Assets.Domain.Models.AssetInventories;
 using Boc.Assets.Domain.Models.Assets;
+using Boc.Assets.Domain.Models.Assets.TableViews;
 using Boc.Assets.Domain.Models.Organizations;
 using Boc.Assets.Infrastructure.DbConfigurations.ApplicationDbContextConfig;
 using Microsoft.EntityFrameworkCore;
@@ -66,6 +67,14 @@ namespace Boc.Assets.Infrastructure.DataBase
         /// </summary>
         public DbSet<AssetInventoryRegister> AssetInventoryRegisters { get; set; }
         /// <summary>
+        /// 视图类，表示按资产分类获取资产汇总数据的视图
+        /// </summary>          
+        public DbQuery<AssetSumarryByCategory> AssetSumarryByCategorys { get; set; }
+        /// <summary>
+        /// 视图类，统计各机构的资产数量
+        /// </summary>
+        public DbQuery<AssetSumarryByCount> AssetSumarryByCounts { get; set; }
+        /// <summary>
         /// 机构管理资产分类的注册表
         /// </summary>
         public DbSet<CategoryManageRegister> CategoryManageRegisters { get; set; }
@@ -88,6 +97,9 @@ namespace Boc.Assets.Infrastructure.DataBase
             builder.ApplyConfiguration(new OrganizationDbConfig());
             builder.ApplyConfiguration(new OrganizationRoleDbConfig());
             builder.ApplyConfiguration(new OrganizationSpaceDbConfig());
+            //视图类
+            builder.Query<AssetSumarryByCategory>().ToView("AssetSumarryByCategorys");
+            builder.Query<AssetSumarryByCount>().ToView("AssetSummaryByCounts");
 
         }
     }

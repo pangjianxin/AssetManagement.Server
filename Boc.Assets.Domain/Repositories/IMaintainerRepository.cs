@@ -8,7 +8,6 @@ namespace Boc.Assets.Domain.Repositories
 {
     public interface IMaintainerRepository : IRepository<Maintainer>
     {
-        Task<bool> AnyTargetMaintainer(string telephone);
-        Task<bool> AnyAsync(Expression<Func<Maintainer, bool>> predicate);
+      
     }
 }

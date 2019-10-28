@@ -36,15 +36,15 @@ namespace Boc.Assets.Domain.Models.Assets
         /// <summary>
         /// 资产输出机构
         /// </summary>
-        public OrganizationInfo ExportOrgInfo { get; set; }
+        public virtual OrganizationInfo ExportOrgInfo { get; set; }
         /// <summary>
         /// 资产输入机构
         /// </summary>
-        public OrganizationInfo ImportOrgInfo { get; set; }
+        public virtual OrganizationInfo ImportOrgInfo { get; set; }
         /// <summary>
         /// 审批机构
         /// </summary>
-        public OrganizationInfo AuthorizeOrgInfo { get; set; }
+        public virtual OrganizationInfo AuthorizeOrgInfo { get; set; }
         #region methods
         /// <summary>
         /// 显示事件发生对比目前的时间戳

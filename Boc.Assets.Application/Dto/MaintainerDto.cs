@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Boc.Assets.Application.Dto
 {
     public class MaintainerDto
     {
+        [Key]
         /// <summary>
         /// 主键
         /// </summary>

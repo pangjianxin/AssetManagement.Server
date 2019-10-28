@@ -2,29 +2,31 @@
 using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Domain.Core.SharedKernel;
 using Boc.Assets.Domain.Models.Assets;
+using Boc.Assets.Domain.Models.Assets.TableViews;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers
 {
     public class AssetController : ODataController
     {
         private readonly IAssetService _assetService;
+        private readonly IAssetSumarryService _assetsumarryservice;
         private readonly IUser _user;
 
         public AssetController(
             IUser user,
-            IAssetService assetService)
+            IAssetService assetService,
+            IAssetSumarryService assetSumarryService)
         {
             _assetService = assetService;
             _user = user;
+            _assetsumarryservice = assetSumarryService;
         }
-        #region 普通用户资源
         /// <summary>
         /// 当前机构资产分页数据
         /// 当前机构权限
@@ -33,36 +35,11 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [EnableQuery]
         [Authorize(Policy = "user")]
-        public IQueryable<AssetDto> GetRurrent()
+        public IQueryable<AssetDto> GetCurrent()
         {
             Expression<Func<Asset, bool>> predicate = it => it.OrganizationInUseId == _user.OrgId;
             return _assetService.Get(predicate);
         }
-        /// <summary>
-        /// 当前机构按三级分类的汇总数据
-        /// 当前机构权限
-        /// </summary>
-        /// <returns></returns>
-        //[EnableQuery]
-        //[Authorize(Policy = "user")]
-        //public async Task<IActionResult> CountByThirdLevelCurrent()
-        //{
-        //    Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
-        //    var categories = await _assetService.CategoriesByThirdLevelAsync(currentAssetsPredicate);
-        //}
-        /// <summary>
-        /// 当前机构按条线的汇总数量
-        /// </summary>
-        /// <returns></returns>
-        //[EnableQuery]
-        //[Authorize(Policy = "user")]
-        //public async Task<IActionResult> CountByManagerOrgCurrent()
-        //{
-        //    Expression<Func<Asset, bool>> currentAssetsPredicate = it => it.OrganizationInUseId == _user.OrgId;
-        //    var categories = await _assetService.CategoriesByManagerOrg(currentAssetsPredicate);
-        //}
-        #endregion
-        #region 管理员资源
         /// <summary>
         /// 资产分页数据
         /// 二级权限
@@ -76,36 +53,18 @@ namespace Boc.Assets.Web.Controllers
             return _assetService.Get(it => it.OrganizationInChargeId == _user.OrgId);
         }
         /// <summary>
-        /// 获取某个机构下的所有资产，
-        /// 二级权限
+        /// 当前机构按三级分类的汇总数据
+        /// 当前机构权限
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="orgInUseId"></param>
-        /// <returns></returns>
+        /// <returns>IEnumerable<ChartData></returns>
+        [ODataRoute("GetCurrentSumarryByCategory")]
         [EnableQuery]
-        [Authorize(Policy = "manage")]
-        public IQueryable<AssetDto> GetCurrent(Guid orgInUseId)
+        [Authorize(Policy = "user")]
+        public IQueryable<ChartData> GetCurrentSumarryByCategory()
         {
-            Expression<Func<Asset, bool>> predicate = it => it.OrganizationInChargeId == _user.OrgId
-                                                                         && it.OrganizationInUseId == orgInUseId;
-            return _assetService.Get(predicate);
-        }
-        /// <summary>
-        /// 按三级分类的分页数据
-        /// 二级权限,用于资产申请分配资产
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="categoryId"></param>
-        /// <returns></returns>
-        [EnableQuery]
-        [Authorize(Policy = "manage")]
-        public IQueryable<AssetDto> GetManageByCategory(Guid categoryId)
-        {
-
-            Expression<Func<Asset, bool>> predicate = it => it.OrganizationInChargeId == _user.OrgId
-                                                            && it.AssetCategoryId == categoryId
-                                                            && it.AssetStatus == AssetStatus.在库;
-            return _assetService.Get(predicate);
+            Expression<Func<AssetSumarryByCategory, bool>> predicate = it => it.OrganizationInUseId == _user.OrgId;
+            var sumarry = _assetsumarryservice.GetSumarryByCategory(predicate);
+            return sumarry;
         }
         /// <summary>
         /// 按三级分类索引的汇总数据
@@ -114,26 +73,39 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [EnableQuery]
+        [ODataRoute("GetManageSumarryByCategory")]
         [Authorize(Policy = "manage")]
-        public async Task<IActionResult> CategoriesByThirdLevelSecondary()
+        public IQueryable<ChartData> GetManageSumarryByCategory()
         {
-            Expression<Func<Asset, bool>> predicate = it => it.OrganizationInChargeId == _user.OrgId;
-            var result = await _assetService.CategoriesByThirdLevelAsync(predicate);
-            return Ok(result);
+            Expression<Func<AssetSumarryByCategory, bool>> predicate = it => it.OrganizationInChargeId == _user.OrgId;
+            var result = _assetsumarryservice.GetSumarryByCategory(predicate);
+            return result;
+        }
+
+        [EnableQuery]
+        [ODataRoute("GetManageSumarryByCount")]
+        [Authorize(Policy = "manage")]
+        public IQueryable<ChartData> GetManageSumarryByCount()
+        {
+            Expression<Func<AssetSumarryByCount, bool>> predicate = it => it.OrganizationInChargeId == _user.OrgId;
+            var result = _assetsumarryservice.GetSumarryByCount(predicate);
+            return result;
         }
         /// <summary>
-        /// 按资产状态汇总数据
-        /// 二级权限
-        /// 这个放到AssetCategoryController里面会更好，以后改
+        /// 查询未盘点资产
         /// </summary>
+        /// <param name="model"></param>
+        /// <param name="assetStockTakingOrgId"></param>
         /// <returns></returns>
-        //[EnableQuery]
-        //[Authorize(Policy = "manage")]
-        //public async Task<IActionResult> CategoriesByStatusSecondary()
-        //{
-        //    var result = await _assetService.CategoriesByStatusAsync(it => it.OrganizationInChargeId == _user.OrgId);
-        //    return AppResponse(result);
-        //}
-        #endregion
+        [EnableQuery]
+        [Authorize(Policy = "user")]
+        public IQueryable<AssetDto> GetAssetsWithoutInventory([FromODataUri]Guid assetInventoryRegisterId)
+        {
+
+            Expression<Func<Asset, bool>> predicate = it => it.OrganizationInUseId == _user.OrgId
+                                                            && !it.AssetInventoryDetails.Any(that => that.AssetInventoryRegisterId == assetInventoryRegisterId);
+            var queryable = _assetService.Get(predicate);
+            return queryable;
+        }
     }
 }

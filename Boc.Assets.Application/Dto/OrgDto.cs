@@ -4,7 +4,7 @@ namespace Boc.Assets.Application.Dto
 {
     public class OrgDto
     {
-        public Guid OrgId { get; set; }
+        public Guid Id { get; set; }
         public Guid RoleId { get; set; }
         public string OrgIdentifier { get; set; }
         public string OrgNam { get; set; }

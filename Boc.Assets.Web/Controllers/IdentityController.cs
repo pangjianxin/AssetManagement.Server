@@ -1,57 +1,85 @@
-﻿using Boc.Assets.Application.Dto;
-using Boc.Assets.Application.ServiceInterfaces;
+﻿using Boc.Assets.Application.ServiceInterfaces;
+using Boc.Assets.Application.ViewModels.Login;
+using Boc.Assets.Application.ViewModels.Organization;
 using Boc.Assets.Domain.Authentication;
+using Boc.Assets.Domain.Core.Notifications;
 using Boc.Assets.Domain.Core.SharedKernel;
-using Boc.Assets.Domain.Models.Organizations;
-using Microsoft.AspNet.OData;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Linq;
-using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers
 {
-    public class IdentityController : ODataController
+    [Route("api/auth")]
+    public class IdentityController : ApiController
     {
         private readonly IOrganizationService _organizationService;
         private readonly IJwtFactory _jwtFactory;
-        private readonly IUser _user;
 
         public IdentityController(
+            INotificationHandler<DomainNotification> notifications,
             IUser user,
             IOrganizationService organizationService,
             IJwtFactory jwtFactory)
+            : base(notifications, user)
         {
             _organizationService = organizationService;
             _jwtFactory = jwtFactory;
-            _user = user;
         }
         /// <summary>
-        /// 获取前二十个搜索结果
-        /// </summary>
-        /// <param name="searchInput"></param>
-        /// <returns></returns>
-        [EnableQuery]
-        [Authorize(Policy = "user")]
-        public IQueryable<OrgDto> Get(string searchInput)
-        {
-            Expression<Func<Organization, bool>> predicate = it =>
-                it.Org2 == _user.Org2
-                && (it.OrgNam.Contains(searchInput)
-                || it.OrgIdentifier.Contains(searchInput));
-            return _organizationService.Get(predicate);
-        }
-        /// <summary>
-        /// 获取某个二级行下面的所有机构
+        /// 用户登录
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [EnableQuery]
-        [Authorize(Policy = "user")]
-        public IQueryable<OrgDto> Get()
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] Login model)
         {
-            Expression<Func<Organization, bool>> predicate = it => it.Org2 == _user.Org2;
-            return _organizationService.Get(predicate);
+            var accessToken = await _organizationService.LoginAsync(model);
+            return AppResponse(new
+            {
+                access_token = accessToken
+            }, "登录成功");
+        }
+        /// <summary>
+        /// 修改用户简称
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("changeOrgShortName")]
+        [Authorize]
+        public async Task<IActionResult> ChangeOrgShortName([FromBody]ChangeOrgShortName model)
+        {
+            var token = await _organizationService.ChangeOrgShortNameAsync(model);
+            return AppResponse(new { access_token = token }, "操作成功");
+        }
+        /// <summary>
+        /// 重置密码
+        /// 二级权限
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("resetPassword")]
+        [Authorize]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetOrgPassword model)
+        {
+
+            await _organizationService.ResetOrgPassword(model);
+            return AppResponse(null, "操作成功");
+        }
+        /// <summary>
+        /// 修改密码
+        /// 当前机构权限
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("changeOrgPassword")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangeOrgPassword model)
+        {
+            var token = await _organizationService.ChangeOrgPassword(model);
+            return AppResponse(new { access_token = token }, "修改密码成功");
         }
     }
 }

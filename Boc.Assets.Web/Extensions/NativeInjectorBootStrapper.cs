@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -45,7 +46,7 @@ namespace Boc.Assets.Web.Extensions
             //mvc
             services.AddMvc(action =>
             {
-                action.Filters.Add<ModelStateActionFilter>();
+                //  action.Filters.Add<ModelStateActionFilter>();
                 // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
                 // Because conflicts with ODataRouting as of this version could improve performance though
                 action.EnableEndpointRouting = false;
@@ -62,9 +63,10 @@ namespace Boc.Assets.Web.Extensions
             //ef core dbContext 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
+                options.UseLazyLoadingProxies();
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
                 //下面注释的两句是要记录或者忽略这个错误
-                //options.ConfigureWarnings(warnning => warnning.Log(CoreEventId.DetachedLazyLoadingWarning));
+                options.ConfigureWarnings(warnning => warnning.Log(CoreEventId.DetachedLazyLoadingWarning));
                 //options.ConfigureWarnings(warnning => warnning.Ignore(CoreEventId.DetachedLazyLoadingWarning));
             });
             services.AddDbContext<EventStoreDbContext>(options =>
@@ -163,6 +165,9 @@ namespace Boc.Assets.Web.Extensions
             services.AddScoped<IAssetExchangeService, AssetExchangeService>();
             services.AddScoped<IOrganizationRoleService, OrganizationRoleService>();
             services.AddScoped<ICategoryManageResgisterService, CategoryManageResgisterService>();
+            services.AddScoped<IAssetSumarryService, AssetSumarryService>();
+            services.AddScoped<IAssetInventoryDetailService, AssetInventoryDetailService>();
+            services.AddScoped<IAssetInventoryRegisterService, AssetInventoryRegisterService>();
 
         }
         private static void AddJwtAuthentication(IServiceCollection services, IConfiguration config)

@@ -2,6 +2,9 @@
 using Boc.Assets.Domain.Repositories;
 using Boc.Assets.Infrastructure.DataBase;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Boc.Assets.Infrastructure.Repository
@@ -16,6 +19,11 @@ namespace Boc.Assets.Infrastructure.Repository
         {
             var org = await Context.Set<Organization>().SingleAsync(it => it.OrgIdentifier == orgIdentifier);
             return org;
+        }
+
+        public override IQueryable<Organization> GetAll(Expression<Func<Organization, bool>> predicate = null)
+        {
+            return predicate == null ? DbSet : DbSet.Where(predicate);
         }
         #endregion
 

@@ -234,6 +234,8 @@ namespace Boc.Assets.Infrastructure.Migrations.app
 
                     b.Property<Guid>("AssetInventoryId");
 
+                    b.Property<DateTime>("CreateDateTime");
+
                     b.Property<Guid>("ParticipationId");
 
                     b.HasKey("Id");
@@ -550,28 +552,6 @@ namespace Boc.Assets.Infrastructure.Migrations.app
                     b.ToTable("OrganizationSpaces");
                 });
 
-            modelBuilder.Entity("Boc.Assets.Domain.Models.Organizations.Permission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ActionName")
-                        .IsRequired()
-                        .HasMaxLength(20);
-
-                    b.Property<string>("ControllerName")
-                        .IsRequired()
-                        .HasMaxLength(20);
-
-                    b.Property<Guid>("RoleId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Permissions");
-                });
-
             modelBuilder.Entity("Boc.Assets.Domain.Models.AssetInventories.AssetInventoryDetail", b =>
                 {
                     b.HasOne("Boc.Assets.Domain.Models.Assets.Asset", "Asset")
@@ -722,14 +702,6 @@ namespace Boc.Assets.Infrastructure.Migrations.app
                     b.HasOne("Boc.Assets.Domain.Models.Organizations.Organization", "Organization")
                         .WithMany("OrganizationSpaces")
                         .HasForeignKey("OrgId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Boc.Assets.Domain.Models.Organizations.Permission", b =>
-                {
-                    b.HasOne("Boc.Assets.Domain.Models.Organizations.OrganizationRole", "OrganizationRole")
-                        .WithMany("Permissions")
-                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

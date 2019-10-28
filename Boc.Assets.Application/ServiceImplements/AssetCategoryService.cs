@@ -39,15 +39,5 @@ namespace Boc.Assets.Application.ServiceImplements
         {
             return _mapper.ProjectTo<AssetCategoryDto>(_assetCategoryRepository.GetAll(predicate));
         }
-
-        public IEnumerable<dynamic> GetMeteringUnits()
-        {
-            List<dynamic> dic = new List<dynamic>();
-            foreach (var item in Enum.GetValues(typeof(AssetMeteringUnit)))
-            {
-                dic.Add(new { name = item.ToString(), value = (int)item });
-            }
-            return dic;
-        }
     }
 }

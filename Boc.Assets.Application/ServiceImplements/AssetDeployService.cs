@@ -34,7 +34,7 @@ namespace Boc.Assets.Application.ServiceImplements
         {
             var deploys = _assetDeployRepository.GetAll(it => it.AuthorizeOrgInfo.OrgId == _user.OrgId
                                                               && it.CreateDateTime >= model.StartDate
-                                                              && it.CreateDateTime <= model.EndDate);
+                                                              && it.CreateDateTime < model.EndDate.AddHours(24));
             if (model.ImportOrgId != null)
             {
                 deploys = deploys.Where(it => it.ImportOrgInfo.OrgId == model.ImportOrgId.Value);

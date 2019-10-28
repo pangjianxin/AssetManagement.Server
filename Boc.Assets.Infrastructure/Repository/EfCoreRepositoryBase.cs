@@ -65,7 +65,7 @@ namespace Boc.Assets.Infrastructure.Repository
         /// <returns></returns>
         public virtual IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null)
         {
-            return predicate == null ? DbSet : DbSet.Where(predicate).AsNoTracking();
+            return predicate == null ? DbSet.AsNoTracking() : DbSet.Where(predicate).AsNoTracking();
         }
         /// <summary>
         /// async method GetAllList

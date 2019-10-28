@@ -33,7 +33,7 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost("apply")]
+        [HttpPost]
         [Authorize(Policy = "user")]
         public async Task<IActionResult> Post([FromBody] ApplyAsset model)
         {
@@ -46,7 +46,7 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPut("secondary/handle")]
+        [HttpPut("handle")]
         [Authorize(Policy = "manage")]
         public async Task<IActionResult> Put([FromBody]HandleAssetApply model)
         {
@@ -59,9 +59,9 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpDelete("revoke")]
+        [HttpPut("revoke")]
         [Authorize(Policy = "manage")]
-        public async Task<IActionResult> Delete(RevokeAssetApply model)
+        public async Task<IActionResult> Put([FromBody]RevokeAssetApply model)
         {
             await _assetApplyService.RevokeAsync(model);
             return AppResponse(null, "事件已撤销");
@@ -73,7 +73,7 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="eventId"></param>
         /// <returns></returns>
-        [HttpDelete("remove")]
+        [HttpDelete()]
         [Authorize(Policy = "user")]
         public async Task<IActionResult> Delete(RemoveAssetApply model)
         {

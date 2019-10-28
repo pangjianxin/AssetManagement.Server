@@ -22,14 +22,14 @@ namespace Boc.Assets.Web.Controllers
             _maintainerService = maintainerService;
         }
 
-        [HttpPost("post")]
+        [HttpPost]
         [Authorize(Policy = "manage")]
         public async Task<IActionResult> Post([FromBody] AddMaintainer model)
         {
             await _maintainerService.AddMaintainerAsync(model);
             return AppResponse(null, "操作成功");
         }
-        [HttpDelete("delete")]
+        [HttpDelete]
         [Authorize(Policy = "manage")]
         public async Task<IActionResult> Delete(DeleteMaintainer model)
         {

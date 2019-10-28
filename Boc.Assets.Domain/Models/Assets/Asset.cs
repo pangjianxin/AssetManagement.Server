@@ -1,7 +1,6 @@
 ﻿using Boc.Assets.Domain.Core.Models;
 using Boc.Assets.Domain.Models.AssetInventories;
 using Boc.Assets.Domain.Models.Organizations;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 
@@ -9,16 +8,11 @@ namespace Boc.Assets.Domain.Models.Assets
 {
     public class Asset : EntityBase
     {
-        private readonly ILazyLoader _lazyLoader;
-
-        public Asset(ILazyLoader lazyLoader = null)
+        // for ef core
+        public Asset()
         {
-            _lazyLoader = lazyLoader;
+
         }
-        private AssetCategory _assetCategory;
-        private Organization _organizationInCharge;
-        private Organization _organizationInUse;
-        private ICollection<AssetInventoryDetail> _assetInventoryDetails;
         /// <summary>
         /// 资产分类外键
         /// </summary>
@@ -95,35 +89,19 @@ namespace Boc.Assets.Domain.Models.Assets
         /// <summary>
         /// 固定资产分类
         /// </summary>
-        public AssetCategory AssetCategory
-        {
-            get => _lazyLoader.Load(this, ref _assetCategory);
-            set => _assetCategory = value;
-        }
+        public virtual AssetCategory AssetCategory { get; set; }
         /// <summary>
         /// 资产管理机构
         /// </summary>
-        public Organization OrganizationInCharge
-        {
-            get => _lazyLoader.Load(this, ref _organizationInCharge);
-            set => _organizationInCharge = value;
-        }
+        public virtual Organization OrganizationInCharge { get; set; }
         /// <summary>
         /// 资产在用机构
         /// </summary>
-        public Organization OrganizationInUse
-        {
-            get => _lazyLoader.Load(this, ref _organizationInUse);
-            set => _organizationInUse = value;
-        }
+        public virtual Organization OrganizationInUse { get; set; }
         /// <summary>
         /// 对应的资产盘点情况
         /// </summary>
-        public ICollection<AssetInventoryDetail> AssetInventoryDetails
-        {
-            get => _lazyLoader.Load(this, ref _assetInventoryDetails);
-            set => _assetInventoryDetails = value;
-        }
+        public virtual ICollection<AssetInventoryDetail> AssetInventoryDetails { get; set; }
         #endregion
 
         #region methods
@@ -145,10 +123,10 @@ namespace Boc.Assets.Domain.Models.Assets
     /// </summary>
     public enum AssetStatus
     {
-        在用 = 0,
-        在库 = 1,
-        闲置 = 2,
-        报废 = 3,
-        在途 = 4
+        在用 = 1,
+        在库 = 2,
+        闲置 = 3,
+        报废 = 4,
+        在途 = 5
     }
 }

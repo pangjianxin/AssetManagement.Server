@@ -109,8 +109,9 @@ namespace Boc.Assets.Domain.CommandHandlers.Assets
                     LastDeployRecord = request.Message,
                     CreateDateTime = request.CreateDateTime,
                     OrganizationInChargeId = _user.OrgId,
-                    OrgInUseIdentifier = _user.OrgIdentifier,
-                    OrgInUseName = _user.OrgNam
+                    OrganizationInUseId = null,
+                    OrgInUseIdentifier = string.Empty,
+                    OrgInUseName = string.Empty
                 };
                 tempInventoryList.Add(asset);
             }

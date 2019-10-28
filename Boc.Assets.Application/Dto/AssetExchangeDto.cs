@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Boc.Assets.Application.Dto
 {
     public class AssetExchangeDto
     {
-        public Guid EventId { get; set; }
+        [Key]
+        public Guid Id { get; set; }
         public Guid RequestOrgId { get; set; }
         public string RequestOrgIdentifier { get; set; }
         public string RequestOrgNam { get; set; }

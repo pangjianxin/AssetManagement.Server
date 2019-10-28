@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Boc.Assets.Domain.Core.Models;
+﻿using Boc.Assets.Domain.Core.Models;
 using Boc.Assets.Domain.Models.Organizations;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
+using System.Collections.Generic;
 
 namespace Boc.Assets.Domain.Models.AssetInventories
 {
@@ -11,12 +10,7 @@ namespace Boc.Assets.Domain.Models.AssetInventories
     /// </summary>
     public class AssetInventory : EntityBase
     {
-        private readonly ILazyLoader _lazyLoader;
-        private ICollection<AssetInventoryRegister> _assetInventoryRegisters;
-        public AssetInventory(ILazyLoader lazyLoader = null)
-        {
-            _lazyLoader = lazyLoader;
-        }
+        public AssetInventory() { }
         public AssetInventory(Organization organization,
             string taskName,
             string taskComment,
@@ -64,11 +58,7 @@ namespace Boc.Assets.Domain.Models.AssetInventories
         /// 过期时间
         /// </summary>
         public DateTime ExpiryDateTime { get; set; }
-        public ICollection<AssetInventoryRegister> AssetInventoryRegisters
-        {
-            get => _lazyLoader.Load(this, ref _assetInventoryRegisters);
-            set => _assetInventoryRegisters = value;
-        }
+        public virtual ICollection<AssetInventoryRegister> AssetInventoryRegisters { get; set; }
         #region methods
         public bool IsExpiry()
         {

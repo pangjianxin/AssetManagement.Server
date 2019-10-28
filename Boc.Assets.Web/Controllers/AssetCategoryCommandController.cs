@@ -26,7 +26,7 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPut("manage/changeMeteringUnit")]
+        [HttpPut]
         [Authorize(Policy = "manage")]
         public async Task<IActionResult> Put([FromBody]ChangeMeteringUnit model)
         {

@@ -34,7 +34,7 @@ namespace Boc.Assets.Web.Controllers
         /// <returns></returns>
         [EnableQuery]
         [Authorize(Policy = "user")]
-        public IQueryable<AssetApplyDto> GetRurrent()
+        public IQueryable<AssetApplyDto> GetCurrent()
         {
             return _assetApplyService.Get(it => it.TargetOrgId == _user.OrgId);
         }

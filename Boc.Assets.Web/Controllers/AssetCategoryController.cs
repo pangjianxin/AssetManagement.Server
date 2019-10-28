@@ -3,7 +3,6 @@ using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Domain.Core.SharedKernel;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Boc.Assets.Web.Controllers
@@ -46,17 +45,6 @@ namespace Boc.Assets.Web.Controllers
         {
             return _assetCategoryService.Get();
 
-        }
-        /// <summary>
-        /// 资产分类计量单位
-        /// 当前机构权限
-        /// </summary>
-        /// <returns></returns>
-        [EnableQuery]
-        [Authorize(Policy = "user")]
-        public IEnumerable<dynamic> GetMeteringUnits()
-        {
-            return _assetCategoryService.GetMeteringUnits();
         }
 
     }

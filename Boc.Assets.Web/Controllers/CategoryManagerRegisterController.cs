@@ -1,30 +1,32 @@
-﻿using Boc.Assets.Application.ServiceInterfaces;
-using Boc.Assets.Domain.Core.Notifications;
+﻿using Boc.Assets.Application.Dto;
+using Boc.Assets.Application.ServiceInterfaces;
 using Boc.Assets.Domain.Core.SharedKernel;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authorization;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Boc.Assets.Web.Controllers
 {
-    [Route("api/categoryOrgRegistration")]
-    public class CategoryOrgRegistrationController : ApiController
+    public class CategoryManagerRegisterController : ODataController
     {
         private readonly ICategoryManageResgisterService _categoryOrgRegistrationService;
-
-        public CategoryOrgRegistrationController(INotificationHandler<DomainNotification> notifications,
+        private readonly IUser _user;
+        public CategoryManagerRegisterController(
             IUser user,
             ICategoryManageResgisterService categoryOrgRegistrationService)
-            : base(notifications, user)
+
         {
+            _user = user;
             _categoryOrgRegistrationService = categoryOrgRegistrationService;
         }
-        [HttpGet("examinations")]
-        public async Task<IActionResult> GetExaminationOrganizations(Guid categoryId)
+        [EnableQuery]
+        [Authorize(Policy = "user")]
+        public async Task<IEnumerable<OrgDto>> GetOrgByCategory([FromODataUri]Guid categoryId)
         {
             var organizations = await _categoryOrgRegistrationService.GetOrgByCategoryAndOrg2(categoryId, _user.Org2);
-            return AppResponse(organizations);
+            return organizations;
         }
     }
 }

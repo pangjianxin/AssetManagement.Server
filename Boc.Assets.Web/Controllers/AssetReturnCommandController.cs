@@ -29,7 +29,7 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost()]
+        [HttpPost]
         [Authorize(Policy = "user")]
         public async Task<IActionResult> Post([FromBody] ReturnAsset model)
         {
@@ -43,8 +43,8 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpDelete()]
-        [Authorize(Policy = "manage")]
+        [HttpDelete]
+        [Authorize(Policy = "user")]
         public async Task<IActionResult> Delete(RemoveAssetReturn model)
         {
             var apply = await _assetReturnService.RemoveAssetReturnAsync(model);
@@ -56,7 +56,7 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPut("manage/handle")]
+        [HttpPut("hendle")]
         [Authorize(Policy = "manage")]
         public async Task<IActionResult> Put([FromBody]HandleAssetReturn model)
         {
@@ -69,7 +69,7 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPut("manage/revoke")]
+        [HttpPut("revoke")]
         [Authorize(Policy = "manage")]
         public async Task<IActionResult> Put([FromBody]RevokeAssetReturn model)
         {

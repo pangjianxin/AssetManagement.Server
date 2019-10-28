@@ -12,7 +12,6 @@ namespace Boc.Assets.Application.ServiceInterfaces
     public interface IAssetCategoryService : IApplicationService
     {
         IQueryable<AssetCategoryDto> Get(Expression<Func<AssetCategory, bool>> predicate = null);
-        IEnumerable<dynamic> GetMeteringUnits();
         Task ChangeMeteringUnit(ChangeMeteringUnit model);
     }
 }

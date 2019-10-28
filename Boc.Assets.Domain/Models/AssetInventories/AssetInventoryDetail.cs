@@ -1,7 +1,6 @@
-﻿using System;
-using Boc.Assets.Domain.Core.Models;
+﻿using Boc.Assets.Domain.Core.Models;
 using Boc.Assets.Domain.Models.Assets;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
 
 namespace Boc.Assets.Domain.Models.AssetInventories
 {
@@ -10,12 +9,8 @@ namespace Boc.Assets.Domain.Models.AssetInventories
     /// </summary>
     public class AssetInventoryDetail : EntityBase
     {
-        private readonly ILazyLoader _lazyLoader;
-        private AssetInventoryRegister _assetInventoryRegister;
-        private Asset _asset;
-        public AssetInventoryDetail(ILazyLoader lazyLoader = null)
+        public AssetInventoryDetail()
         {
-            _lazyLoader = lazyLoader;
         }
         /// <summary>
         /// 资产盘点机构登记表外键
@@ -44,19 +39,11 @@ namespace Boc.Assets.Domain.Models.AssetInventories
         /// <summary>
         /// 已被盘点资产
         /// </summary>
-        public Asset Asset
-        {
-            get => _lazyLoader.Load(this, ref _asset);
-            set => _asset = value;
-        }
+        public virtual Asset Asset { get; set; }
         /// <summary>
         /// 资产盘点和机构登记表
         /// </summary>
-        public AssetInventoryRegister AssetInventoryRegister
-        {
-            get => _lazyLoader.Load(this, ref _assetInventoryRegister);
-            set => _assetInventoryRegister = value;
-        }
+        public virtual AssetInventoryRegister AssetInventoryRegister { get; set; }
         public InventoryStatus InventoryStatus { get; set; }
     }
     /// <summary>

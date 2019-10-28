@@ -1,16 +1,12 @@
 ﻿using Boc.Assets.Domain.Core.Models;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 
 namespace Boc.Assets.Domain.Models.Assets
 {
     public class Maintainer : EntityBase
     {
-        private readonly ILazyLoader _lazyLoader;
-        private AssetCategory _assetCategory;
-        public Maintainer(ILazyLoader lazyLoader = null)
+        public Maintainer()
         {
-            _lazyLoader = lazyLoader;
         }
         /// <summary>
         /// 资产分类外键
@@ -43,10 +39,6 @@ namespace Boc.Assets.Domain.Models.Assets
         /// <summary>
         /// 维修信息的关联资产分类
         /// </summary>
-        public AssetCategory AssetCategory
-        {
-            get => _lazyLoader.Load(this, ref _assetCategory);
-            set => _assetCategory = value;
-        }
+        public virtual AssetCategory AssetCategory { get; set; }
     }
 }

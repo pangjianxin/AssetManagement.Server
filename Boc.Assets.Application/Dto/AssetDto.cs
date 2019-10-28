@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Boc.Assets.Application.Dto
 {
     public class AssetDto
     {
-        public Guid AssetId { get; set; }
+        [Key]
+        public Guid Id { get; set; }
         /// <summary>
         /// 资产名称
         /// </summary>

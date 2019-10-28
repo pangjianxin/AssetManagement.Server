@@ -26,7 +26,7 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPut("current/modifyLocation")]
+        [HttpPut]
         [Authorize(Policy = "user")]
         public async Task<IActionResult> Put([FromBody]ModifyAssetLocation model)
         {
@@ -39,9 +39,9 @@ namespace Boc.Assets.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost("secondary/storage")]
+        [HttpPost]
         [Authorize(Policy = "manage")]
-        public async Task<IActionResult> StorageWithOutFile([FromBody]StoreAsset model)
+        public async Task<IActionResult> Post([FromBody]StoreAsset model)
         {
             await _assetService.StorageWithOutFile(model);
             return AppResponse(null, "入库成功");

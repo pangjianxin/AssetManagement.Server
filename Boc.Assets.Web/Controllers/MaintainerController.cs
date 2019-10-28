@@ -25,7 +25,7 @@ namespace Boc.Assets.Web.Controllers
         }
         [EnableQuery]
         [Authorize(Policy = "manage")]
-        public IQueryable<MaintainerDto> GetOwnedManage()
+        public IQueryable<MaintainerDto> GetCurrent()
         {
             Expression<Func<Maintainer, bool>> predicate = it => it.OrganizationId == _user.OrgId;
             return _maintainerService.Get(predicate);
@@ -40,7 +40,7 @@ namespace Boc.Assets.Web.Controllers
         }
         [EnableQuery]
         [Authorize(Policy = "user")]
-        public IQueryable<MaintainerDto> GetByCategoryId(Guid assetCategoryId)
+        public IQueryable<MaintainerDto> GetByCategoryId([FromODataUri]Guid assetCategoryId)
         {
             Expression<Func<Maintainer, bool>> predicate = it =>
                 it.AssetCategoryId == assetCategoryId && it.Org2 == _user.Org2;

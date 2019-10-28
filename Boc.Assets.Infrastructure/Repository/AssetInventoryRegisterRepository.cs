@@ -15,7 +15,8 @@ namespace Boc.Assets.Infrastructure.Repository
 
         public override IQueryable<AssetInventoryRegister> GetAll(Expression<Func<AssetInventoryRegister, bool>> predicate = null)
         {
-            return predicate == null ? DbSet : DbSet.Where(predicate);
+            return predicate == null ? DbSet
+                : DbSet.Where(predicate);
         }
 
     }

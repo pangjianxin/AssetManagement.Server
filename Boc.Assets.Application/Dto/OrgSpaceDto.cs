@@ -4,7 +4,7 @@ namespace Boc.Assets.Application.Dto
 {
     public class OrgSpaceDto
     {
-        public Guid SpaceId { get; set; }
+        public Guid Id { get; set; }
         public string SpaceName { get; set; }
         public string SpaceDescription { get; set; }
         public Guid OrgId { get; set; }
