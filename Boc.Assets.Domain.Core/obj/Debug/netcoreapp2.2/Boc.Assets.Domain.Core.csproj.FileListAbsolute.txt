@@ -13,12 +13,9 @@ D:\WorkingSpace\Boc.Assets\Server\Boc.Assets\Boc.Assets.Domain.Core\obj\Debug\ne
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\bin\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.deps.json
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\bin\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.dll
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\bin\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.pdb
-D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\bin\Debug\netcoreapp2.2\Newtonsoft.Json.dll
-D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\bin\Debug\netcoreapp2.2\Newtonsoft.Json.xml
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\obj\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.csprojAssemblyReference.cache
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\obj\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.csproj.CoreCompileInputs.cache
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\obj\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.AssemblyInfoInputs.cache
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\obj\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.AssemblyInfo.cs
-D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\obj\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.csproj.CopyComplete
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\obj\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.dll
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain.Core\obj\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.pdb

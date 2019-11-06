@@ -33,6 +33,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -82,15 +83,15 @@ namespace Boc.Assets.Web.Extensions
             {
                 option.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200",
-                                       "http://21.33.129.180:4201",
-                                       "http://localhost:4201");
+
+                    var origins = new List<string>();
+                    configuration.Bind("Cors:Origins", origins);
+                    policy.WithOrigins(origins.ToArray());
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
-                    //policy.AllowAnyOrigin();
                     policy.AllowCredentials();
-                    policy.WithExposedHeaders("X-Pagination");
-                    policy.SetPreflightMaxAge(TimeSpan.FromMinutes(60));
+                    //policy.WithExposedHeaders("X-Pagination");
+                    // policy.SetPreflightMaxAge(TimeSpan.FromMinutes(60));
                 });
             });
             //jwt authentication

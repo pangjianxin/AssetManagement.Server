@@ -34,5 +34,3 @@ D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Application\obj\Debu
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Application\obj\Debug\netcoreapp2.2\Boc.Assets.Application.csproj.CopyComplete
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Application\obj\Debug\netcoreapp2.2\Boc.Assets.Application.dll
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Application\obj\Debug\netcoreapp2.2\Boc.Assets.Application.pdb
-D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Application\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Http.Abstractions.dll
-D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Application\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Http.Abstractions.xml

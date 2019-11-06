@@ -16,9 +16,7 @@ D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain\bin\Debug\net
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain\bin\Debug\netcoreapp2.2\Boc.Assets.Domain.dll
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain\bin\Debug\netcoreapp2.2\Boc.Assets.Domain.pdb
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain\bin\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.dll
-D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.SignalR.Core.dll
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain\bin\Debug\netcoreapp2.2\Boc.Assets.Domain.Core.pdb
-D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.SignalR.Core.xml
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain\obj\Debug\netcoreapp2.2\Boc.Assets.Domain.csprojAssemblyReference.cache
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain\obj\Debug\netcoreapp2.2\Boc.Assets.Domain.csproj.CoreCompileInputs.cache
 D:\WorkingSpace\Boc.AssetsV2.1\Server\Boc.Assets\Boc.Assets.Domain\obj\Debug\netcoreapp2.2\Boc.Assets.Domain.AssemblyInfoInputs.cache

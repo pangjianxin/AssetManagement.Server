@@ -91,11 +91,11 @@ namespace Boc.Assets.Web.Controllers
             var result = _assetsumarryservice.GetSumarryByCount(predicate);
             return result;
         }
+
         /// <summary>
         /// 查询未盘点资产
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="assetStockTakingOrgId"></param>
+        /// <param name="assetInventoryRegisterId"></param>
         /// <returns></returns>
         [EnableQuery]
         [Authorize(Policy = "user")]
@@ -103,7 +103,7 @@ namespace Boc.Assets.Web.Controllers
         {
 
             Expression<Func<Asset, bool>> predicate = it => it.OrganizationInUseId == _user.OrgId
-                                                            && !it.AssetInventoryDetails.Any(that => that.AssetInventoryRegisterId == assetInventoryRegisterId);
+                                                            && it.AssetInventoryDetails.All(that => that.AssetInventoryRegisterId != assetInventoryRegisterId);
             var queryable = _assetService.Get(predicate);
             return queryable;
         }
